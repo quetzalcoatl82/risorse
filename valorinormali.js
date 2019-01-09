@@ -310,7 +310,7 @@ node.appendChild(newdiv);
 	googletag.cmd.push(function() {
 
 		var mappingStrip = googletag.sizeMapping().
-		addSize([0, 0], [[320, 50], [320, 1]]).
+		addSize([0, 0], [[320, 1], [320, 50]]).
 		addSize([401, 400], [728,90]).
 		addSize([980, 500], [[728,90],[980,50],[970,250],[980,250],[980,323]]).
 		build();
