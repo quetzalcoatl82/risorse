@@ -65,7 +65,7 @@ if(document.getElementsByTagName("head").length>0)document.getElementsByTagName(
   })();
 
 
-<!-- krux per tag gpt -->
+// krux per tag gpt
 window.Krux||((Krux=function(){Krux.q.push(arguments);}).q=[]);
 (function(){
   function retrieve(n){
@@ -88,8 +88,8 @@ window.Krux||((Krux=function(){Krux.q.push(arguments);}).q=[]);
 
 
 
-<!-- BEGIN Krux Control Tag for "Farmaco e Cura" -->
-<!-- Source: /snippet/controltag?confid=KKMkcIv2&site=Valorei%20Normali&edit=1 -->
+// BEGIN Krux Control Tag for "Farmaco e Cura"
+// Source: /snippet/controltag?confid=KKMkcIv2&site=Valorei%20Normali&edit=1
   window.Krux||((Krux=function(){Krux.q.push(arguments)}).q=[]);
   (function(){
     var k=document.createElement('script');k.type='text/javascript';k.async=true;
@@ -99,7 +99,7 @@ window.Krux||((Krux=function(){Krux.q.push(arguments);}).q=[]);
   ;
     var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(k,s);
   }());
-<!-- END Krux Controltag -->
+// END Krux Controltag
 
 document.write('<s' + 'cript src="//euasync01.admantx.com/admantx/service?request={%20tag%3A%22%22%2C%20key%3A%220c98897dbc164f908b46da9a579a5a66f545cbc906646befd32bfc20fa9c0dd7%22%2Cmethod%3A%22descriptor%22%2Cfilter%3A%22default%22%2Cdecorator%3A%22template.valorinormali%22%2Ctype%3A%22URL%22%2Cmode%3A%22async%22%2Cbody:\'' + escape(document.location.href) + '\'%2Ccustom2%3A%22'+Krux.kxkuid+'%22}"></s' +'cript>');
 
