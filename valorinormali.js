@@ -310,7 +310,7 @@ node.appendChild(newdiv);
 	googletag.cmd.push(function() {
 
 		var mappingStrip = googletag.sizeMapping().
-		addSize([0, 0], [320, 50]).
+		addSize([0, 0], [[320, 50], [320, 1]]).
 		addSize([401, 400], [728,90]).
 		addSize([980, 500], [[728,90],[980,50],[970,250],[980,250],[980,323]]).
 		build();
@@ -327,6 +327,7 @@ node.appendChild(newdiv);
 			mm_stript1 = googletag.defineSlot(MMsezioneTag,[970,250],'div-gpt-ad-1234567891234-strip')
 				.defineSizeMapping(mappingStrip)
 				.setTargeting("pos","1")
+				.setTargeting("test","2")
 				.setCollapseEmptyDiv(true)
 				.addService(googletag.pubads());
 		}
@@ -395,11 +396,18 @@ node.appendChild(newdiv);
 		googletag.pubads().addEventListener('slotOnload', function(event) {
 			if(event.slot===mm_stript1) {
 				console.log('===> slot strip caricato');
-				 //strip_animation();
+				 strip_animation();
 			}
 		});
 		googletag.pubads().addEventListener('slotRenderEnded', function(event) {
 			if(event.slot===mm_stript1) {
+
+				if((event.size[0] != "970" && event.size[1] != "250") && (event.size[0] != "320" && event.size[1] != "1")){
+            $("#strip_adv").removeClass("advCollapse");
+        }
+        console.log('[push FE] slotRenderEnded gpt_strip: '+parseInt(performance.now() - startPageTimes.performanceNow));
+        isAnimationAllowed = isStripAnimationAllowed(event);
+
 				console.log('===> slot strip renderizzato');
 				sizeCompleta = event.size;
 				idCampagnaMastHead=event.campaignId;
