@@ -331,7 +331,7 @@ node.appendChild(newdiv);
 			if(event.slot===mm_stript1) {
 
 
-				if((event.size[0] != "970" && event.size[1] != "250") && (event.size[0] != "320" && event.size[1] != "1")){
+				if(event.size[0] != "970" && event.size[1] != "250"){
             $("#strip_adv").removeClass("advCollapse");
         }
         //console.log('[push FE] slotRenderEnded gpt_strip: '+parseInt(performance.now() - startPageTimes.performanceNow));
