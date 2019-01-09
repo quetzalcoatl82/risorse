@@ -540,3 +540,5 @@ function loadVideoArticle(){
 	document.getElementsByTagName('body')[0].appendChild(script);
 
 }
+
+console.log('vn override');
