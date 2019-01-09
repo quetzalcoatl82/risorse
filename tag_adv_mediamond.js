@@ -329,10 +329,11 @@ node.appendChild(newdiv);
 		});
 		googletag.pubads().addEventListener('slotRenderEnded', function(event) {
 			if(event.slot===mm_stript1) {
+
 				if((event.size[0] != "970" && event.size[1] != "250") && (event.size[0] != "320" && event.size[1] != "1")){
             $("#strip_adv").removeClass("advCollapse");
         }
-        //console.log('[push FE] slotRenderEnded gpt_strip: '+parseInt(performance.now() - startPageTimes.performanceNow));
+        console.log('[push FE] slotRenderEnded gpt_strip: '+parseInt(performance.now() - startPageTimes.performanceNow));
         isAnimationAllowed = isStripAnimationAllowed(event);
 				//console.log('===> slot strip renderizzato');
 				sizeCompleta = event.size;
