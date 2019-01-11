@@ -131,6 +131,7 @@ jQuery( '<div id="container_promobox" class="container_promobox_class"></div>' )
 jQuery('<div id="adv-skin"></div>').insertAfter('#main');
 
 function initTagGpt(){
+	console.log('initgpt');
 	if(MMlarghezzaSitoAdv <= 970){
 	document.getElementById("adv-gpt-masthead-leaderboard-container1").style.display = 'none';
 	}
@@ -464,6 +465,7 @@ var adxLoad = false;
 var timerGpt = setInterval(function(){searchAdxLabel();},100);
 
 function searchAdxLabel(){
+	console.log('search adx timer');
 	if(typeof(ADX_label) != 'undefined'){
 		if(ADX_label != ''){
 		//console.log('===>adx per SRA TIMER2 label definita:'+ADX_label);
