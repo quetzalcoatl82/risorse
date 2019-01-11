@@ -450,15 +450,15 @@ var m=0;
 var adxLoad = false;
 
 
-window.addEventListener('load', function() {
+//window.addEventListener('load', function() {
 		if(adxLoad == false && MMarrayUrlSkinControllo[1] != 'noadv'){
-			adxLoad = true;
-			initTagGpt();
+			//adxLoad = true;
+			//initTagGpt();
 			//console.log('===> initTag load');
 
 		}
-	clearInterval(timerGpt);
-});
+	//clearInterval(timerGpt);
+//});
 
 
 var timerGpt = setInterval(function(){searchAdxLabel();},100);
