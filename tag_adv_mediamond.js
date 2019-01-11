@@ -1,5 +1,5 @@
 // JavaScript Document
-//console.log('===>tag_adv_mediamond....');
+console.log('===>tag_adv_mediamond....');
 //vengono definite delle variabili che poi verranno utilizzate nei js per l'erogazione dei formati
 var MMdatiSkin = new Array();
 var nomeSito = 'farmacoecura';
