@@ -606,10 +606,9 @@ function generaGpt(nSlot){
 
 		googletag.pubads().addEventListener('slotOnload', function(event) {
       if(event.slot===mm_stript1) {
-  				console.log('===> slot strip caricato');
-  				 strip_animation();
-  			}
-  		});
+  			console.log('===> slot strip caricato');
+  			strip_animation();
+  		}
       if(event.slot===window['mm_box' + posNew]) {
 				initComscore(campaignIdBox,creativeIdBox,lineItemIdBox,sizeBox,posNew,window['mm_box' + posNew],nSlot,divslotnameNew);
 			}
