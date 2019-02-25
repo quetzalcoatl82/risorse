@@ -2,9 +2,9 @@
 let wrapperdiv = document.createElement("div");
 wrapperdiv.id = 'av-pushdown-wrapper';
 
-let staticcont = document.querySelectorAll(".static-container");
+let contstatic = document.querySelectorAll(".static-container");
 
-staticcont[0].parentNode.insertBefore(wrapperdiv, staticcont[0]);
+contstatic[0].parentNode.insertBefore(wrapperdiv, contstatic[0]);
 
 /*PUSHUP
 strip_animation: gestisce il comportamento delle strip
@@ -111,22 +111,22 @@ function topStrip() {
 }
 
 function isStripAnimationAllowed(e) {
-    document.addEventstatic-contener("child_NoBmVideoAdv", function() {
+    document.addEventListener("child_NoBmVideoAdv", function() {
         console.log('[push FE] NoBmVideoAdv: '+parseInt(performance.now() - startPageTimes.performanceNow));
     });
 
-    document.addEventstatic-contener("child_BmVideoPlay", function() {
+    document.addEventListener("child_BmVideoPlay", function() {
         console.log('[push FE] BmVideoPlay: '+parseInt(performance.now() - startPageTimes.performanceNow));
     });
 
-    document.addEventstatic-contener("child_BmVideoAdv", function() {
+    document.addEventListener("child_BmVideoAdv", function() {
         console.log('[push FE] BmVideoAdv: '+parseInt(performance.now() - startPageTimes.performanceNow));
     });
 
     return true;
 }
 
-window.addEventstatic-contener("message", initPushdown, false);
+window.addEventListener("message", initPushdown, false);
 
 function initPushdown(event) {
   if(event.data && (event.data.action=='initPushMobile' || event.data.action=='initPushDesktop')){
