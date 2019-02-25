@@ -1,10 +1,10 @@
 // cambio il markup da qua per non entrare dentro il template
-var newItem = document.createElement("div");
-newItem.id = 'av-pushdown-wrapper';
+var wrapperdiv = document.createElement("div");
+wrapperdiv.id = 'av-pushdown-wrapper';
 
-var list = document.querySelectorAll(".static-container");
-list.insertBefore(newItem, list.childNodes[0]);
+var staticcont = document.querySelectorAll(".static-container");
 
+staticcont[0].parentNode.insertBefore(wrapperdiv, staticcont[0]);
 
 /*PUSHUP
 strip_animation: gestisce il comportamento delle strip
@@ -111,22 +111,22 @@ function topStrip() {
 }
 
 function isStripAnimationAllowed(e) {
-    document.addEventListener("child_NoBmVideoAdv", function() {
+    document.addEventstatic-contener("child_NoBmVideoAdv", function() {
         console.log('[push FE] NoBmVideoAdv: '+parseInt(performance.now() - startPageTimes.performanceNow));
     });
 
-    document.addEventListener("child_BmVideoPlay", function() {
+    document.addEventstatic-contener("child_BmVideoPlay", function() {
         console.log('[push FE] BmVideoPlay: '+parseInt(performance.now() - startPageTimes.performanceNow));
     });
 
-    document.addEventListener("child_BmVideoAdv", function() {
+    document.addEventstatic-contener("child_BmVideoAdv", function() {
         console.log('[push FE] BmVideoAdv: '+parseInt(performance.now() - startPageTimes.performanceNow));
     });
 
     return true;
 }
 
-window.addEventListener("message", initPushdown, false);
+window.addEventstatic-contener("message", initPushdown, false);
 
 function initPushdown(event) {
   if(event.data && (event.data.action=='initPushMobile' || event.data.action=='initPushDesktop')){
