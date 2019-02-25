@@ -4,6 +4,7 @@ wrapperdiv.id = 'av-pushdown-wrapper';
 
 let expanding = document.querySelectorAll(".expanding");
 expanding[0].classList.add('advCollapse');
+console.log('advcollapse added');
 
 let contstatic = document.querySelectorAll(".static-container");
 
