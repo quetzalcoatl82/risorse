@@ -25,8 +25,8 @@ function strip_animation(){
 	                mobile: false
 	            };
 
-	            flyingPush = new flyingPush();
-	            flyingPush.init('.targetFlyingPushdown', devices);
+	            // flyingPush = new flyingPush();
+	            // flyingPush.init('.targetFlyingPushdown', devices);
 	        } else {
 				header = document.getElementById("ameheader_header");
 
@@ -89,8 +89,8 @@ function strip_animation(){
                 var devices = {
                     smartphone: 1
                 };
-                flyingPush = new flyingPush();
-                flyingPush.init('.targetFlyingPushdownMobile', devices, true);
+                // flyingPush = new flyingPush();
+                // flyingPush.init('.targetFlyingPushdownMobile', devices, true);
             });
         }
 	}
