@@ -379,16 +379,15 @@ function initTagGpt(){
 		});
 		googletag.pubads().addEventListener('slotRenderEnded', function(event) {
 			if(event.slot===mm_stript1) {
-                if(event.size[0] != "970" && event.size[1] != "250"){
-                    $("#strip_adv").removeClass("advCollapse");
-                }
 				campaignIdStrip = event.campaignId;
 				creativeIdStrip = event.creativeId;
 				lineItemIdStrip = event.lineItemId;
 				sizeStrip = event.size;
 				sizeCompleta = event.size;
 				idCampagnaMastHead=event.campaignId;
-
+                if(event.size[0] != "970" && event.size[1] != "250"){
+                    $("#strip_adv").removeClass("advCollapse");
+                }
                 console.log('[push FE] slotRenderEnded gpt_strip: '+parseInt(performance.now() - startPageTimes.performanceNow));
                 isAnimationAllowed = isStripAnimationAllowed(event);
 
