@@ -1,3 +1,10 @@
+// cambio il markup da qua per non entrare dentro il template
+var newItem = document.createElement("div");
+newItem.id = 'av-pushdown-wrapper';
+
+var list = document.querySelectorAll(".static-container");
+list.insertBefore(newItem, list.childNodes[0]);
+
 
 /*PUSHUP
 strip_animation: gestisce il comportamento delle strip
