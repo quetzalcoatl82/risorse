@@ -1,135 +1,110 @@
 function strip_animation(){
     if (typeof AMEheader !== "undefined") {
-	    if(AMEheaderOptions.topstrip && isAnimationAllowed){
-	        AMEheader.topstrip();
-	    }
-	}
-}
-
-/* topstrip module */
-(function(){
-	if(typeof AMEheader === "undefined") { AMEheader = {}; }
-
-	var header,
-		staticContainer,
-		flyingContainer,
-		body,
-		stripAdv;
-
-	function init(){
-		if(device == "desktop"){
-			if(is_bnzm_pdown) {
-	            var devices = {
-	                desktop: 1,
-	                tablet: false,
-	                mobile: false
-	            };
-
-	            // flyingPush = new flyingPush();
-	            // flyingPush.init('.targetFlyingPushdown', devices);
-	        } else {
-				header = document.getElementById("ameheader_header");
-
-				staticContainer = document.getElementsByClassName("static-container")[0];
-				flyingContainer = document.getElementsByClassName("flying-container")[0];
-				body = document.getElementsByTagName("body")[0];
-				stripAdv = document.getElementById("strip_adv");
-
-				// assegno l'altezza del blocco strip+header ai due contenitori in modo che allo scroll le parti di pagina che non devono scrollare schizzino verso l'altro
-				staticContainer.style.height = flyingContainer.offsetHeight + "px";
-				flyingContainer.style.height = staticContainer.offsetHeight + "px";
-
-				// assegno al body la classe "pushing" per far scrollare strip+header
-				body.classList.add("pushing");
-
-				// comunico alla logica che la push deve scrollare con l'utente
-				isPushing = true;
-
-				// controllo se abbiamo a che fare con una push o con una creatività di altro genere
-				console.log('è una pushdown? ' + is_bnzm_pdown);
-
-				// nel caso in cui il contenitore della strip sia vuoto (altezza zero) annullo l'assegnazione delle altezze ai contenitori e tolgo la classe pushing: gli do 5 secondi
-				var mycount = 0;
-				var myint = setInterval(function() {
-					if (stripAdv.offsetHeight == 0) {
-						clearInterval(myint);
-						flyingContainer.style.height = "auto";
-						staticContainer.style.height = "auto";
-						body.classList.remove("pushing");
-					} else if (mycount == 5000) {
-						clearInterval(myint);
-					}
-					mycount += 100;
-				}, 100);
-
-				// gestisco la logica per le strip NO push (logica della push nei JS all'interno delle creatività)
-				if (!is_bnzm_pdown) {
-					// conto 5s
-					setTimeout(
-						function() {
-							stripToTop();
-						},
-						5000
-					);
-				}
-			}
-		} else if(device == "smartphone") {
-            document.addEventListener("child_BmVideoAdv", function() {
-                console.log('[push FE] init flyingPushMobile: '+parseInt(performance.now() - startPageTimes.performanceNow));
-				var pushTitle = document.createElement("span");
-				pushTitle.classList.add("pushTitle");
-				var pushTitleText = document.createTextNode("Video del giorno");
-				pushTitle.appendChild(pushTitleText);
-				document.getElementsByClassName("placeholderFlyingPushdownMobile")[0].parentNode.prepend(pushTitle);
-
-                if(!document.getElementsByClassName("placeholderFlyingPushdownMobile")[0].classList.contains("rendered")){
-                    document.getElementsByClassName("placeholderFlyingPushdownMobile")[0].classList.add("rendered");
-                }
-
-                var devices = {
-                    smartphone: 1
-                };
-                // flyingPush = new flyingPush();
-                // flyingPush.init('.targetFlyingPushdownMobile', devices, true);
-            });
+      if(AMEheaderOptions.topstrip){
+        if(isAnimationAllowed) {
+          AMEheader.topstrip();
         }
-	}
-
-	function stripToTop(){
-		// se l'utente ha iniziato a scrollare
-		var scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-
-		if (scrollTop > stripAdv.offsetHeight) {
-			// rimuovo la classe pushing e metto la classe hiding per la dissolvenza
-			body.classList.add("hiding");
-
-			// attendo la dissolvenza sia terminata
-			setTimeout(
-				// rimuovo la classe hiding e rimuovo le altezze date ai due contenitori
-				function() {
-					body.classList.remove('hiding');
-					body.classList.remove('pushing');
-					staticContainer.style.height = "auto";
-					flyingContainer.style.height = "auto";
-					// comunico alla logica che la push non deve più scrollare con l'utente
-					isPushing = false;
-				},
-				300
-			);
-			// se l'utente non ha iniziato a scrollare
-		} else {
-			// rimuovo la classe pushing ma non ho bisogno della classe hiding per la dissolvenza
-			body.classList.remove('pushing');
-			// rimuovo le altezze date ai due contenitori
-			flyingContainer.style.height = "auto";
-			staticContainer.style.height = "auto";
-			// comunico alla logica che la push non deve più scrollare con l'utente
-			isPushing = false;
-		}
-	}
-
-	AMEheader.topstrip = init;
-}());
+      }
+    }
+  }
+  
+  /* topstrip module */
+  (function(){
+      if(typeof AMEheader === "undefined") { AMEheader = {}; }
+  
+      var header,
+          staticContainer,
+          flyingContainer,
+          body,
+          stripAdv;
+  
+      function init(){
+          if(device == "desktop"){
+              if(!is_bnzm_pdown) {
+          $("#strip_adv").removeClass("advCollapse");
+              header = document.getElementById("ameheader_header");
+  
+                  staticContainer = document.getElementsByClassName("static-container")[0];
+                  flyingContainer = document.getElementsByClassName("flying-container")[0];
+                  body = document.getElementsByTagName("body")[0];
+                  stripAdv = document.getElementById("strip_adv");
+  
+                  // assegno l'altezza del blocco strip+header ai due contenitori in modo che allo scroll le parti di pagina che non devono scrollare schizzino verso l'altro
+                  staticContainer.style.height = flyingContainer.offsetHeight + "px";
+                  flyingContainer.style.height = staticContainer.offsetHeight + "px";
+  
+                  // assegno al body la classe "pushing" per far scrollare strip+header
+                  body.classList.add("pushing");
+  
+                  // comunico alla logica che la push deve scrollare con l'utente
+                  isPushing = true;
+  
+                  // controllo se abbiamo a che fare con una push o con una creativitÃ  di altro genere
+                  console.log('Ã¨ una pushdown? ' + is_bnzm_pdown);
+  
+                  // nel caso in cui il contenitore della strip sia vuoto (altezza zero) annullo l'assegnazione delle altezze ai contenitori e tolgo la classe pushing: gli do 5 secondi
+                  var mycount = 0;
+                  var myint = setInterval(function() {
+                      if (stripAdv.offsetHeight == 0) {
+                          clearInterval(myint);
+                          flyingContainer.style.height = "auto";
+                          staticContainer.style.height = "auto";
+                          body.classList.remove("pushing");
+                      } else if (mycount == 5000) {
+                          clearInterval(myint);
+                      }
+                      mycount += 100;
+                  }, 100);
+  
+                  // gestisco la logica per le strip NO push (logica della push nei JS all'interno delle creativitÃ )
+                  if (!is_bnzm_pdown) {
+                      // conto 5s
+                      setTimeout(
+                          function() {
+                              stripToTop();
+                          },
+                          5000
+                      );
+                  }
+              }
+          }
+      }
+  
+      function stripToTop(){
+          // se l'utente ha iniziato a scrollare
+          var scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+  
+          if (scrollTop > stripAdv.offsetHeight) {
+              // rimuovo la classe pushing e metto la classe hiding per la dissolvenza
+              body.classList.add("hiding");
+  
+              // attendo la dissolvenza sia terminata
+              setTimeout(
+                  // rimuovo la classe hiding e rimuovo le altezze date ai due contenitori
+                  function() {
+                      body.classList.remove('hiding');
+                      body.classList.remove('pushing');
+                      staticContainer.style.height = "auto";
+                      flyingContainer.style.height = "auto";
+                      // comunico alla logica che la push non deve piÃ¹ scrollare con l'utente
+                      isPushing = false;
+                  },
+                  300
+              );
+              // se l'utente non ha iniziato a scrollare
+          } else {
+              // rimuovo la classe pushing ma non ho bisogno della classe hiding per la dissolvenza
+              body.classList.remove('pushing');
+              // rimuovo le altezze date ai due contenitori
+              flyingContainer.style.height = "auto";
+              staticContainer.style.height = "auto";
+              // comunico alla logica che la push non deve piÃ¹ scrollare con l'utente
+              isPushing = false;
+          }
+      }
+  
+      AMEheader.topstrip = init;
+  }());  
 
 /* search module */
 (function(){
