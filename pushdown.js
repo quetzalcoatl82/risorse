@@ -1,8 +1,8 @@
 // cambio il markup da qua per non entrare dentro il template
-var wrapperdiv = document.createElement("div");
+let wrapperdiv = document.createElement("div");
 wrapperdiv.id = 'av-pushdown-wrapper';
 
-var staticcont = document.querySelectorAll(".static-container");
+let staticcont = document.querySelectorAll(".static-container");
 
 staticcont[0].parentNode.insertBefore(wrapperdiv, staticcont[0]);
 
