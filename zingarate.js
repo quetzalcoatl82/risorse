@@ -266,6 +266,7 @@ function initTagGpt(){
 			mm_stript1 = googletag.defineSlot(MMsezioneTag,[[970,250],[320,1]],divslotnameStrip)
 				.defineSizeMapping(mappingStrip)
 				.setTargeting("pos","1")
+				.setTargeting("test","2")
 				.setCollapseEmptyDiv(true)
 				.addService(googletag.pubads());
 		}

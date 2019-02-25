@@ -2,6 +2,9 @@
 let wrapperdiv = document.createElement("div");
 wrapperdiv.id = 'av-pushdown-wrapper';
 
+let expanding = document.querySelectorAll(".expanding");
+expanding[0].classList.add('advCollapse');
+
 let contstatic = document.querySelectorAll(".static-container");
 
 contstatic[0].parentNode.insertBefore(wrapperdiv, contstatic[0]);
