@@ -256,61 +256,61 @@ if(window.innerWidth > 800 || window.innerHeight > 600) { /* not mobile modifica
 '); } </script>
     <div id="fb-root"></div>
 <script>
-window.fbAsyncInit = function() {
-  FB.init({
-    appId      : '287984944588378',
-    status     : false, // check login status
-    cookie     : true, // enable cookies to allow the server to access the session
-    xfbml      : true  // parse XFBML
-  });
-  FB.Event.subscribe('auth.authResponseChange', function(response) {
-    if (response.status === 'connected') {
-        if (!logged_user) {
-           $.post('/ajax/login.php', 
-            { action: 'facebookLogin' }, 
-            function(result) {
-                if (result.status != 'error') {
-                    $('.boxlogin .warning-message').hide();
-                    logged_user = result.user;
-                    $('body').trigger($.Event( "login"));
-                    $('body').trigger($.Event( "facebook_connect"));
-                    close_login();
-                } else {
-                    console.log(result.profile);
-                    if (result.message == 'email') $('.boxlogin .warning-fb-email').show();
-                    if (result.message == 'unregistered') $('.boxlogin .warning-fb-unreg').show();
-                    if (result.message == 'nouser') $('.boxlogin .error-message').html('Utente non trovato');
-                }
-            },'json');
-        } else    
-        if (logged_user.facebook != response.authResponse.userID) {
-            $.post('/ajax/user_profile.php', { action: 'associaFacebook', uid: response.authResponse.userID }, function(result) {
-                if (result.status == 'ok') {
-                    logged_user.facebook = result.facebook;
-                    $('body').trigger($.Event( "facebook_connect"));
-                }
-            },'json');
-        }
-    } else if (response.status === 'not_authorized') {
-        $.post('/ajax/user_profile.php', { action: 'dissociaFacebook' }, function(result) {
-            if (result.status == 'ok') {
-                $('body').trigger($.Event( "facebook_unconnect"));
-                logged_user.facebook = 0;
-            }
-        },'json');
-      //FB.login();
-    } else {
-        $('body').trigger($.Event( "facebook_logout"));
-    }
-  });
-};
-(function(d){
-   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-   if (d.getElementById(id)) {return;}
-   js = d.createElement('script'); js.id = id; js.async = true;
-   js.src = "//connect.facebook.net/it_IT/all.js";
-   ref.parentNode.insertBefore(js, ref);
-}(document));
+// window.fbAsyncInit = function() {
+//   FB.init({
+//     appId      : '287984944588378',
+//     status     : false, // check login status
+//     cookie     : true, // enable cookies to allow the server to access the session
+//     xfbml      : true  // parse XFBML
+//   });
+//   FB.Event.subscribe('auth.authResponseChange', function(response) {
+//     if (response.status === 'connected') {
+//         if (!logged_user) {
+//            $.post('/ajax/login.php', 
+//             { action: 'facebookLogin' }, 
+//             function(result) {
+//                 if (result.status != 'error') {
+//                     $('.boxlogin .warning-message').hide();
+//                     logged_user = result.user;
+//                     $('body').trigger($.Event( "login"));
+//                     $('body').trigger($.Event( "facebook_connect"));
+//                     close_login();
+//                 } else {
+//                     console.log(result.profile);
+//                     if (result.message == 'email') $('.boxlogin .warning-fb-email').show();
+//                     if (result.message == 'unregistered') $('.boxlogin .warning-fb-unreg').show();
+//                     if (result.message == 'nouser') $('.boxlogin .error-message').html('Utente non trovato');
+//                 }
+//             },'json');
+//         } else    
+//         if (logged_user.facebook != response.authResponse.userID) {
+//             $.post('/ajax/user_profile.php', { action: 'associaFacebook', uid: response.authResponse.userID }, function(result) {
+//                 if (result.status == 'ok') {
+//                     logged_user.facebook = result.facebook;
+//                     $('body').trigger($.Event( "facebook_connect"));
+//                 }
+//             },'json');
+//         }
+//     } else if (response.status === 'not_authorized') {
+//         $.post('/ajax/user_profile.php', { action: 'dissociaFacebook' }, function(result) {
+//             if (result.status == 'ok') {
+//                 $('body').trigger($.Event( "facebook_unconnect"));
+//                 logged_user.facebook = 0;
+//             }
+//         },'json');
+//       //FB.login();
+//     } else {
+//         $('body').trigger($.Event( "facebook_logout"));
+//     }
+//   });
+// };
+// (function(d){
+//    var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+//    if (d.getElementById(id)) {return;}
+//    js = d.createElement('script'); js.id = id; js.async = true;
+//    js.src = "//connect.facebook.net/it_IT/all.js";
+//    ref.parentNode.insertBefore(js, ref);
+// }(document));
 
 function testAPI() {
     
@@ -396,7 +396,7 @@ if (aCookieKrux != "") {
          <div class="logowrap">
             <a href="/" class="logo" title="FilmTv">
                 <span>FilmTv</span>
-                <img alt="logo FilmTv" src="/public/images/logo-filmtv.png">
+                <img alt="logo FilmTv" src="https://www.filmtv.it/public/images/logo-filmtv.png">
             </a>
         </div>
          <nav class="nav the_menu cf" style="display:none;">
@@ -931,7 +931,7 @@ Sam Bell, firmato un contratto triennale con la societ&agrave; per  essere invia
         <li><a id="newlist-R" href="#recensioni" data-exec="newlist('R','//www.filmtv.it/loader/timeline/film/40495/R/0/20/-/');">Recensioni<span>(81)</span><div class="triangle"></div></a></li>        <li><a id="newlist-L" href="#playlist" data-exec="newlist('L','//www.filmtv.it/loader/timeline/film/40495/L/0/20/-/');">Playlist<span>(37)</span><div class="triangle"></div></a></li>        <li><a id="newlist-F" href="#foto" data-exec="newlist('F','//www.filmtv.it/loader/timeline/film/40495/F/0/20/-/');">Foto e Trailer<span>(27)</span><div class="triangle"></div></a></li>        <li><a id="newlist-N" href="#notizie" data-exec="newlist('N','//www.filmtv.it/loader/timeline/film/40495/N/0/20/-/');">Notizie<span>(1)</span><div class="triangle"></div></a></li>        <li><a id="newlist-P" href="#post" data-exec="newlist('P','//www.filmtv.it/loader/timeline/film/40495/P/0/20/-/');">Post<span>(1)</span><div class="triangle"></div></a></li>        <li class="espandi-li"><a class="espandi" href="javascript:void(0)">+</a></li>
     </ul>
 </menu>
-<div class="loader" style="display:none;" id="master-loader"><img src="/public/images/loader.gif" /></div>        
+<div class="loader" style="display:none;" id="master-loader"><img src="https://www.filmtv.it/public/images/loader.gif" /></div>        
         <section id="item-list-container">
             <section class="items-list">
             				<header class="year-title">
