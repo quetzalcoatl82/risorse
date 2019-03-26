@@ -10,6 +10,10 @@ var sw                  = document.documentElement.clientWidth,
     is_bnzm_pdown       = false,
     load_pdown_desktop  = false;
 
+var flyingPush,
+detectStripAnimation,
+creativeContext = true;
+
 var pdown_desktop_data;
 
 var topStrip,
