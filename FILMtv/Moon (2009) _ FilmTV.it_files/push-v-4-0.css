@@ -1,0 +1,128 @@
+.pushdown-body{
+	position: relative;
+	margin:0 auto;
+	width:980px; height:250px;
+	overflow:hidden;
+	background:#000;
+}
+
+.pushdown-body .video{
+	float:left;
+	width:445px; height:250px;
+	background-position:center center;
+	background-size:100% auto;
+}
+
+.pushdown-body .more{
+	float:left; position: relative;
+	width:495px; height:250px;
+}
+
+.pushdown-body .logo{
+	display:block;
+	margin-top:12px; margin-left:40px;
+	width:190px; height:22px;
+	text-indent:-9999em;
+}
+
+.vt{
+	position:absolute;
+	top:12px; left:345px;
+	padding:0 15px;
+	font:10px/21px 'Lato';
+	color:#999; text-transform:uppercase; text-decoration:none;
+	border:1px solid #999; border-radius:2px;
+}
+
+.pushdown-body ul{
+	padding:0;
+	color:#fff;
+	list-style-type:none;
+}
+
+.pushdown-body .ul160{
+	padding:0;
+	color:#fff;
+	list-style-type:none;
+	margin-top:10px;
+}
+
+.pushdown-body li{
+	position:relative;
+	margin-top:12px; padding-left:40px;
+	overflow:hidden;
+}
+
+.pushdown-body li:before{
+	content:attr(data-count);
+	position:absolute;
+	top:0; left:0;
+	width:40px;
+	font:700 15px/87px 'Lato';
+	color:#999999; text-align:center;
+}
+
+.pushdown-body ul .img{
+	float:left;
+	margin-right:20px;
+	width:153px;
+}
+
+.pushdown-body ul .img160{
+	float:left;
+	margin-right:20px;
+	width:160px;
+	height:90px;
+}
+
+.pushdown-body ul .img img{
+	display:block;
+	max-width:100%
+}
+
+.pushdown-body ul .tit{
+	display:block;
+	font:700 18px 'Roboto Slab';
+	color:#fff !important ; text-decoration:none;
+}
+
+.pushdown-body ul .cat{
+	font:12px 'Lato';
+	color:#999999; text-decoration:none; text-transform:uppercase;
+}
+
+.pushdown-body li.off:before,
+.pushdown-body ul .off .tit,
+.pushdown-body ul .off .cat{
+	opacity:.6;
+}
+
+
+.push_close {
+position: absolute;
+top: 12px;
+left: 494px;
+padding: 0;
+font: 10px/21px 'Lato';
+color: #999;
+text-decoration: none;
+border: 1px solid #999;
+border-radius: 120px;
+height: 24px;
+width: 24px;
+text-align: center;
+line-height: 24px;
+font-weight: bold;
+font-size: 11px;
+}
+
+a.push_close {
+text-decoration: none;
+}
+
+.meride-video-container .topBarBtn{
+	display: none;
+}
+.meride-video-container .fullBtn{
+	display: none;
+}
