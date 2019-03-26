@@ -279,6 +279,11 @@ node.appendChild(newdiv);
 		googletag.pubads().addEventListener('slotRenderEnded', function(event) {
             if(document.getElementById(divslotnameStrip)){
                 if(event.slot===mm_stript1) {
+					if(event.size[0] != "970" && event.size[1] != "250"){
+						$("#strip_adv").removeClass("advCollapse");
+					}
+					console.log('[push FE] slotRenderEnded gpt_strip: '+parseInt(performance.now() - startPageTimes.performanceNow));
+					
                     console.log('===> slot strip renderizzato');
 
                     document.getElementById(divslotnameStrip).style.display = 'block';
