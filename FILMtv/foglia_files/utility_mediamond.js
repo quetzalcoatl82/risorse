@@ -13,7 +13,7 @@ function checkPageAdv(){
         }
     }
 }
-nomeSito = 'filmtv';
+
 if(nomeSito == 'meteo'){
     function initGptIubenda(){
         console.log('[mediamond]===>call initGptIubenda');
