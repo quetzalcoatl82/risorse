@@ -542,7 +542,10 @@ cfr. "../images/dm-pink-overlay.svg#dm-filter-pink" */
     transition: opacity 300ms .5s;
 }
 
-
+.dm-marginbottom, .dm-foglia p, .dm-foglia h1, .dm-foglia h2, .dm-foglia h3, .dm-foglia h4, .dm-foglia h5, .dm-foglia h6, .dm-foglia ul, blockquote {
+    margin-bottom: 20px;
+    display: inline-block;
+}
 
 /*-------------------*\
       Mod Daniela
@@ -557,7 +560,7 @@ cfr. "../images/dm-pink-overlay.svg#dm-filter-pink" */
     display: flex;
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
-        -ms-flex-flow: column;
+        -ms-flex-flow : column;
             flex-flow: column;
 }
 .dm-daniela > [class^="dm-daniela"] {
@@ -887,6 +890,54 @@ cfr. "../images/dm-pink-overlay.svg#dm-filter-pink" */
 }
 
 
+
+
+
+.dm-wrapper img, .dm-wrapper picture {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+.dm-brunella-credits {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    opacity: 0.6;
+    color: #ffffff;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 15px;
+}
+.dm-giorgia, .dm-fullwidthdiv {
+    width: 100vw;
+    max-width: 100vw;
+    position: relative;
+    margin-left: -50vw;
+    left: 50%;
+}
+.dm-giorgia.dm-marginbottom {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+.dm-giorgia img {
+    width: 100%;
+}
+.dm-foglia p {
+    font-size: 18px;
+    line-height: 28px;
+    color: #000000;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 300;
+    display: block;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 33px;
+    color: #645881;
+}
+
+
+
 .dm-daniela-related-heading.dm-columnwidth.dm-columnfull {
   color: #645881;
   font-size: 40px;
@@ -919,6 +970,7 @@ cfr. "../images/dm-pink-overlay.svg#dm-filter-pink" */
   padding: 0 20px;
   text-align: left;
   margin-bottom: 10px;
+  display: block;
 }
 .dm-daniela .dm-daniela-title {
   padding: 0 20px;
@@ -993,9 +1045,20 @@ a {
     flex: 0 0 calc(50% - 30px);
     margin: 0 15px 30px;
   }
+  .dm-giorgia {
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    left: 0;
+    margin-left: 0;
+    }
 }
 
 @media all and (min-width: 1000px){
+    .dm-giorgia.dm-marginbottom {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
     .dm-columnwidth.dm-columnfull.dmb-related {
     width: calc(100% + 60px);
     max-width: calc(100% + 60px);
@@ -1012,10 +1075,26 @@ a {
     flex: 0 0 calc(33.333333% - 30px);
     margin: 0 15px 30px;
   }
-}
-.dm-daniela .dm-daniela-title {
+  .dm-erica img, .dm-chiara .swiper-image, .dm-giorgia-cont picture {
+    border-radius: 20px;
+    overflow: hidden;
+    }
+    .dm-daniela .dm-daniela-title {
     flex: 1 0 auto;
   }
+
+}
+@media all and (min-width: 1200px){
+
+    .dm-giorgia {
+    width: calc(100% + 60px);
+    max-width: calc(100% + 60px);
+    margin-left: -30px;
+    margin-right: -30px;
+    }
+
+
+}
 
     </style>
 </head>
@@ -1024,9 +1103,25 @@ a {
         <div class="dm-wrapper dm-sitewidth">
             <main class="dm-content">
                 <div class="dm-columnwidth dm-columnfull dm-foglia">
-                        <div style="min-height: 500px;">THE CONTENT</div>
-                        <div class="OUTBRAIN" data-src="https://www.donnamoderna.com/bellezza/capelli/tutorial-treccia-cascata-forbice-particolare" data-widget-id="AR_6" data-ob-template="donnamoderna"></div>
-                        <script type="text/javascript" async="async" src="https://widgets.outbrain.com/outbrain.js"></script>
+                    <div class="dm-foglia-content">
+                            <p class="Normal">Ripetiamo questi passaggi fino ad arrivare dall’altro lato della testa. Blocchiamo la treccia con un elastico in silicone e, a nostra discrezione, possiamo aggiungere degli <strong>accessori</strong> che arricchiscono la <strong>treccia</strong>.</p>
+                            <div class="dm-giorgia  dm-marginbottom ">
+                                <div class="dm-giorgia-cont">
+                                    <picture>
+                                        <source media="(min-width: 480px)" data-srcset="https://www.donnamoderna.com/wp-content/uploads/2018/08/scissor-braid-copertina-725x545.jpg" srcset="https://www.donnamoderna.com/wp-content/uploads/2018/08/scissor-braid-copertina-725x545.jpg">
+                                        <source data-srcset="https://www.donnamoderna.com/wp-content/uploads/2018/08/scissor-braid-copertina-725x545.jpg" srcset="https://www.donnamoderna.com/wp-content/uploads/2018/08/scissor-braid-copertina-725x545.jpg">
+                                        <!-- img tag for browsers that do not support picture element -->
+                                        <img src="https://www.donnamoderna.com/wp-content/uploads/2018/08/scissor-braid-copertina-725x545.jpg" data-src="https://www.donnamoderna.com/wp-content/uploads/2018/08/scissor-braid-copertina-725x545.jpg" class="dm-filter-pink dm-pic-loaded" alt="">
+                                    </picture>
+                                            <span class="dm-brunella-credits">Credits: Argentea Lo</span>
+                                    </div>
+                            </div>
+                            <p class="Normal">Ripetiamo questi passaggi fino ad arrivare dall’altro lato della testa. Blocchiamo la treccia con un elastico in silicone e, a nostra discrezione, possiamo aggiungere degli <strong>accessori</strong> che arricchiscono la <strong>treccia</strong>.</p>
+                            <p class="Normal">Ripetiamo questi passaggi fino ad arrivare dall’altro lato della testa. Blocchiamo la treccia con un elastico in silicone e, a nostra discrezione, possiamo aggiungere degli <strong>accessori</strong> che arricchiscono la <strong>treccia</strong>.</p>
+                            <div class="OUTBRAIN" data-src="https://www.donnamoderna.com/bellezza/capelli/tutorial-treccia-cascata-forbice-particolare" data-widget-id="AR_6" data-ob-template="donnamoderna"></div>
+                            <script type="text/javascript" async="async" src="https://widgets.outbrain.com/outbrain.js"></script>
+                    </div>
+
                 </div>
             </main>
             <div class="dm-sidebar dm-columnwidth"></div>
