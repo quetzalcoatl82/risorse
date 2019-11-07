@@ -1,27 +1,47 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
 <body>
  
 <script>
-// var xhr = new XMLHttpRequest();
-// xhr.open("POST", 'http://mobile.my-link.it/mylink/mobile/stazione', true);
-// xhr.setRequestHeader('Content-Type', 'application/json');
-// xhr.send(JSON.stringify({
-//     stazione: 'milano+s.+cristoforo'
-// }));
-var url = 'https://giromilano.atm.it/proxy.ashx';
-var request = new XMLHttpRequest();
-var formData = new FormData();
-formData.append("url", "tpPortal/geodata/pois/trains/201630");
 
-request.open('POST', url, true);
-request.onreadystatechange = function() {if (request.readyState==4) alert("It worked!");};
-request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-// request.setRequestHeader("Content-length", params.length);
-request.setRequestHeader("Connection", "close");
-request.send(formData);
-// request.send(params);
-console.log(request.responseText);
+var cors = 'https://cors-anywhere.herokuapp.com/';
+var url = 'https://giromilano.atm.it/proxy.ashx';
+
+
+// var request = new XMLHttpRequest();
+// var formData = new FormData();
+// formData.append("url", "tpPortal/geodata/pois/trains/201630");
+
+// request.open('POST', cors + url, true);
+// request.onreadystatechange = function() {if (request.readyState==4) alert("It worked!");};
+
+// request.send(formData);
+
+// console.log(request.responseText);
+var fd = new FormData();    
+// fd.append( 'file', input.files[0] );
+fd.append("url", "tpPortal/geodata/pois/trains/201630");
+
+
+$.ajax({
+    type: "POST",
+    url: url,
+    crossDomain: true,
+    contentType: false,
+    processData: false,
+    data: fd,
+    success: function (data) {
+        // do something with server response data
+        console.log(data);
+    },
+    error: function (err) {
+        console.log(err);
+        // handle your error logic here
+    }
+});
 
 </script>
 
