@@ -58,8 +58,9 @@ function chiamafermata(fermataid, tipo) {
 function creafermata(id, info) {
     if (info['Lines'][0]['WaitMessage'] != 'soppressa') {
         html = "<div class='fermata'>";
-        html+= "<span class='title'>" + info['Description'] + "</span> ";
-        html+= "<span class='linea'>" + info['Lines'][0]['BookletUrl2'] + "</span> ";
+        html+= "<span class='title'>" + info['Description'] + "</span> - ";
+        html+= "<span class='linea'>" + info['Lines'][0]['Line']['LineCode'] + "</span> - ";
+        html+= "<span class='linea'>Direzione: " + info['Lines'][0]['Line']['LineDescription'].split(" - ").pop() + "</span> - ";
         html+= "<span class='orario'>" + info['Lines'][0]['WaitMessage'] + "</span>";
         html+= "</div>";
         $('#fermate').append(html);

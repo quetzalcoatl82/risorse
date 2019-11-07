@@ -4,28 +4,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
- 
+    <h1>Fermate ATM</h1>
+    <div id="fermate">
+
+    </div>
 <script>
 
 var cors = 'https://cors-anywhere.herokuapp.com/';
 var url = 'https://giromilano.atm.it/proxy.ashx';
 
-
-// var request = new XMLHttpRequest();
-// var formData = new FormData();
-// formData.append("url", "tpPortal/geodata/pois/trains/201630");
-
-// request.open('POST', cors + url, true);
-// request.onreadystatechange = function() {if (request.readyState==4) alert("It worked!");};
-
-// request.send(formData);
-
-// console.log(request.responseText);
- 
-// fd.append( 'file', input.files[0] );
-//fd.append("url", "tpPortal/geodata/pois/trains/201630");
-//fd.append("url", "tpPortal/geodata/pois/stops/10890");
-// fd.append("url", "tpPortal/geodata/pois/stops/10337");
 // tram 14 - direzione milano
 // gonin giordani = 10204
 // s. cristoforo = 10335
@@ -37,12 +24,16 @@ var url = 'https://giromilano.atm.it/proxy.ashx';
 // bus 50 - direzione milano
 // 10326
 
-chiamafermata(10337, 'stops');
-chiamafermata(10204, 'stops');
-chiamafermata(10328, 'stops');
-chiamafermata(10204, 'stops');
-chiamafermata(10332, 'stops');
-chiamafermata(10204, 'stops');
+chiamafermata(11175, 'stops');
+chiamafermata(11176, 'stops');
+
+chiamafermata(10890, 'stops');
+chiamafermata(10893, 'stops');
+
+//chiamafermata(10328, 'stops');
+// chiamafermata(10204, 'stops');
+// chiamafermata(10332, 'stops');
+// chiamafermata(10326, 'stops');
 
 function chiamafermata(fermataid, tipo) {
     var fd = new FormData();   
@@ -57,6 +48,7 @@ function chiamafermata(fermataid, tipo) {
         success: function (data) {
             // do something with server response data
             console.log(data);
+            creafermata(fermataid, data);
         },
         error: function (err) {
             console.log(err);
@@ -65,8 +57,20 @@ function chiamafermata(fermataid, tipo) {
     });
 }
 
+function creafermata(id, info) {
+    if (info['Lines'][0]['WaitMessage'] != 'soppressa') {
+        html = "<div class='fermata'>";
+        html+= "<span class='title'>" + info['Description'] + "</span> - ";
+        html+= "<span class='linea'>" + info['Lines'][0]['Line']['LineCode'] + "</span> - ";
+        html+= "<span class='linea'>Direzione: " + info['Lines'][0]['Line']['LineDescription'].split(" - ").pop() + "</span> - ";
+        html+= "<span class='orario'>" + info['Lines'][0]['WaitMessage'] + "</span>";
+        html+= "</div>";
+        $('#fermate').append(html);
+    }
+    console.log(info['Lines'][0]['BookletUrl2']);
+}
 
 </script>
-
+    
 </body>
 </html>
