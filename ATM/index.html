@@ -19,7 +19,7 @@ let fermate = [];
 
 if (searchParams.has('martina')) {
     // preimpostato per martina
-    fermate.push(11175,11176,10890,10893);
+    fermate.push(10204,10335,10337,10332,10326);
 }
 if (searchParams.has('quetz')) {
     // preimpostato per quetz
@@ -59,8 +59,12 @@ if (fermate.length == 0) {
 }
 
 function chiamafermata(fermataid, tipo) {
-    var fd = new FormData();   
+    // per aggiungere correttamente i form data alla richiesta
+    var fd = new FormData();
     fd.append("url", "tpPortal/geodata/pois/" + tipo + "/" + fermataid);
+    // creo i div per ospitare le fermate in ordine
+    html = "<div class='fermata' data-id='" + fermataid + "'></div>";
+    $('#fermate').append(html);
     $.ajax({
         type: "POST",
         url: cors + url,
@@ -82,13 +86,13 @@ function chiamafermata(fermataid, tipo) {
 
 function creafermata(id, info) {
     if (info['Lines'][0]['WaitMessage'] != 'soppressa') {
-        html = "<div class='fermata'>";
-        html+= "<span class='title'>" + info['Description'] + "</span> - ";
+        // html = "<div class='fermata'>";
+        html = "<span class='title'>" + info['Description'] + "</span> - ";
         html+= "<span class='linea'>" + info['Lines'][0]['Line']['LineCode'] + "</span> - ";
         html+= "<span class='linea'>Direzione: " + info['Lines'][0]['Line']['LineDescription'].split(" - ").pop() + "</span> - ";
         html+= "<span class='orario'>" + info['Lines'][0]['WaitMessage'] + "</span>";
-        html+= "</div>";
-        $('#fermate').append(html);
+        // html+= "</div>";
+        $('.fermata[data-id=' + id + ']').append(html);
     }
     console.log(info['Lines'][0]['BookletUrl2']);
 }
