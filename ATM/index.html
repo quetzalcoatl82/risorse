@@ -12,6 +12,8 @@
     <div id="fermate"></div>
 <script>
 
+let cors = 'https://cors-anywhere.herokuapp.com/';
+let url = 'https://giromilano.atm.it/proxy.ashx';
 let searchParams = new URLSearchParams(window.location.search);
 let fermate = [];
 
@@ -40,7 +42,6 @@ if (searchParams.has('fermate')) {
 fermate.sort((a, b) => a - b);;
 console.log(fermate);
 
-
 if (fermate.length == 0) {
     // se dopo tutto sto giro non ci sono comunque fermate creo la home vuota
     html = "<div class='home'>";
@@ -51,25 +52,11 @@ if (fermate.length == 0) {
     $('#home').append(html);
 } else {
     // se ci sono fermate le chiamo in ordine
-    // chiamafermata(11175, 'stops');
-// chiamafermata(11176, 'stops');
-
-// chiamafermata(10890, 'stops');
-// chiamafermata(10893, 'stops');
     fermate.forEach(function(element) {
         console.log(element);
         chiamafermata(element, 'stops');
     });
 }
-
-var cors = 'https://cors-anywhere.herokuapp.com/';
-var url = 'https://giromilano.atm.it/proxy.ashx';
-
-// chiamafermata(11175, 'stops');
-// chiamafermata(11176, 'stops');
-
-// chiamafermata(10890, 'stops');
-// chiamafermata(10893, 'stops');
 
 function chiamafermata(fermataid, tipo) {
     var fd = new FormData();   
