@@ -41,6 +41,9 @@ if (fermate.length == 0) {
 } else {
     // prima di tutto mostro il loader
     $('.loader').addClass('show');
+    // mi segno l'ora della chiamata
+    let time = ora();
+    $('#fermate').attr("data-time",time);
     // se ci sono fermate le chiamo in ordine
     fermate.forEach(function(element) {
         console.log(element);
@@ -50,7 +53,7 @@ if (fermate.length == 0) {
 
 function chiamafermata(fermataid, tipo) {
     // per aggiungere correttamente i form data alla richiesta
-    var fd = new FormData();
+    let fd = new FormData();
     fd.append("url", "tpPortal/geodata/pois/" + tipo + "/" + fermataid);
     // creo i div per ospitare le fermate in ordine
     html = "<div class='fermata' data-id='" + fermataid + "'></div>";
@@ -65,24 +68,39 @@ function chiamafermata(fermataid, tipo) {
         success: function (data) {
             // alla prima risposta tolgo il loader
             $('.loader').removeClass('show');
+            $('#fermate').addClass('ready');
             // do something with server response data
             console.log(data);
             creafermata(fermataid, data);
         },
         error: function (err) {
             console.log(err);
-            $('.loader').removeClass('show');            
+            $('.loader').removeClass('show');
             html = "<div class='home'>";
             if(err.status == 404) {
+                // fermata non raggiungibile
                 html+= '<p>La fermata richiesta <b>' + fermataid + '</b> non è raggiungibile, controlla che il numero sia corretto o prova a ricaricare la pagina</p>';
             } else {
-                html+= '<p>Qualcosa è andato storto, prova a ricaricare o a controllare che il numero delle fermate sia corretto</p>';
+                // errore generico
+                html+= '<p>Qualcosa è andato storto, prova a ricaricare e ad incrociare le dita. Giuro che di solito funziona!</p>';
             }
             html+= "</div>";
             $('#home').append(html);
             // handle your error logic here
         }
     });
+}
+
+function ora() {
+    let d = new Date();
+    let hr = d.getHours();
+    let min = d.getMinutes();
+    if (min < 10) {
+        min = "0" + min;
+    }
+    let time = hr + ':' + min;
+    console.log(time);
+    return time;
 }
 
 function creafermata(id, info) {
