@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css?family=Codystar&display=swap');
+body {
+    font-family: Arial;
+    margin: 0;
+}
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+.fermata:not(:empty) {
+    border: 5px solid #444;
+    padding: 5px;
+    background: #444;
+    color: #FFF;
+}
+.fermata:not(:empty):before {
+    content: attr(data-id) " - ";
+    font-weight: 700;
+}
+.fermata + .fermata {
+    border-top: none;
+    padding-top: 0;
+}
+.fermata-title {
+    padding: 5px;
+    padding-top: 0;
+    display: inline-block;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+.linea {
+    padding: 5px;
+    font-family: 'Codystar', cursive;
+    font-weight: 700;
+    background: #222;
+    color: orange;
+}
+.linea + .linea {
+    padding-top: 0;
+}

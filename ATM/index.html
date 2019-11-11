@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Fermate ATM</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-    <div id="home"></div>
-    <div id="fermate"></div>
+    <section class="container">
+        <div id="home"></div>
+        <div id="fermate"></div>
+    </section>
 <script>
 
 let cors = 'https://cors-anywhere.herokuapp.com/';
@@ -85,14 +88,29 @@ function chiamafermata(fermataid, tipo) {
 }
 
 function creafermata(id, info) {
+    if (info['Lines'][0]) { // se c'e' almeno una linea
+        html = "<span class='fermata-title'>" + info['Description'] + "</span>";
+        info['Lines'].forEach(function(linea) {
+            console.log(linea);
+            html+= "<div class='linea'>";
+            html+= "<span class='numero'>" + linea['Line']['LineCode'] + "</span> - ";
+            html+= "<span class='direzione'>Direzione: " + linea['Line']['LineDescription'].split(" - ").pop() + "</span> - ";
+            html+= "<span class='orario'>" + linea['WaitMessage'] + "</span>";
+            html+= "</div>"
+        });
+        $('.fermata[data-id=' + id + ']').append(html);
+    }
+
+
+
     if (info['Lines'][0]['WaitMessage'] != 'soppressa') {
         // html = "<div class='fermata'>";
-        html = "<span class='title'>" + info['Description'] + "</span> - ";
-        html+= "<span class='linea'>" + info['Lines'][0]['Line']['LineCode'] + "</span> - ";
-        html+= "<span class='linea'>Direzione: " + info['Lines'][0]['Line']['LineDescription'].split(" - ").pop() + "</span> - ";
-        html+= "<span class='orario'>" + info['Lines'][0]['WaitMessage'] + "</span>";
+        // html = "<span class='title'>" + info['Description'] + "</span> - ";
+        // html+= "<span class='linea'>" + info['Lines'][0]['Line']['LineCode'] + "</span> - ";
+        // html+= "<span class='linea'>Direzione: " + info['Lines'][0]['Line']['LineDescription'].split(" - ").pop() + "</span> - ";
+        // html+= "<span class='orario'>" + info['Lines'][0]['WaitMessage'] + "</span>";
         // html+= "</div>";
-        $('.fermata[data-id=' + id + ']').append(html);
+        // $('.fermata[data-id=' + id + ']').append(html);
     }
     console.log(info['Lines'][0]['BookletUrl2']);
 }
