@@ -73,7 +73,7 @@ function chiamafermata(fermataid, tipo) {
             console.log(err);
             $('.loader').removeClass('show');            
             html = "<div class='home'>";
-                html+= '<p>Qualcosa è andato storto, prova a ricaricare</p>';
+                html+= '<p>Qualcosa è andato storto, prova a ricaricare o a controllare che il numero delle fermate sia corretto</p>';
             html+= "</div>";
             $('#home').append(html);
             // handle your error logic here
