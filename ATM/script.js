@@ -17,13 +17,16 @@ if (searchParams.has('fermate')) {
     // filtro solo i numeri dalla query
     let filter = searchParams.get('fermate').split(',');
     filter = filter.map(el => {
-        let n = Number(el);
+        let n = parseInt(el);
         return  isNaN(n) ? null : n;
     }).filter(function (el) {
         return el != null;
     });
     // unisco la query pulita alle eventuali fermate già raccolte
     fermate = fermate.concat(filter);
+    console.log(fermate);
+    
+
 }
 
 fermate.sort((a, b) => a - b);
@@ -79,7 +82,7 @@ function chiamafermata(fermataid, tipo) {
             html = "<div class='home'>";
             if(err.status == 404) {
                 // fermata non raggiungibile
-                html+= '<p>La fermata richiesta <b>' + fermataid + '</b> non è raggiungibile, controlla che il numero sia corretto o prova a ricaricare la pagina</p>';
+                html+= '<p>La fermata richiesta <b>' + fermataid + '</b> non è raggiungibile, controlla che il numero sia corretto prima di ricaricare la pagina</p>';
             } else {
                 // errore generico
                 html+= '<p>Qualcosa è andato storto, prova a ricaricare e ad incrociare le dita. Giuro che di solito funziona!</p>';
@@ -104,6 +107,8 @@ function ora() {
 }
 
 function creafermata(id, info) {
+    console.log(info['Lines'][0]);
+    
     if (info['Lines'][0]) { // se c'e' almeno una linea
         html = "<span class='fermata-title'>" + info['Description'] + "</span>";
         info['Lines'].forEach(function(linea) {
