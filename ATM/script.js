@@ -45,7 +45,6 @@ if (fermate.length == 0) {
     $('#fermate').attr("data-time",time);
     // se ci sono fermate le chiamo in ordine
     fermate.forEach(function(element) {
-        console.log(element);
         chiamafermata(element, 'stops');
     });
 }
