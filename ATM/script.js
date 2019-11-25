@@ -24,13 +24,9 @@ if (searchParams.has('fermate')) {
     });
     // unisco la query pulita alle eventuali fermate già raccolte
     fermate = fermate.concat(filter);
-    console.log(fermate);
-    
-
 }
 
 fermate.sort((a, b) => a - b);
-console.log(fermate);
 
 if (fermate.length == 0) {
     // se dopo tutto sto giro non ci sono comunque fermate creo la home vuota
@@ -73,11 +69,9 @@ function chiamafermata(fermataid, tipo) {
             $('.loader').removeClass('show');
             $('#fermate').addClass('ready');
             // do something with server response data
-            console.log(data);
             creafermata(fermataid, data);
         },
         error: function (err) {
-            console.log(err);
             $('.loader').removeClass('show');
             html = "<div class='home'>";
             if(err.status == 404) {
@@ -102,17 +96,13 @@ function ora() {
         min = "0" + min;
     }
     let time = hr + ':' + min;
-    console.log(time);
     return time;
 }
 
 function creafermata(id, info) {
-    console.log(info['Lines'][0]);
-    
     if (info['Lines'][0]) { // se c'e' almeno una linea
         html = "<span class='fermata-title'>" + info['Description'] + "</span>";
         info['Lines'].forEach(function(linea) {
-            console.log(linea);
             html+= "<div class='linea'>";
             html+= "<span class='numero'>" + linea['Line']['LineCode'] + "</span> - ";
             html+= "<span class='direzione'>Direzione: " + linea['Line']['LineDescription'].split(" - ").pop() + "</span> - ";
