@@ -111,3 +111,6 @@ function creafermata(id, info) {
         $('.fermata[data-id=' + id + ']').append(html);
     }
 }
+
+// API Treni
+// http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/partenze/S01630/Mon%20Nov%2025%202019%2023:04:42%20GMT+0100%20(Ora%20standard%20dell%E2%80%99Europa%20centrale)
