@@ -1,6 +1,7 @@
-
 let cors = 'https://cors-anywhere.herokuapp.com/';
-let url = 'https://giromilano.atm.it/proxy.ashx';
+let APIurl = {};
+    APIurl.ATM = 'https://giromilano.atm.it/proxy.ashx';
+    APIurl.FFSS = 'http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/';
 let searchParams = new URLSearchParams(window.location.search);
 let fermate = [];
 let stazioni = [];
@@ -44,7 +45,7 @@ console.log(fermate);
 console.log(stazioni);
 
 if (fermate.length == 0 && stazioni.length == 0) {
-    // se dopo tutto sto giro non ci sono comunque fermate creo la home vuota
+    // se dopo tutto sto giro non ci sono comunque fermate e stazioni creo la home vuota
     html = "<div class='home'>";
         html+= "<h1>Fermate ATM</h1>";
         html+= "<h2>Come funziona</h2>";
@@ -59,14 +60,17 @@ if (fermate.length == 0 && stazioni.length == 0) {
     let time = ora();
     // se ci sono fermate le chiamo in ordine
     if (fermate) {
-        $('#fermate').attr("data-time",time);
-        fermate.forEach(function(element) {
-            chiamafermata(element, 'stops');
+        $('#fermate').attr("data-time",time.time);
+        fermate.forEach(function(fermata) {
+            chiamafermata(fermata, 'stops');
         });
     }
     if (stazioni) {
-        $('#stazioni').attr("data-time",time);
+        $('#stazioni').attr("data-time",time.time);
         console.log('stazioni');
+        stazioni.forEach(function(stazione) {
+            chiamastazione(stazione, time);
+        });
     }
 }
 
@@ -79,7 +83,7 @@ function chiamafermata(fermataid, tipo) {
     $('#fermate').append(html);
     $.ajax({
         type: "POST",
-        url: cors + url,
+        url: cors + APIurl.ATM,
         crossDomain: true,
         contentType: false,
         processData: false,
@@ -107,16 +111,74 @@ function chiamafermata(fermataid, tipo) {
         }
     });
 }
+function chiamastazione(stazioneid, date) {
+    html = "<div class='stazione' data-id='" + stazioneid + "'></div>";
+    $('#stazioni').append(html);
+    // http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/dettaglioStazione/S01700/1
+    $.ajax({
+        type: "GET",
+        url: cors + APIurl.FFSS + 'dettaglioStazione/' + stazioneid + '/1',
+        success: function (data) {
+            // do something with server response data
+            chiamapartenze(stazioneid, date, data);
+            console.log(data);
+        },
+        error: function (err) {
+            $('.loader').removeClass('show');
+            html = "<div class='home'>";
+            if(err.status == 404) {
+                // fermata non raggiungibile
+                html+= '<p>La stazione richiesta <b>' + stazioneid + '</b> non è raggiungibile, controlla che il numero sia corretto prima di ricaricare la pagina</p>';
+            } else {
+                // errore generico
+                html+= '<p>Qualcosa è andato storto, prova a ricaricare e ad incrociare le dita. Giuro che di solito funziona!</p>';
+            }
+            html+= "</div>";
+            $('#home').append(html);
+            // handle your error logic here
+        }
+    });
+}
+function chiamapartenze(stazioneid, date, infostazione) {
+    $.ajax({
+        type: "GET",
+        url: cors + APIurl.FFSS + 'partenze/' + stazioneid + '/' + date.full,
+        success: function (data) {
+            // alla prima risposta tolgo il loader
+            $('.loader').removeClass('show');
+            $('#stazioni').addClass('ready');
+            // do something with server response data
+            creastazione(stazioneid, data, infostazione);
+        },
+        error: function (err) {
+            $('.loader').removeClass('show');
+            html = "<div class='home'>";
+            if(err.status == 404) {
+                // fermata non raggiungibile
+                html+= '<p>La stazione richiesta <b>' + stazioneid + '</b> non è raggiungibile, controlla che il numero sia corretto prima di ricaricare la pagina</p>';
+            } else {
+                // errore generico
+                html+= '<p>Qualcosa è andato storto, prova a ricaricare e ad incrociare le dita. Giuro che di solito funziona!</p>';
+            }
+            html+= "</div>";
+            $('#home').append(html);
+            // handle your error logic here
+        }
+    });
+}
 
 function ora() {
-    let d = new Date();
-    let hr = d.getHours();
-    let min = d.getMinutes();
-    if (min < 10) {
-        min = "0" + min;
+    let date = {};
+    date.full = new Date();
+    date.hr = date.full.getHours();
+    date.min = date.full.getMinutes();
+    if (date.min < 10) {
+        date.min = "0" + date.min;
     }
-    let time = hr + ':' + min;
-    return time;
+
+    date.time = date.hr + ':' + date.min;
+    
+    return date;
 }
 
 function creafermata(id, info) {
@@ -130,6 +192,25 @@ function creafermata(id, info) {
             html+= "</div>"
         });
         $('.fermata[data-id=' + id + ']').append(html);
+    }
+}
+
+function creastazione(id, info, infostazione) {
+    console.log(info);
+    console.log(infostazione.localita.nomeBreve);
+    
+    if (info[0]) { // se c'e' almeno una linea
+        html = "<span class='stazione-title'>" + infostazione.localita.nomeBreve + "</span>";
+        info.forEach(function(linea) {
+            html+= "<div class='linea'>";
+            html+= "<span class='numero'>" + linea.categoria + ' ' +  linea.numeroTreno + "</span> - ";
+            html+= "<span class='direzione'>Direzione: " + linea.destinazione + "</span> - ";
+            html+= "<span class='orario'>" + linea.compOrarioPartenzaZeroEffettivo + "</span> - ";
+            html+= "<span class='orario'>Ritardo: " + linea.ritardo + " MIN</span> - ";
+            html+= "<span class='orario'>" + linea.compInStazionePartenza[0] + "</span>";
+            html+= "</div>"
+        });
+        $('.stazione[data-id=' + id + ']').append(html);
     }
 }
 
