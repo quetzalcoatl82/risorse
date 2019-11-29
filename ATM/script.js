@@ -3,6 +3,7 @@ let cors = 'https://cors-anywhere.herokuapp.com/';
 let url = 'https://giromilano.atm.it/proxy.ashx';
 let searchParams = new URLSearchParams(window.location.search);
 let fermate = [];
+let stazioni = [];
 
 if (searchParams.has('martina')) {
     // preimpostato per martina
@@ -13,8 +14,8 @@ if (searchParams.has('quetz')) {
     fermate.push(11175,11176,10890,10893);
 }
 if (searchParams.has('fermate')) {
-    // se ci sono le fermate specificate le tiro fuori
-    // filtro solo i numeri dalla query
+    // se ci sono delle fermate specificate le tiro fuori
+    // il formato delle fermate è di 5 numeri - filtro solo i numeri dalla query
     let filter = searchParams.get('fermate').split(',');
     filter = filter.map(el => {
         let n = parseInt(el);
@@ -25,10 +26,24 @@ if (searchParams.has('fermate')) {
     // unisco la query pulita alle eventuali fermate già raccolte
     fermate = fermate.concat(filter);
 }
+if (searchParams.has('stazioni')) {
+    // se ci sono delle stazioni specificate le tiro fuori
+    // il formato delle stazioni è questo - S01630
+    let filter = searchParams.get('stazioni').split(',');
+    filter = filter.filter(function (el) {
+        return el != '';
+    });
+    // unisco la query pulita alle eventuali fermate già raccolte
+    stazioni = stazioni.concat(filter);
+}
 
 fermate.sort((a, b) => a - b);
+stazioni.sort();
 
-if (fermate.length == 0) {
+console.log(fermate);
+console.log(stazioni);
+
+if (fermate.length == 0 && stazioni.length == 0) {
     // se dopo tutto sto giro non ci sono comunque fermate creo la home vuota
     html = "<div class='home'>";
         html+= "<h1>Fermate ATM</h1>";
@@ -42,11 +57,17 @@ if (fermate.length == 0) {
     $('.loader').addClass('show');
     // mi segno l'ora della chiamata
     let time = ora();
-    $('#fermate').attr("data-time",time);
     // se ci sono fermate le chiamo in ordine
-    fermate.forEach(function(element) {
-        chiamafermata(element, 'stops');
-    });
+    if (fermate) {
+        $('#fermate').attr("data-time",time);
+        fermate.forEach(function(element) {
+            chiamafermata(element, 'stops');
+        });
+    }
+    if (stazioni) {
+        $('#stazioni').attr("data-time",time);
+        console.log('stazioni');
+    }
 }
 
 function chiamafermata(fermataid, tipo) {
@@ -110,6 +131,10 @@ function creafermata(id, info) {
         });
         $('.fermata[data-id=' + id + ']').append(html);
     }
+}
+
+function chiamatreno(stazioneid) {
+    
 }
 
 // API Treni
