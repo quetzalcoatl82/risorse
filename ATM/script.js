@@ -9,6 +9,7 @@ let stazioni = [];
 if (searchParams.has('martina')) {
     // preimpostato per martina
     fermate.push(10204,10335,10337,10332,10326);
+    stazioni.push('S01630');
 }
 if (searchParams.has('quetz')) {
     // preimpostato per quetz
