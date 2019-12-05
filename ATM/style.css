@@ -19,9 +19,28 @@ h1,h2,h3,h4,h5,h6 {
     max-width: 600px;
     margin: 0 auto;
 }
+
 #stazioni,
 #fermate {
     position: relative;
+    width: 100%;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+thead tr {
+    border-bottom: 1px solid white;
+}
+td {
+    padding: 5px;
+    text-align: center;
+}
+th {
+    padding: 5px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 #stazioni.ready:before,
 #fermate.ready:before {
@@ -39,11 +58,11 @@ h1,h2,h3,h4,h5,h6 {
     background: #444;
     color: #FFF;
 }
-.stazione:not(:empty):before,
+/* .stazione:not(:empty):before,
 .fermata:not(:empty):before {
     content: attr(data-id) " - ";
     font-weight: 700;
-}
+} */
 .stazione:not(:empty) ~ .stazione:not(:empty),
 .fermata:not(:empty) ~ .fermata:not(:empty) {
     border-top: none;
@@ -51,22 +70,41 @@ h1,h2,h3,h4,h5,h6 {
 }
 .stazione-title,
 .fermata-title {
-    padding: 5px;
-    padding-top: 0;
-    padding-left: 0;
-    display: inline-block;
-    font-weight: 700;
-    text-transform: uppercase;
+ color: orange;
 }
 .linea {
-    padding: 5px;
     font-family: 'Codystar', cursive;
     font-weight: 700;
     background: #222;
     color: orange;
+    border-bottom: 1px solid #ffa50075;
 }
 .linea + .linea {
     padding-top: 0;
+}
+.linea:nth-child(even) {
+    background: #353535;
+}
+.fermata thead .numero {
+    width: 30px;
+}
+.fermata thead .orario {
+    width: 90px;
+}
+.stazione thead .numero {
+    width: 80px;
+}
+.stazione thead .orario {
+    width: 40px;
+}
+.stazione thead .ritardo {
+    width: 70px;
+}
+.stazione thead .stato {
+    width: 70px;
+}
+:not(th).direzione {
+    text-align: left;
 }
 
 

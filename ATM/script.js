@@ -80,7 +80,7 @@ function chiamafermata(fermataid, tipo) {
     let fd = new FormData();
     fd.append("url", "tpPortal/geodata/pois/" + tipo + "/" + fermataid);
     // creo i div per ospitare le fermate in ordine
-    html = "<div class='fermata' data-id='" + fermataid + "'></div>";
+    html = "<table class='fermata' data-id='" + fermataid + "'></table>";
     $('#fermate').append(html);
     $.ajax({
         type: "POST",
@@ -113,7 +113,7 @@ function chiamafermata(fermataid, tipo) {
     });
 }
 function chiamastazione(stazioneid, date) {
-    html = "<div class='stazione' data-id='" + stazioneid + "'></div>";
+    html = "<table class='stazione' data-id='" + stazioneid + "'></tables>";
     $('#stazioni').append(html);
     // http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/dettaglioStazione/S01700/1
     $.ajax({
@@ -184,35 +184,42 @@ function ora() {
 
 function creafermata(id, info) {
     if (info['Lines'][0]) { // se c'e' almeno una linea
-        html = "<span class='fermata-title'>" + info['Description'] + "</span>";
+        html = "<thead>";
+        html += "<th colspan='3' class='fermata-title'>" + id + " - " + info['Description'] + "</th>";
+        html += "<tr><th class='numero'>#</th><th class='direzione'>Direzione</th><th class='orario'>Orario</th></tr>";
+        html += "</thead>";
+        html += "<tbody>";
         info['Lines'].forEach(function(linea) {
-            html+= "<div class='linea'>";
-            html+= "<span class='numero'>" + linea['Line']['LineCode'] + "</span> - ";
-            html+= "<span class='direzione'>Direzione: " + linea['Line']['LineDescription'].split(" - ").pop() + "</span> - ";
-            html+= "<span class='orario'>" + linea['WaitMessage'] + "</span>";
-            html+= "</div>"
+            html+= "<tr class='linea'>";
+            html+= "<td class='numero'>" + linea['Line']['LineCode'] + "</td>";
+            html+= "<td class='direzione'>" + linea['Line']['LineDescription'].split(" - ").pop() + "</td>";
+            html+= "<td class='orario'>" + linea['WaitMessage'] + "</td>";
+            html+= "</tr>";
         });
+        html+= "</tbody>";
         $('.fermata[data-id=' + id + ']').append(html);
     }
 }
 
 function creastazione(id, info, infostazione) {
-    console.log(info);
-    console.log(infostazione.localita.nomeBreve);
-    
     if (info[0]) { // se c'e' almeno una linea
-        html = "<span class='stazione-title'>" + infostazione.localita.nomeBreve + "</span>";
+        html = "<thead>";
+        html += "<th colspan='6' class='stazione-title'>" + id + " - " + infostazione.localita.nomeBreve + "</th>";
+        html += "<tr><th class='numero'>#</th><th class='direzione'>Direzione</th><th class='orario'>Orario</th><th class='ritardo'>Ritardo</th><th class='stato'>Stato</th></tr>";
+        html += "</thead>";
+        html += "<tbody>";
         info.forEach(function(linea) {
-            html+= "<div class='linea'>";
-            html+= "<span class='numero'>" + linea.categoria + ' ' +  linea.numeroTreno + "</span> - ";
-            html+= "<span class='direzione'>Direzione: " + linea.destinazione + "</span> - ";
-            html+= "<span class='orario'>" + linea.compOrarioPartenzaZeroEffettivo + "</span> - ";
-            html+= "<span class='orario'>Ritardo: " + linea.ritardo + " MIN</span>";
-            if (linea.compInStazionePartenza[0].length) {
-                html+= " - <span class='orario'>" + linea.compInStazionePartenza[0] + "</span>";
-            }
-            html+= "</div>"
+            html+= "<tr class='linea'>";
+            html+= "<td class='numero'>" + linea.categoria + ' ' +  linea.numeroTreno + "</td>";
+            html+= "<td class='direzione'>" + linea.destinazione + "</td>";
+            html+= "<td class='orario'>" + linea.compOrarioPartenzaZeroEffettivo + "</td>";
+            html+= "<td class='ritardo'>" + linea.ritardo + " MIN</td>";
+            // if (linea.compInStazionePartenza[0].length) {
+                html+= "<td class='stato'>" + linea.compInStazionePartenza[0] + "</td>";
+            // }
+            html+= "</tr>";
         });
+        html+= "</tbody>";
         $('.stazione[data-id=' + id + ']').append(html);
     }
 }
