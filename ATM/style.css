@@ -19,9 +19,11 @@ h1,h2,h3,h4,h5,h6 {
     max-width: 600px;
     margin: 0 auto;
 }
+#stazioni,
 #fermate {
     position: relative;
 }
+#stazioni.ready:before,
 #fermate.ready:before {
     content: attr(data-time);
     position: absolute;
@@ -30,20 +32,24 @@ h1,h2,h3,h4,h5,h6 {
     font-weight: 700;
     top: 10px;
 }
+.stazione:not(:empty),
 .fermata:not(:empty) {
     border: 5px solid #444;
     padding: 5px;
     background: #444;
     color: #FFF;
 }
+.stazione:not(:empty):before,
 .fermata:not(:empty):before {
     content: attr(data-id) " - ";
     font-weight: 700;
 }
+.stazione:not(:empty) ~ .stazione:not(:empty),
 .fermata:not(:empty) ~ .fermata:not(:empty) {
     border-top: none;
     padding-top: 0;
 }
+.stazione-title,
 .fermata-title {
     padding: 5px;
     padding-top: 0;

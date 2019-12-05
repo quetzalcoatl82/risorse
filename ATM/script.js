@@ -207,8 +207,10 @@ function creastazione(id, info, infostazione) {
             html+= "<span class='numero'>" + linea.categoria + ' ' +  linea.numeroTreno + "</span> - ";
             html+= "<span class='direzione'>Direzione: " + linea.destinazione + "</span> - ";
             html+= "<span class='orario'>" + linea.compOrarioPartenzaZeroEffettivo + "</span> - ";
-            html+= "<span class='orario'>Ritardo: " + linea.ritardo + " MIN</span> - ";
-            html+= "<span class='orario'>" + linea.compInStazionePartenza[0] + "</span>";
+            html+= "<span class='orario'>Ritardo: " + linea.ritardo + " MIN</span>";
+            if (linea.compInStazionePartenza[0].length) {
+                html+= " - <span class='orario'>" + linea.compInStazionePartenza[0] + "</span>";
+            }
             html+= "</div>"
         });
         $('.stazione[data-id=' + id + ']').append(html);
