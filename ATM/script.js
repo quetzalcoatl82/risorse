@@ -90,11 +90,16 @@ function chiamafermata(fermataid, tipo) {
         processData: false,
         data: fd,
         success: function (data) {
-            // alla prima risposta tolgo il loader
-            $('.loader').removeClass('show');
-            $('#fermate').addClass('ready');
-            // do something with server response data
-            creafermata(fermataid, data);
+            console.log(data['Lines'].length);
+            if (data['Lines'].length > 0) {
+                console.log('ci stanno le linee');
+                // alla prima risposta tolgo il loader
+                $('.loader').removeClass('show');
+                $('#fermate').addClass('ready');
+                // do something with server response data
+                creafermata(fermataid, data);
+            }
+
         },
         error: function (err) {
             $('.loader').removeClass('show');
@@ -145,11 +150,15 @@ function chiamapartenze(stazioneid, date, infostazione) {
         type: "GET",
         url: cors + APIurl.FFSS + 'partenze/' + stazioneid + '/' + date.full,
         success: function (data) {
-            // alla prima risposta tolgo il loader
-            $('.loader').removeClass('show');
-            $('#stazioni').addClass('ready');
-            // do something with server response data
-            creastazione(stazioneid, data, infostazione);
+            console.log(data);
+            if (data.length > 0) {
+                // alla prima risposta tolgo il loader
+                $('.loader').removeClass('show');
+                $('#stazioni').addClass('ready');
+                // do something with server response data
+                creastazione(stazioneid, data, infostazione);
+            }
+
         },
         error: function (err) {
             $('.loader').removeClass('show');
@@ -183,22 +192,20 @@ function ora() {
 }
 
 function creafermata(id, info) {
-    if (info['Lines'][0]) { // se c'e' almeno una linea
-        html = "<thead>";
-        html += "<th colspan='3' class='fermata-title'>" + id + " - " + info['Description'] + "</th>";
-        html += "<tr><th class='numero'>#</th><th class='direzione'>Direzione</th><th class='orario'>Orario</th></tr>";
-        html += "</thead>";
-        html += "<tbody>";
-        info['Lines'].forEach(function(linea) {
-            html+= "<tr class='linea'>";
-            html+= "<td class='numero'>" + linea['Line']['LineCode'] + "</td>";
-            html+= "<td class='direzione'>" + linea['Line']['LineDescription'].split(" - ").pop() + "</td>";
-            html+= "<td class='orario'>" + linea['WaitMessage'] + "</td>";
-            html+= "</tr>";
-        });
-        html+= "</tbody>";
-        $('.fermata[data-id=' + id + ']').append(html);
-    }
+    html = "<thead>";
+    html += "<th colspan='3' class='fermata-title'>" + id + " - " + info['Description'] + "</th>";
+    html += "<tr><th class='numero'>#</th><th class='direzione'>Direzione</th><th class='orario'>Orario</th></tr>";
+    html += "</thead>";
+    html += "<tbody>";
+    info['Lines'].forEach(function(linea) {
+        html+= "<tr class='linea'>";
+        html+= "<td class='numero'>" + linea['Line']['LineCode'] + "</td>";
+        html+= "<td class='direzione'>" + linea['Line']['LineDescription'].split(" - ").pop() + "</td>";
+        html+= "<td class='orario'>" + linea['WaitMessage'] + "</td>";
+        html+= "</tr>";
+    });
+    html+= "</tbody>";
+    $('.fermata[data-id=' + id + ']').append(html);
 }
 
 function creastazione(id, info, infostazione) {
