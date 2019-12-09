@@ -5,6 +5,7 @@ let APIurl = {};
 let searchParams = new URLSearchParams(window.location.search);
 let fermate = [];
 let stazioni = [];
+let stazioniobj = {};
 
 if (searchParams.has('martina')) {
     // preimpostato per martina
@@ -32,9 +33,11 @@ if (searchParams.has('stazioni')) {
     // se ci sono delle stazioni specificate le tiro fuori
     // il formato delle stazioni è questo - S01630
     let filter = searchParams.get('stazioni').split(',');
+    
     filter = filter.filter(function (el) {
         return el != '';
     });
+
     // unisco la query pulita alle eventuali fermate già raccolte
     stazioni = stazioni.concat(filter);
 }
@@ -68,9 +71,16 @@ if (fermate.length == 0 && stazioni.length == 0) {
     }
     if (stazioni) {
         $('#stazioni').attr("data-time",time.time);
-        console.log('stazioni');
         stazioni.forEach(function(stazione) {
-            chiamastazione(stazione, time);
+            if (stazione.includes(":")) {
+                var stazionefiltro = stazione.split(":").pop();
+                stazione = stazione.split(":").shift();
+                console.log(stazione);
+                console.log(stazionefiltro);
+                
+
+            }
+            chiamastazione(stazione, time, stazionefiltro);
         });
     }
 }
@@ -90,9 +100,7 @@ function chiamafermata(fermataid, tipo) {
         processData: false,
         data: fd,
         success: function (data) {
-            console.log(data['Lines'].length);
             if (data['Lines'].length > 0) {
-                console.log('ci stanno le linee');
                 // alla prima risposta tolgo il loader
                 $('.loader').removeClass('show');
                 $('#fermate').addClass('ready');
@@ -117,7 +125,7 @@ function chiamafermata(fermataid, tipo) {
         }
     });
 }
-function chiamastazione(stazioneid, date) {
+function chiamastazione(stazioneid, date, filtro) {
     html = "<table class='stazione' data-id='" + stazioneid + "'></tables>";
     $('#stazioni').append(html);
     // http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/dettaglioStazione/S01700/1
@@ -126,8 +134,7 @@ function chiamastazione(stazioneid, date) {
         url: cors + APIurl.FFSS + 'dettaglioStazione/' + stazioneid + '/1',
         success: function (data) {
             // do something with server response data
-            chiamapartenze(stazioneid, date, data);
-            console.log(data);
+            chiamapartenze(stazioneid, date, data, filtro);
         },
         error: function (err) {
             $('.loader').removeClass('show');
@@ -145,20 +152,18 @@ function chiamastazione(stazioneid, date) {
         }
     });
 }
-function chiamapartenze(stazioneid, date, infostazione) {
+function chiamapartenze(stazioneid, date, infostazione, filtro) {
     $.ajax({
         type: "GET",
         url: cors + APIurl.FFSS + 'partenze/' + stazioneid + '/' + date.full,
         success: function (data) {
-            console.log(data);
             if (data.length > 0) {
                 // alla prima risposta tolgo il loader
                 $('.loader').removeClass('show');
                 $('#stazioni').addClass('ready');
                 // do something with server response data
-                creastazione(stazioneid, data, infostazione);
+                creastazione(stazioneid, data, infostazione, filtro);
             }
-
         },
         error: function (err) {
             $('.loader').removeClass('show');
@@ -208,7 +213,7 @@ function creafermata(id, info) {
     $('.fermata[data-id=' + id + ']').append(html);
 }
 
-function creastazione(id, info, infostazione) {
+function creastazione(id, info, infostazione, filtro) {
     if (info[0]) { // se c'e' almeno una linea
         html = "<thead>";
         html += "<th colspan='6' class='stazione-title'>" + id + " - " + infostazione.localita.nomeBreve + "</th>";
@@ -216,15 +221,15 @@ function creastazione(id, info, infostazione) {
         html += "</thead>";
         html += "<tbody>";
         info.forEach(function(linea) {
-            html+= "<tr class='linea'>";
-            html+= "<td class='numero'>" + linea.categoria + ' ' +  linea.numeroTreno + "</td>";
-            html+= "<td class='direzione'>" + linea.destinazione + "</td>";
-            html+= "<td class='orario'>" + linea.compOrarioPartenzaZeroEffettivo + "</td>";
-            html+= "<td class='ritardo'>" + linea.ritardo + " MIN</td>";
-            // if (linea.compInStazionePartenza[0].length) {
+            if (linea.destinazione.includes(filtro)) {
+                html+= "<tr class='linea'>";
+                html+= "<td class='numero'>" + linea.categoria + ' ' +  linea.numeroTreno + "</td>";
+                html+= "<td class='direzione'>" + linea.destinazione + "</td>";
+                html+= "<td class='orario'>" + linea.compOrarioPartenzaZeroEffettivo + "</td>";
+                html+= "<td class='ritardo'>" + linea.ritardo + " MIN</td>";
                 html+= "<td class='stato'>" + linea.compInStazionePartenza[0] + "</td>";
-            // }
-            html+= "</tr>";
+                html+= "</tr>";
+            }
         });
         html+= "</tbody>";
         $('.stazione[data-id=' + id + ']').append(html);
