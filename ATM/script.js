@@ -1,11 +1,10 @@
-let cors = 'https://cors-anywhere.herokuapp.com/';
-let APIurl = {};
+const cors = 'https://cors-anywhere.herokuapp.com/';
+var APIurl = {};
     APIurl.ATM = 'https://giromilano.atm.it/proxy.ashx';
     APIurl.FFSS = 'http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/';
-let searchParams = new URLSearchParams(window.location.search);
-let fermate = [];
-let stazioni = [];
-let stazioniobj = {};
+var searchParams = new URLSearchParams(window.location.search);
+var fermate = [];
+var stazioni = [];
 
 if (searchParams.has('martina')) {
     // preimpostato per martina
