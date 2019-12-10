@@ -18,8 +18,15 @@ h1,h2,h3,h4,h5,h6 {
 .container {
     max-width: 600px;
     margin: 0 auto;
+    margin-bottom: 20px;
 }
-
+blockquote {
+    border: 1px solid orange;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 20px;
+    background: #FFFFFF20;
+}
 #stazioni,
 #fermate {
     position: relative;

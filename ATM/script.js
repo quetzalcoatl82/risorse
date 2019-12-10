@@ -15,6 +15,7 @@ if (searchParams.has('martina')) {
 if (searchParams.has('quetz')) {
     // preimpostato per quetz
     fermate.push(11175,11176,10890,10893);
+    //stazioni.push('S01630:saronno');
 }
 if (searchParams.has('fermate')) {
     // se ci sono delle fermate specificate le tiro fuori
@@ -45,16 +46,23 @@ if (searchParams.has('stazioni')) {
 fermate.sort((a, b) => a - b);
 stazioni.sort();
 
-console.log(fermate);
-console.log(stazioni);
+// console.log(fermate);
+// console.log(stazioni);
 
 if (fermate.length == 0 && stazioni.length == 0) {
     // se dopo tutto sto giro non ci sono comunque fermate e stazioni creo la home vuota
     html = "<div class='home'>";
-        html+= "<h1>Fermate ATM</h1>";
-        html+= "<h2>Come funziona</h2>";
-        html+= '<p>Questo tool serve a recuperare i tempi di attesa nelle fermate specificate, per usarlo basta inserire nella url le fermate richieste usando la stringa "?fermate=10000,20000,30000" sostituendo i numeri con le fermate preferite, sempre separate da una virgola come questo link di esempio:</p>';
+        html+= "<h1>Recupero orari bus, tram e treni</h1>";
+        html+= "<h2>Come funziona per le fermate ATM</h2>";
+        html+= '<p>Questo tool serve a recuperare i tempi di attesa delle fermate ATM specificate, per usarlo basta inserire nella url le fermate richieste usando la stringa "?fermate=10000,20000,30000" sostituendo i numeri con le fermate preferite, sempre separate da una virgola come questo link di esempio:</p>';
         html+= '<p><a href="?fermate=14187,14188">?fermate=14187,14188</a></p>';
+        html+= '<blockquote>Il codice per le fermate ATM è sempre mostrato sulle banchine e sulle fermate, le metro non sono incluse</blockquote>';
+        html+= "<h2>Come funziona per le stazioni Trenitalia e Trenord</h2>";
+        html+= '<p>È possibile anche visualizzare il tabellone dei treni in partenza per le stazioni Trenitalia e Trenord, inserendo il codice univoco nella url usando questa stringa "?stazioni=10000,20000,30000", si possono filtrare ulteriormente i risultati inserendo la destinazione preferita dopo il codice della stazione in questo modo "?stazioni=10000:roma,20000:torino,30000":</p>';
+        html+= '<p><a href="?stazioni=S01630,S01700:torino">?stazioni=S01630,S01700:torino</a></p>';
+        html+= '<p>Ovviamente le due informazioni possono essere unite nella url usando il carattere & in questo modo "?fermate=10000,20000&stazioni=10000:roma,20000:torino,30000": </p>';
+        html+= '<p><a href="?fermate=14187,14188&stazioni=S01630,S01700:torino">?fermate=14187,14188&stazioni=S01630,S01700:torino</a></p>';
+        html+= '<blockquote>Il codice per le stazioni dei treni può essere recuperato <a target="_blank" href="https://github.com/sabas/trenitalia/blob/master/stazioni.tsv">in questo documento</a></blockquote>';
     html+= "</div>";
     $('#home').append(html);
 } else {
@@ -75,10 +83,6 @@ if (fermate.length == 0 && stazioni.length == 0) {
             if (stazione.includes(":")) {
                 var stazionefiltro = stazione.split(":").pop();
                 stazione = stazione.split(":").shift();
-                console.log(stazione);
-                console.log(stazionefiltro);
-                
-
             }
             chiamastazione(stazione, time, stazionefiltro);
         });
@@ -221,7 +225,13 @@ function creastazione(id, info, infostazione, filtro) {
         html += "</thead>";
         html += "<tbody>";
         info.forEach(function(linea) {
-            if (linea.destinazione.includes(filtro)) {
+
+            if (!filtro) {
+                // scrivo un filtro vuoto se è undefined
+                filtro = '';
+            }
+
+            if (linea.destinazione.includes(filtro.toUpperCase())) {
                 html+= "<tr class='linea'>";
                 html+= "<td class='numero'>" + linea.categoria + ' ' +  linea.numeroTreno + "</td>";
                 html+= "<td class='direzione'>" + linea.destinazione + "</td>";
