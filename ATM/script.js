@@ -56,13 +56,13 @@ if (fermate.length == 0 && stazioni.length == 0) {
         html+= "<h2>Come funziona per le fermate ATM</h2>";
         html+= '<p>Questo tool serve a recuperare i tempi di attesa delle fermate ATM specificate, per usarlo basta inserire nella url le fermate richieste usando la stringa "<strong>?fermate=10000,20000,30000</strong>" sostituendo i numeri con le fermate preferite, sempre separate da una virgola come questo link di esempio:</p>';
         html+= '<p><strong><a href="?fermate=14187,14188">?fermate=14187,14188</a></strong></p>';
-        html+= '<blockquote>Il codice per le fermate ATM è sempre mostrato sulle banchine e sulle fermate, le metro non sono incluse</blockquote>';
+        html+= '<blockquote>Il codice per le fermate ATM è di cinque cifre ed è sempre mostrato sulle banchine e sulle fermate, le metro non sono incluse</blockquote>';
         html+= "<h2>Come funziona per le stazioni Trenitalia e Trenord</h2>";
-        html+= '<p>È possibile anche visualizzare il tabellone dei treni in partenza per le stazioni Trenitalia e Trenord, inserendo il codice univoco nella url usando questa stringa "<strong>?stazioni=10000,20000,30000</strong>", si possono filtrare ulteriormente i risultati inserendo le destinazioni preferite dopo i due punti, separate da punto e virgola dopo il codice della stazione in questo modo "<strong>?stazioni=10000:roma,20000:torino;parma,30000</strong>":</p>';
+        html+= '<p>È possibile anche visualizzare il tabellone dei treni in partenza per le stazioni Trenitalia e Trenord, inserendo il codice univoco nella url usando questa stringa "<strong>?stazioni=S10000,S20000,S30000</strong>", si possono filtrare i risultati inserendo le destinazioni preferite dopo il codice stazione usando i due punti, gli ulteriori filtri aggiuntivi vanno separati dal punto e virgola "<strong>?stazioni=S10000:roma,S20000:torino;parma,S30000</strong>":</p>';
         html+= '<p><strong><a href="?stazioni=S01630:saronno,S01700:torino;roma">?stazioni=S01630:saronno,S01700:torino;roma</a></strong></p>';
-        html+= '<p>Ovviamente le due informazioni possono essere unite nella url usando il carattere & in questo modo "<strong>?fermate=10000,20000&stazioni=10000:roma;bologna,20000:torino,30000</strong>": </p>';
+        html+= '<p>Ovviamente le due informazioni possono essere unite nella url usando il carattere <strong>&</strong> in modo da separare fermate e stazioni: "<strong>?fermate=10000,20000&stazioni=S10000:roma;bologna,S20000:torino,S30000</strong>": </p>';
         html+= '<p><strong><a href="?fermate=14187,14188&stazioni=S01630,S01700:torino;roma">?fermate=14187,14188&stazioni=S01630,S01700:torino;roma</a></strong></p>';
-        html+= '<blockquote>Il codice per le stazioni dei treni può essere recuperato <a target="_blank" href="https://github.com/sabas/trenitalia/blob/master/stazioni.tsv">in questo documento</a></blockquote>';
+        html+= '<blockquote>Il codice per le stazioni dei treni inizia sempre con una lettera (S o N) seguita da 5 cifre e può essere recuperato <a target="_blank" href="https://github.com/sabas/trenitalia/blob/master/stazioni.tsv">in questo documento</a></blockquote>';
     html+= "</div>";
     $('#home').append(html);
 } else {
