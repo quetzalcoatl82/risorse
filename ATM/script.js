@@ -49,7 +49,7 @@ stazioni.sort();
 // console.log(stazioni);
 
 if (fermate.length == 0 && stazioni.length == 0) {
-    // se dopo tutto sto giro non ci sono comunque fermate e stazioni creo la home vuota
+    // se dopo tutto sto giro non ci sono comunque fermate e stazioni creo la home con le info
     html = "<div class='home'>";
         html+= "<h1>Recupero orari bus, tram e treni</h1>";
         html+= "<div class='bg'><img class='tram-albero' src='img/albero.svg'><img class='tram-banchina' src='img/banchina.svg'><div class='tram-strada'></div><div class='tram'><img class='tram-body vibrate-1' src='img/tram-body.svg'><img class='tram-bg' src='img/tram-bg.svg'></div><div class='tram-filo'></div><img class='tram-albero front' src='img/albero.svg'><div class='tram-erba front'></div></div>";
@@ -58,10 +58,10 @@ if (fermate.length == 0 && stazioni.length == 0) {
         html+= '<p><a href="?fermate=14187,14188">?fermate=14187,14188</a></p>';
         html+= '<blockquote>Il codice per le fermate ATM è sempre mostrato sulle banchine e sulle fermate, le metro non sono incluse</blockquote>';
         html+= "<h2>Come funziona per le stazioni Trenitalia e Trenord</h2>";
-        html+= '<p>È possibile anche visualizzare il tabellone dei treni in partenza per le stazioni Trenitalia e Trenord, inserendo il codice univoco nella url usando questa stringa "?stazioni=10000,20000,30000", si possono filtrare ulteriormente i risultati inserendo la destinazione preferita dopo il codice della stazione in questo modo "?stazioni=10000:roma,20000:torino,30000":</p>';
-        html+= '<p><a href="?stazioni=S01630,S01700:torino">?stazioni=S01630,S01700:torino</a></p>';
+        html+= '<p>È possibile anche visualizzare il tabellone dei treni in partenza per le stazioni Trenitalia e Trenord, inserendo il codice univoco nella url usando questa stringa "?stazioni=10000,20000,30000", si possono filtrare ulteriormente i risultati inserendo le destinazioni preferite dopo i due punti, separate da punto e virgola dopo il codice della stazione in questo modo "?stazioni=10000:roma,20000:torino;parma,30000":</p>';
+        html+= '<p><a href="?stazioni=S01630:saronno,S01700:torino;roma">?stazioni=S01630:saronno,S01700:torino;roma</a></p>';
         html+= '<p>Ovviamente le due informazioni possono essere unite nella url usando il carattere & in questo modo "?fermate=10000,20000&stazioni=10000:roma,20000:torino,30000": </p>';
-        html+= '<p><a href="?fermate=14187,14188&stazioni=S01630,S01700:torino">?fermate=14187,14188&stazioni=S01630,S01700:torino</a></p>';
+        html+= '<p><a href="?fermate=14187,14188&stazioni=S01630,S01700:torino;roma">?fermate=14187,14188&stazioni=S01630,S01700:torino;roma</a></p>';
         html+= '<blockquote>Il codice per le stazioni dei treni può essere recuperato <a target="_blank" href="https://github.com/sabas/trenitalia/blob/master/stazioni.tsv">in questo documento</a></blockquote>';
     html+= "</div>";
     $('#home').append(html);
@@ -80,8 +80,10 @@ if (fermate.length == 0 && stazioni.length == 0) {
     if (stazioni) {
         $('#stazioni').attr("data-time",time.time);
         stazioni.forEach(function(stazione) {
+            let stazionefiltro = [];
             if (stazione.includes(":")) {
-                var stazionefiltro = stazione.split(":").pop();
+                let stazionefiltrostr = stazione.split(":").pop();
+                stazionefiltro = stazionefiltrostr.split(";");
                 stazione = stazione.split(":").shift();
             }
             chiamastazione(stazione, time, stazionefiltro);
@@ -225,13 +227,9 @@ function creastazione(id, info, infostazione, filtro) {
         html += "</thead>";
         html += "<tbody>";
         info.forEach(function(linea) {
-
-            if (!filtro) {
-                // scrivo un filtro vuoto se è undefined
-                filtro = '';
-            }
-
-            if (linea.destinazione.includes(filtro.toUpperCase())) {
+            if (filtro.length == 0 || filtro.some(filtrino=>linea.destinazione.includes(filtrino.toUpperCase()))) {
+            // se non ci sono filtri o se il filtro corrisponde entriamo dentro e stampiamo il treno
+            // if (linea.destinazione.includes(filtro.toUpperCase())) {
                 html+= "<tr class='linea'>";
                 html+= "<td class='numero'>" + linea.categoria + ' ' +  linea.numeroTreno + "</td>";
                 html+= "<td class='direzione'>" + linea.destinazione + "</td>";
