@@ -52,6 +52,7 @@ if (fermate.length == 0 && stazioni.length == 0) {
     // se dopo tutto sto giro non ci sono comunque fermate e stazioni creo la home vuota
     html = "<div class='home'>";
         html+= "<h1>Recupero orari bus, tram e treni</h1>";
+        html+= "<div class='bg'><img class='tram-albero' src='img/albero.svg'><img class='tram-banchina' src='img/banchina.svg'><div class='tram-strada'></div><div class='tram'><img class='tram-body vibrate-1' src='img/tram-body.svg'><img class='tram-bg' src='img/tram-bg.svg'></div><div class='tram-filo'></div><img class='tram-albero front' src='img/albero.svg'><div class='tram-erba front'></div></div>";
         html+= "<h2>Come funziona per le fermate ATM</h2>";
         html+= '<p>Questo tool serve a recuperare i tempi di attesa delle fermate ATM specificate, per usarlo basta inserire nella url le fermate richieste usando la stringa "?fermate=10000,20000,30000" sostituendo i numeri con le fermate preferite, sempre separate da una virgola come questo link di esempio:</p>';
         html+= '<p><a href="?fermate=14187,14188">?fermate=14187,14188</a></p>';

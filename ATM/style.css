@@ -120,7 +120,7 @@ th {
     text-align: left;
 }
 .bg {
-    background-color: aqua;
+    background-color: #9dffff;
     width: 100%;
     padding-bottom: 60%;
     height: 0;
@@ -151,15 +151,37 @@ th {
     right: -100%;
     animation: move-away 3.7s linear infinite;
 }
+.tram-albero.front {
+    width: 25%;
+    bottom: 13%;
+    animation: move-away 3.5s linear infinite;
+}
+.tram-erba {
+    background-image: url("img/erba.svg");
+    position: absolute;
+    bottom: 17%;
+    width: 20%;
+    right: -100%;
+    animation: move-away 3.7s linear infinite;
+}
+.tram-strada {
+    display: block;
+    background-color: #bcbcbd;
+    position: absolute;
+    bottom: 0;
+    height: 16.5%;
+    width: 100%;
+    border-top: 7px double #99999c;
+}
 .tram-filo {
     position: absolute;
     bottom: 63%;
     width: 100%;
     display: block;
     height: 1%;
-    background-color: black;
+    background-color: #5d5d5d;
 }
-.newloader {
+.noloader {
     display: none;
 }
 
