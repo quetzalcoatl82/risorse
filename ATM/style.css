@@ -125,19 +125,42 @@ th {
     padding-bottom: 60%;
     height: 0;
     position: relative;
+    overflow: hidden;
 }
 .tram {
     position: absolute;
     width: 65%;
-    bottom: 50px;
+    bottom: 15%;
     left: 50%;
     transform: translateX(-50%);
 }
 .tram .tram-body {
     position: absolute;
 }
+.tram-banchina {
+    position: absolute;
+    bottom: 17%;
+    width: 80%;
+    right: -100%;
+    animation: move-away 15s linear infinite;
+}
+.tram-albero {
+    position: absolute;
+    bottom: 17%;
+    width: 20%;
+    right: -100%;
+    animation: move-away 3.7s linear infinite;
+}
+.tram-filo {
+    position: absolute;
+    bottom: 63%;
+    width: 100%;
+    display: block;
+    height: 1%;
+    background-color: black;
+}
 .newloader {
-    display: none;
+    /* display: none; */
 }
 
 
@@ -285,6 +308,18 @@ th {
     100% {
       -webkit-transform: translate(0);
               transform: translate(0);
+    }
+  }
+
+
+  @keyframes move-away {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+    100% {
+        -webkit-transform: translateX(-1000%);
+        transform: translateX(-1000%);
     }
   }
   
