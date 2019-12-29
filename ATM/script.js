@@ -251,3 +251,4 @@ function chiamatreno(stazioneid) {
 // API Treni
 // http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/partenze/S01630/Mon%20Nov%2025%202019%2023:04:42%20GMT+0100%20(Ora%20standard%20dell%E2%80%99Europa%20centrale)
 // http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/partenze/S01630/Mon Nov 25 2019 23:14:42 GMT+0100 (Ora standard dell%E2%80%99Europa centrale)
+// http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/partenze/S01630/Tue Dec 17 2019 15:36:42 GMT+0100 (Ora standard dell'Europa centrale)
