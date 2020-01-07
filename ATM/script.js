@@ -8,12 +8,12 @@ var stazioni = [];
 
 if (searchParams.has('martina')) {
     // preimpostato per martina
-    fermate.push(10204,10335,10337,10332,10326);
+    fermate.push(10335,10332,10326);
     stazioni.push('S01630');
 }
 if (searchParams.has('quetz')) {
     // preimpostato per quetz
-    fermate.push(11175,11176,10890,10893);
+    fermate.push(11175,11176,10890,10893,10887);
     //stazioni.push('S01630:saronno');
 }
 if (searchParams.has('fermate')) {
