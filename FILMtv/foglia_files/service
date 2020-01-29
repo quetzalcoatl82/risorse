@@ -1,6 +1,0 @@
-var ADX_label = "adx_Entertainment,movies,science_fiction_movies,arte_e_intrattenimento,cinema,film";
-var ADX_lemmas = "film,poster,regia,trama";
-var ADX_people = "Dominique_McElligott,Duncan_Jones,Kevin_Spacey,Matt_Berry,Robin_Chalk,Sam_Bell,Sam_Rockwell,Selene";
-var ADX_companies = "Lunar_Industries_Ltd,Tennessee_Titans";
-var ADX_places = "";
-var ADX_categories = "movies,science_fiction_movies";
