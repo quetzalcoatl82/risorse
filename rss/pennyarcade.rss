@@ -1,21 +1,20 @@
-<rss>
-  <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-    <channel>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rss version="2.0">
+  <channel>
+    <title>Comic: A Wall Three Dollars High</title>
+    <link>https://www.penny-arcade.com/comic/2020/02/17</link>
+    <description>New Comic: A Wall Three Dollars High</description>
+    <atom:link/>
+    <language>en-us</language>
+    <copyright>Penny Arcade</copyright>
+    <lastBuildDate>2020-02-17T16:01:00.000Z</lastBuildDate>
+    <item>
       <title>Comic: A Wall Three Dollars High</title>
       <link>https://www.penny-arcade.com/comic/2020/02/17</link>
-      <description>New Comic: A Wall Three Dollars High</description>
-      <atom:link rel="self"/>
-      <language>en-us</language>
-      <copyright>Copyright (c) 1998-2020 Penny Arcade, Inc.</copyright>
-      <lastBuildDate>2020-02-17T16:01:00.000Z</lastBuildDate>
-      <item>
-        <title>Comic: A Wall Three Dollars High</title>
-        <link>https://www.penny-arcade.com/comic/2020/02/17</link>
-        <description>&lt;img src="https://assets.penny-arcade.com/comics/q5tc17-W9NvVInGc.jpg" title="A Wall Three Dollars High"&gt;</description>
-        <author>Gabe@penny-arcade.com (Gabe)</author>
-        <pubDate>Mon, 17 Feb 2020 08:01:00 PST</pubDate>
-        <guid>/comic/2020/02/17/a-wall-three-dollars-high</guid>
-      </item>
-    </channel>
-  </rss>
-</rss>
+      <description>&lt;img src="https://assets.penny-arcade.com/comics/q5tc17-W9NvVInGc.jpg" alt="A Wall Three Dollars High" title="A Wall Three Dollars High"&gt;</description>
+      <author>Gabe@penny-arcade.com (Gabe)</author>
+      <pubDate>Mon, 17 Feb 2020 08:01:00 PST</pubDate>
+      <guid>/comic/2020/02/17/a-wall-three-dollars-high</guid>
+    </item>
+  </channel>
+</rss version="2.0">
