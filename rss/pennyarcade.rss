@@ -7,5 +7,45 @@
     <atom:link/>
     <language>en-us</language>
     <copyright>Penny Arcade</copyright>
+    <item>
+      <title>Comic: Who Put The Braum In The Braum Ba Braum Ba Braum</title>
+      <link>https://www.penny-arcade.com/comic/2020/02/07</link>
+      <description>&lt;![CDATA[&lt;img src="https://assets.penny-arcade.com/comics/q5avs1-MpqFow0Lc.jpg"&gt;]]&gt;</description>
+      <author>Tycho@penny-arcade.com (Tycho)</author>
+      <pubDate>2020-02-07T16:01:00.000Z</pubDate>
+      <guid isPermaLink="true">https://www.penny-arcade.com/comic/2020/02/07</guid>
+    </item>
+    <item>
+      <title>Comic: Coin Toss</title>
+      <link>https://www.penny-arcade.com/comic/2020/02/10</link>
+      <description>&lt;![CDATA[&lt;img src="https://assets.penny-arcade.com/comics/q5gfur-j3owevoBc.jpg"&gt;]]&gt;</description>
+      <author>Gabe@penny-arcade.com (Gabe)</author>
+      <pubDate>2020-02-10T16:01:00.000Z</pubDate>
+      <guid isPermaLink="true">https://www.penny-arcade.com/comic/2020/02/10</guid>
+    </item>
+    <item>
+      <title>Comic: Nominator</title>
+      <link>https://www.penny-arcade.com/comic/2020/02/12</link>
+      <description>&lt;![CDATA[&lt;img src="https://assets.penny-arcade.com/comics/q5k7nn-l3beIyKxc.jpg"&gt;]]&gt;</description>
+      <author>Tycho@penny-arcade.com (Tycho)</author>
+      <pubDate>2020-02-12T16:01:00.000Z</pubDate>
+      <guid isPermaLink="true">https://www.penny-arcade.com/comic/2020/02/12</guid>
+    </item>
+    <item>
+      <title>Comic: Hmmmmm</title>
+      <link>https://www.penny-arcade.com/comic/2020/02/14</link>
+      <description>&lt;![CDATA[&lt;img src="https://assets.penny-arcade.com/comics/q5nwcx-6TsFn4cwc.jpg"&gt;]]&gt;</description>
+      <author>Gabe@penny-arcade.com (Gabe)</author>
+      <pubDate>2020-02-14T16:01:00.000Z</pubDate>
+      <guid isPermaLink="true">https://www.penny-arcade.com/comic/2020/02/14</guid>
+    </item>
+    <item>
+      <title>Comic: A Wall Three Dollars High</title>
+      <link>https://www.penny-arcade.com/comic/2020/02/17</link>
+      <description>&lt;![CDATA[&lt;img src="https://assets.penny-arcade.com/comics/q5tc17-W9NvVInGc.jpg"&gt;]]&gt;</description>
+      <author>Gabe@penny-arcade.com (Gabe)</author>
+      <pubDate>2020-02-17T16:01:00.000Z</pubDate>
+      <guid isPermaLink="true">https://www.penny-arcade.com/comic/2020/02/17</guid>
+    </item>
   </channel>
 </rss>
