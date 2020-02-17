@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <rss>
   <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
@@ -12,7 +11,7 @@
       <item>
         <title>Comic: A Wall Three Dollars High</title>
         <link>https://www.penny-arcade.com/comic/2020/02/17</link>
-        <description>&lt;img src=""&gt;</description>
+        <description>&lt;img src="https://assets.penny-arcade.com/comics/q5tc17-W9NvVInGc.jpg" title="A Wall Three Dollars High"&gt;</description>
         <author>Gabe@penny-arcade.com (Gabe)</author>
         <pubDate>Mon, 17 Feb 2020 08:01:00 PST</pubDate>
         <guid>/comic/2020/02/17/a-wall-three-dollars-high</guid>
