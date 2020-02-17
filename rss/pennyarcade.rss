@@ -7,17 +7,5 @@
     <atom:link/>
     <language>en-us</language>
     <copyright>Penny Arcade</copyright>
-    <item>
-      <title>Comic: A Wall Three Dollars High</title>
-      <author>Gabe</author>
-      <url>https://www.penny-arcade.com/comic/2020/02/17</url>
-      <attrs>
-        <src>https://assets.penny-arcade.com/comics/q5tc17-W9NvVInGc.jpg</src>
-        <alt>A Wall Three Dollars High</alt>
-        <width>1050</width>
-      </attrs>
-      <summary>New Comic: A Wall Three Dollars High</summary>
-      <dateUpdated/>
-    </item>
   </channel>
 </rss>
