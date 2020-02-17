@@ -7,17 +7,16 @@
     <atom:link/>
     <language>en-us</language>
     <copyright>Penny Arcade</copyright>
-    <lastBuildDate>2020-02-17T16:01:00.000Z</lastBuildDate>
     <item>
-      <title>Comic: A Wall Three Dollars High</title>
-      <author>Gabe</author>
-      <url>https://www.penny-arcade.com/comic/2020/02/17</url>
+      <title>Comic: Who Put The Braum In The Braum Ba Braum Ba Braum</title>
+      <author>Tycho</author>
+      <url>https://www.penny-arcade.com/comic/2020/02/07</url>
       <attrs>
-        <src>https://assets.penny-arcade.com/comics/q5tc17-W9NvVInGc.jpg</src>
-        <alt>A Wall Three Dollars High</alt>
+        <src>https://assets.penny-arcade.com/comics/q5avs1-MpqFow0Lc.jpg</src>
+        <alt>Who Put The Braum In The Braum Ba Braum Ba Braum</alt>
         <width>1050</width>
       </attrs>
-      <summary>New Comic: A Wall Three Dollars High</summary>
+      <summary>New Comic: Who Put The Braum In The Braum Ba Braum Ba Braum</summary>
       <dateUpdated/>
     </item>
   </channel>
