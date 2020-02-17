@@ -7,17 +7,17 @@
     <atom:link/>
     <language>en-us</language>
     <copyright>Penny Arcade</copyright>
-    <lastBuildDate>2020-02-14T16:01:00.000Z</lastBuildDate>
+    <lastBuildDate>2020-02-17T16:01:00.000Z</lastBuildDate>
     <item>
-      <title>Comic: Hmmmmm</title>
+      <title>Comic: A Wall Three Dollars High</title>
       <author>Gabe</author>
-      <url>https://www.penny-arcade.com/comic/2020/02/14</url>
+      <url>https://www.penny-arcade.com/comic/2020/02/17</url>
       <attrs>
-        <src>https://assets.penny-arcade.com/comics/q5nwcx-6TsFn4cwc.jpg</src>
-        <alt>Hmmmmm</alt>
+        <src>https://assets.penny-arcade.com/comics/q5tc17-W9NvVInGc.jpg</src>
+        <alt>A Wall Three Dollars High</alt>
         <width>1050</width>
       </attrs>
-      <summary>New Comic: Hmmmmm</summary>
+      <summary>New Comic: A Wall Three Dollars High</summary>
       <dateUpdated/>
     </item>
   </channel>
