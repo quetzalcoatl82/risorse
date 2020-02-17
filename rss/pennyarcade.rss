@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <rss>
   <channel>
-    <title>Comic: Who Put The Braum In The Braum Ba Braum Ba Braum</title>
-    <link>https://www.penny-arcade.com/comic/2020/02/07</link>
-    <description>New Comic: Who Put The Braum In The Braum Ba Braum Ba Braum</description>
+    <title>Comic: Coin Toss</title>
+    <link>https://www.penny-arcade.com/comic/2020/02/10</link>
+    <description>New Comic: Coin Toss</description>
     <atom:link/>
     <language>en-us</language>
     <copyright>Penny Arcade</copyright>
-    <lastBuildDate>2020-02-07T16:01:00.000Z</lastBuildDate>
+    <lastBuildDate>2020-02-10T16:01:00.000Z</lastBuildDate>
     <item>
-      <title>Comic: Who Put The Braum In The Braum Ba Braum Ba Braum</title>
-      <link>https://www.penny-arcade.com/comic/2020/02/07</link>
-      <description>&lt;img src="https://assets.penny-arcade.com/comics/q5avs1-MpqFow0Lc.jpg" alt="Who Put The Braum In The Braum Ba Braum Ba Braum" title="Who Put The Braum In The Braum Ba Braum Ba Braum"&gt;</description>
-      <author>Tycho@penny-arcade.com (Tycho)</author>
-      <pubDate>Fri, 07 Feb 2020 08:01:00 PST</pubDate>
-      <guid>/comic/2020/02/07/who-put-the-braum-in-the-braum-ba-braum-ba-braum</guid>
+      <title>Comic: Coin Toss</title>
+      <link>https://www.penny-arcade.com/comic/2020/02/10</link>
+      <description>&lt;img src="https://assets.penny-arcade.com/comics/q5gfur-j3owevoBc.jpg" alt="Coin Toss" title="Coin Toss"&gt;</description>
+      <author>Gabe@penny-arcade.com (Gabe)</author>
+      <pubDate>Mon, 10 Feb 2020 08:01:00 PST</pubDate>
+      <guid>/comic/2020/02/10/coin-toss</guid>
     </item>
   </channel>
 </rss>
