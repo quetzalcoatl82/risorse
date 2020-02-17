@@ -7,14 +7,14 @@
     <atom:link/>
     <language>en-us</language>
     <copyright>Penny Arcade</copyright>
-    <lastBuildDate>2020-02-10T16:01:00.000Z</lastBuildDate>
+    <lastBuildDate>2020-02-12T16:01:00.000Z</lastBuildDate>
     <item>
-      <title>Comic: Coin Toss</title>
-      <link>https://www.penny-arcade.com/comic/2020/02/10</link>
-      <description>&lt;img src="https://assets.penny-arcade.com/comics/q5gfur-j3owevoBc.jpg" alt="Coin Toss" title="Coin Toss"&gt;</description>
-      <author>Gabe</author>
-      <pubDate>2020-02-10T16:01:00.000Z</pubDate>
-      <guid>https://www.penny-arcade.com/comic/2020/02/10</guid>
+      <title>Comic: Nominator</title>
+      <link>https://www.penny-arcade.com/comic/2020/02/12</link>
+      <description>&lt;img src="https://assets.penny-arcade.com/comics/q5k7nn-l3beIyKxc.jpg" alt="Nominator" title="Nominator"&gt;</description>
+      <author>Tycho</author>
+      <pubDate>2020-02-12T16:01:00.000Z</pubDate>
+      <guid>https://www.penny-arcade.com/comic/2020/02/12</guid>
     </item>
   </channel>
 </rss>
