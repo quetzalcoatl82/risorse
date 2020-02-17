@@ -7,17 +7,17 @@
     <atom:link/>
     <language>en-us</language>
     <copyright>Penny Arcade</copyright>
-    <lastBuildDate>2020-02-12T16:01:00.000Z</lastBuildDate>
+    <lastBuildDate>2020-02-14T16:01:00.000Z</lastBuildDate>
     <item>
-      <title>Comic: Nominator</title>
-      <author>Tycho</author>
-      <url>https://www.penny-arcade.com/comic/2020/02/12</url>
+      <title>Comic: Hmmmmm</title>
+      <author>Gabe</author>
+      <url>https://www.penny-arcade.com/comic/2020/02/14</url>
       <attrs>
-        <src>https://assets.penny-arcade.com/comics/q5k7nn-l3beIyKxc.jpg</src>
-        <alt>Nominator</alt>
+        <src>https://assets.penny-arcade.com/comics/q5nwcx-6TsFn4cwc.jpg</src>
+        <alt>Hmmmmm</alt>
         <width>1050</width>
       </attrs>
-      <summary>New Comic: Nominator</summary>
+      <summary>New Comic: Hmmmmm</summary>
       <dateUpdated/>
     </item>
   </channel>
