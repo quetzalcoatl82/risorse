@@ -1,4 +1,4 @@
-var cors = 'https://no-cors.glitch.me/';
+var cors = 'https://cors-anywhere.herokuapp.com/';
 
 fetch(cors, {
     method: 'GET'
