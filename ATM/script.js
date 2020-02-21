@@ -1,16 +1,5 @@
 var cors = 'https://cors-anywhere.herokuapp.com/';
 
-fetch(cors, {
-    method: 'GET'
-}).then(function(response) {
-    if (response.status != 200) {
-        // se glitch non risponde cambio servizio cors
-        cors = 'https://cors-anywhere.herokuapp.com/';
-    }
-}).catch(function(err) {});
-
-console.log(cors);
-
 var APIurl = {};
 APIurl.ATM = 'https://giromilano.atm.it/proxy.ashx';
 APIurl.FFSS = 'http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/';
