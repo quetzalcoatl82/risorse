@@ -26,10 +26,9 @@ fetch(cors + url, {
 
         let string = '';
         menu.forEach(function(piatto) {
-            string += '<a class="piatto" href="' + piatto.url + '">';
+            string += '<a class="piatto" href="' + piatto.url + '" data-nome="' + piatto.nome + '" data-tipo="' + piatto.tipo + '">';
             string += piatto.nome;
             string += '<img src="' + piatto.img + '"/>';
-            string += piatto.tipo;
             string += '</a>';
         })
         html.innerHTML = string;
