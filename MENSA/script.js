@@ -22,13 +22,15 @@ fetch(cors + url, {
         // stampo i risultati
         const home = document.querySelector('#home');
         let html = document.createElement('div');
+        html.classList.add("home");
+
         let string = '';
         menu.forEach(function(piatto) {
-            string += '<a href="' + piatto.url + '">';
+            string += '<a class="piatto" href="' + piatto.url + '">';
             string += piatto.nome;
             string += '<img src="' + piatto.img + '"/>';
             string += piatto.tipo;
-            string += '</br>';
+            string += '</a>';
         })
         html.innerHTML = string;
         home.appendChild(html);

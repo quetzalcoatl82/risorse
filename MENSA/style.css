@@ -1,0 +1,13 @@
+.home {
+    display: flex;
+    max-width: 800px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+.piatto {
+    flex: 0 0 33%;
+}
+
+.piatto img {
+    max-width: 100%;
+}
