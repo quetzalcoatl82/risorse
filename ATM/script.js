@@ -7,6 +7,11 @@ var searchParams = new URLSearchParams(window.location.search);
 var fermate = [];
 var stazioni = [];
 
+var elencostazioni;
+fetch('https://quetzalcoatl82.github.io/risorse/ATM/stazioni.json')
+    .then(data => data.json())
+    .then(success => elencostazioni = success);
+
 const home = document.querySelector('#home');
 const loader = document.querySelector('.loader');
 const stazionicont = document.querySelector('#stazioni');
@@ -298,3 +303,68 @@ function creastazione(id, info, infostazione, filtro) {
 // http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/partenze/S01630/Mon%20Nov%2025%202019%2023:04:42%20GMT+0100%20(Ora%20standard%20dell%E2%80%99Europa%20centrale)
 // http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/partenze/S01630/Mon Nov 25 2019 23:14:42 GMT+0100 (Ora standard dell%E2%80%99Europa centrale)
 // http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/partenze/S01630/Tue Dec 17 2019 15:36:42 GMT+0100 (Ora standard dell'Europa centrale)
+
+const search = document.querySelector('#search');
+const tendina = document.querySelector('#tendina');
+
+const escapeRegExp = (str) => // or better use 'escape-string-regexp' package
+  str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
+
+const filterBy = (term) => {
+    const re = new RegExp(escapeRegExp(term), 'i')
+        return person => {
+            for (let prop in person) {
+                if (!person.hasOwnProperty(prop)) {
+                    continue;
+                }
+                if (re.test(person[prop])) {
+                    return true;
+                }
+            }
+            return false;        
+        }
+    }
+
+function search_stazione() {
+    var inputVal = this.value;
+    
+    if (inputVal.length > 2) {
+        tendina.classList.remove("disable");
+        // filtro in base all'input
+        const search = elencostazioni.filter(filterBy(inputVal));
+        console.log(search);
+        // elimino tutta la tendina ad ogni nuova ricerca
+        while( tendina.firstChild ){
+            tendina.removeChild( tendina.firstChild );
+        }
+        // per ogni oggetto stampo id e nome stazione
+        search.forEach(function(risultato) {
+            let html = document.createElement('li');
+            html.setAttribute("data-id", risultato.id);
+            html.setAttribute("data-stazione", risultato.stazione);
+            let string = risultato.stazione + ' - ';
+            string += risultato.id;
+            html.innerHTML = string;
+            tendina.appendChild(html);
+        })
+        
+    } else {
+        tendina.classList.add("disable");
+        // while( tendina.firstChild ){
+        //     tendina.removeChild( tendina.firstChild );
+        // }
+    }
+
+}
+
+search.addEventListener("keyup", search_stazione);
+
+
+// console.log('find: ', findIn(elencostazioni, '12345'));
+
+
+
+setTimeout(() => {
+
+
+}, 500);
