@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- due colori: uno forzato dentro l'svg uno dal fill esterno -->
+    <symbol id="dm20-gallery" width="21" height="18" viewBox="0 0 21 18">
+        <path fill="#000" id="a" d="M55.06 4010.78a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" transform="translate(-48 -4001)"/>
+        <path id="b" d="M58.56 4016.28a5.45 5.45 0 01-5.5-5.5c0-3.08 2.42-5.5 5.5-5.5s5.5 2.42 5.5 5.5-2.42 5.5-5.5 5.5zm-5.3-13h-3.2a2 2 0 00-2 2v11c0 1.1.9 2 2 2h17a2 2 0 002-2v-11a2 2 0 00-2-2h-3.2l-1.8-2h-7z" transform="translate(-48 -4001)"/>
+    </symbol>
+    <!-- due colori variabili, modificati esternamente dalla variabile -->
+    <symbol id="dm20-gallery-var" width="21" height="18" viewBox="0 0 21 18">
+        <path fill="var(--color-1)" id="a" d="M55.06 4010.78a3.5 3.5 0 117 0 3.5 3.5 0 01-7 0z" transform="translate(-48 -4001)"/>
+        <path fill="var(--color-2)" id="b" d="M58.56 4016.28a5.45 5.45 0 01-5.5-5.5c0-3.08 2.42-5.5 5.5-5.5s5.5 2.42 5.5 5.5-2.42 5.5-5.5 5.5zm-5.3-13h-3.2a2 2 0 00-2 2v11c0 1.1.9 2 2 2h17a2 2 0 002-2v-11a2 2 0 00-2-2h-3.2l-1.8-2h-7z" transform="translate(-48 -4001)"/>
+    </symbol>
+  
+
+</svg>
