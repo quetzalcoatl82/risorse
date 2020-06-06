@@ -274,7 +274,7 @@ function creastazione(id, info, infostazione, filtro) {
         let html = document.createElement('thead');
 
         html.innerHTML += "<th colspan='6' class='stazione-title'>" + id + " - " + infostazione.localita.nomeBreve + "</th>";
-        html.innerHTML += "<tr><th class='numero'>#</th><th class='direzione'>Direzione</th><th class='orario'>Orario</th><th class='ritardo'>Ritardo</th><th class='stato'>Bin</th><th class='stato'>Stato</th></tr>";
+        html.innerHTML += "<tr><th class='numero'>#</th><th class='direzione'>Direzione</th><th class='orario'>Orario</th><th class='bin'>Bin</th><th class='ritardo'>Ritardo</th><th class='stato'>Stato</th></tr>";
 
         singlestazione.appendChild(html);
 
@@ -282,15 +282,15 @@ function creastazione(id, info, infostazione, filtro) {
         let string = '';
 
         info.forEach(function(linea) {
-            console.log(linea);
             if (linea.binarioEffettivoPartenzaDescrizione == null) linea.binarioEffettivoPartenzaDescrizione = '';
+
             if (filtro.length == 0 || filtro.some(filtrino => linea.destinazione.includes(filtrino.toUpperCase()))) {
                 string += "<tr class='linea'>";
                 string += "<td class='numero'>" + linea.categoria + ' ' + linea.numeroTreno + "</td>";
                 string += "<td class='direzione'>" + linea.destinazione + "</td>";
                 string += "<td class='orario'>" + linea.compOrarioPartenzaZeroEffettivo + "</td>";
-                string += "<td class='ritardo'>" + linea.ritardo + " MIN</td>";
                 string += "<td class='binario'>" + linea.binarioEffettivoPartenzaDescrizione + "</td>";
+                string += "<td class='ritardo'>" + linea.ritardo + " MIN</td>";
                 string += "<td class='stato'>" + linea.compInStazionePartenza[0] + "</td>";
                 string += "</tr>";
                 html2.innerHTML = string;
