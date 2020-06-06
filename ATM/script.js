@@ -3,6 +3,7 @@ var cors = 'https://cors-anywhere.herokuapp.com/';
 var APIurl = {};
 APIurl.ATM = 'https://giromilano.atm.it/proxy.ashx';
 APIurl.FFSS = 'http://www.viaggiatreno.it/viaggiatrenonew/resteasy/viaggiatreno/';
+
 var searchParams = new URLSearchParams(window.location.search);
 var fermate = [];
 var stazioni = [];
@@ -108,7 +109,7 @@ if (fermate.length == 0 && stazioni.length == 0) {
                 stazionefiltro = stazionefiltrostr.split(";");
                 stazione = stazione.split(":").shift();
             }
-            chiamastazione(stazione, time, stazionefiltro);
+            chiamaregione(stazione, time, stazionefiltro);
         });
     }
 }
@@ -158,14 +159,41 @@ function chiamafermata(fermataid, tipo) {
         });
 }
 
-function chiamastazione(stazioneid, date, filtro) {
+function chiamaregione(stazioneid, date, filtro) {
+    fetch(cors + APIurl.FFSS + 'regione/' + stazioneid, {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(function(data) {
+            // do something with server response data
+            chiamastazione(stazioneid, date, filtro, data);
+        })
+        .catch(function(err) {
+            loader.classList.remove("show");
+
+            let html = document.createElement('div');
+            html.classList.add("home");
+            if (err.status == 404) {
+                // fermata non raggiungibile
+                html.innerHTML = '<p>La stazione richiesta <b>' + stazioneid + '</b> non è raggiungibile, controlla che il numero sia corretto prima di ricaricare la pagina</p>';
+                console.log(err);
+            } else {
+                // errore generico
+                html.innerHTML = '<p>Qualcosa è andato storto, prova a ricaricare e ad incrociare le dita. Giuro che di solito funziona!</p>';
+                console.log(err);
+            }
+            home.appendChild(html);
+            // handle your error logic here
+        });
+}
+
+function chiamastazione(stazioneid, date, filtro, regione) {
     let html = document.createElement('table');
     html.classList.add("stazione")
     html.setAttribute("data-id", stazioneid);
 
     stazionicont.appendChild(html);
-
-    fetch(cors + APIurl.FFSS + 'dettaglioStazione/' + stazioneid + '/1', {
+    fetch(cors + APIurl.FFSS + 'dettaglioStazione/' + stazioneid + '/' + regione, {
             method: 'GET'
         })
         .then(response => response.json())
