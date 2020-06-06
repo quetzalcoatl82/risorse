@@ -117,6 +117,7 @@ blockquote {
     width: 100%;
 }
 table {
+    display: block;
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
