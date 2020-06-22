@@ -1,0 +1,89 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title></title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+</head>
+
+<body>
+  
+    <audio id="gz-podcast-audio" crossorigin="use-credentials" preload="auto" style="display:none;">
+      <source type="audio/mpeg" src="https://quetzalcoatl82.github.io/risorse/ads-wizz/podcast.mp3">
+    </audio>
+
+    <span class="gz-toggle-play gz-play">PLAY</span>
+    
+    <script src="adswizzsdk.min.js"></script>
+    <script>
+
+      var touchEvent = ('ontouchstart' in window) ? 'touchstart' : 'click';
+
+      podcastDataSource = 'https://quetzalcoatl82.github.io/risorse/ads-wizz/podcast.mp3';
+
+      function podcast() {
+
+          var me = this;
+
+          var audio = document.querySelector('#gz-podcast-audio');
+          var buttonTogglePlay = document.querySelector('.gz-toggle-play');
+
+          me.init = function() {
+
+            //forzo il caricamento dell'audio - hack per ios/safari
+            audio.load();
+
+            //listener ed eventi audio
+            buttonTogglePlay.addEventListener(touchEvent, function(){ bindButtonTogglePlay(); })
+
+            //init adsWizz
+            initAdsWizz();
+              
+          };
+        
+          //funzione per riprodurre lo step
+          me.play = function() {
+
+              audio.src = adswizzSDK.decorateURL(podcastDataSource);
+              audio.useCredential = true;
+
+              audio.play();
+
+          };
+
+          var bindButtonTogglePlay = function() {
+
+              if (buttonTogglePlay.classList.contains('gz-play')) {
+                  me.play();
+              }
+
+          };
+
+          var initAdsWizz = function() {
+
+              adswizzSDK.init({
+                  contentPlayer : audio,
+                  playerId : "Example_Player_JS"
+              });
+
+          };
+
+      }
+
+      (function() {
+
+          //init podcast
+          var podcastInstance = new podcast();
+          podcastInstance.init();
+
+      })();
+
+
+    </script>
+
+</body>
+</html>
