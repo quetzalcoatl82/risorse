@@ -32,7 +32,8 @@ let classehandler;
         me.playvideo = function() {
             // recupera status del video
             console.log(videoArr[Object.keys(videoArr)[0]][0]['contentPlayer']['status']);
-            me.videoActive.play();
+            // me.videoActive.stopContentPlayAdv();
+            videoArr[Object.keys(videoArr)[0]][0]["contentPlayer"].stopContentPlayAdv()
             videoArr[Object.keys(videoArr)[0]][0]['contentPlayer']['status'].playing;
         };
 
