@@ -13,6 +13,9 @@ fetch('https://quetzalcoatl82.github.io/risorse/ATM/stazioni.json')
     .then(data => data.json())
     .then(success => elencostazioni = success);
 
+// mi segno l'ora della chiamata
+var time = ora();
+
 const home = document.querySelector('#home');
 const loader = document.querySelector('.loader');
 const stazionicont = document.querySelector('#stazioni');
@@ -20,13 +23,18 @@ const fermatecont = document.querySelector('#fermate');
 
 if (searchParams.has('martina')) {
     // preimpostato per martina
-    fermate.push(10335, 10332, 10326);
+    fermate.push(10335, 10332);
     stazioni.push('S01630');
 }
 if (searchParams.has('quetz')) {
     // preimpostato per quetz
-    fermate.push(11175, 11176, 10890, 10893, 10887);
-    //stazioni.push('S01630:saronno');
+    // fermate.push(11175, 11176, 10890, 10893, 10887);
+    // fermate.push(10335, 10332, 10326);
+    fermate.push(10335, 10332);
+    stazioni.push('S01630:saronno;seregno');
+    if (time.hr > 12) {
+        stazioni.push('S01701:ALBAIRATE');
+    }
 }
 if (searchParams.has('fermate')) {
     // se ci sono delle fermate specificate le tiro fuori
@@ -91,8 +99,6 @@ if (fermate.length == 0 && stazioni.length == 0) {
 } else {
     // prima di tutto mostro il loader
     loader.classList.add("show");
-    // mi segno l'ora della chiamata
-    let time = ora();
     // se ci sono fermate le chiamo in ordine
     if (fermate) {
         fermatecont.setAttribute("data-time", time.time);
