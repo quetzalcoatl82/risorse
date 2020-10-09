@@ -143,9 +143,9 @@ th {
     right: 10px;
     color: #fff;
     font-weight: 700;
-    top: 10px;
+    top: 15px;
     background-color: #444;
-    padding: 0 0 0 10px;
+    padding: 0 10px 0;
 }
 .stazione:not(:empty),
 .fermata:not(:empty) {
@@ -166,7 +166,8 @@ th {
 }
 .stazione-title,
 .fermata-title {
- color: orange;
+    color: orange;
+    text-align: left;
 }
 .linea {
     font-family: 'Codystar', cursive;
