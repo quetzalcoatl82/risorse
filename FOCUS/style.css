@@ -1969,7 +1969,7 @@ body:not(.foc-skin-visible) .foc-home-lead-articles .foc-card.-small .foc-card-t
     max-width: 100vw;
     width: 55vw;
     margin-left: 2.5vw;
-    width: 100%;
+    width: 90%;
     margin: 0 auto;
 }
 .foc-edicola-cover.mmCarouselItemActive .foc-btn {
