@@ -189,6 +189,19 @@
     </div>
 </div>
 
+<script>
+(function scrollFooter(){
+    let sw=document.documentElement.clientWidth;
+    // per scrollare automaticamente al secondo elemento nel blocco edicola
+    let edicole = document.querySelectorAll('body:not(.foc-mondo-focus-content) .foc-wrapper-black > .foc-edicola');
+        if (sw < 10000 && edicole.length) {
+            edicole.forEach((edicola) => {
+                let edicolascroll = edicola.querySelector('.foc-edicola-covers');
+                edicolascroll.scrollLeft = sw / 2;
+            });
+        }
+})();
+</script>
 
 </body>
 </html>
