@@ -1,11 +1,23 @@
-var cors = 'https://cors-anywhere.herokuapp.com/';
-url = 'https://console-tribe.com/news/director-di-nier-al-lavoro-su-due-nuovi-progetti-194711/';
-// url = 'https://console-tribe.com/recensioni/cyberpunk-2077-2-194617/';
+const cors = 'https://cors-anywhere.herokuapp.com/';
 var insta_share = {};
+var feed = {};
 
-do_fetch(cors + url, 'text', createHtml)
+document.querySelector('.cat-select').addEventListener('change', function() {
+    // ogni volta che cambio value faccio partire la catena di ricerca post dal feed e svuoto la seconda tendina
+    let secondSelect = document.querySelector('.second-select');
+    secondSelect.innerHTML = '';
+    if (this.value) {
+        let feedvar = '';
+        if (this.value != 'last') {
+            feedvar = this.value + '/';
+        }
+        var feedlink = 'https://console-tribe.com/' + feedvar + 'feed/';
+        do_fetch(cors + feedlink, 'text', createHtml);
+    }
+});
 
 function do_fetch(url, type='json', then_function=log) {
+    // funzione generica per fare fetch
     fetch(url)
         .then(response => response[type]())
         .then(data => then_function(data))
@@ -17,6 +29,7 @@ function log(log) {
 }
 
 function createHtml(html) {
+    // funzione generica per generare pagine virtuali dopo che le ho fetchate
     if (html) {
         var parser = new DOMParser();
         var doc = parser.parseFromString(html, 'text/html');
@@ -25,17 +38,171 @@ function createHtml(html) {
 }
 
 function getPostData(doc) {
-    insta_share.imageurl = doc.querySelector('.featured-image figure img').src;
-    insta_share.cat = doc.querySelector('.tag-related a[rel="category tag"]').textContent;
-    insta_share.game = doc.querySelector('.tag-related a:not([rel])').textContent;
-    insta_share.voto = doc.querySelector('.box-cont .cover-voto');
-    insta_share.title = doc.querySelector('.entry-title.single-title').textContent;
-    
-    if (insta_share.voto) {
-        insta_share.voto = doc.querySelector('.box-cont .cover-voto').textContent;
+    // qui elaboro le pagine virtuali in modi diversi se vengono dal feed o dal sito normale
+    feed.present = doc.querySelector('body rss');
+    if (feed.present) {
+        feed.link = {};
+        feed.title = {};
+        feed.list = doc.querySelectorAll('item link');
+        feed.listtit = doc.querySelectorAll('item title');
+        Object.entries(feed.list).forEach( 
+            ([key, value]) => feed.link[key] = value.nextSibling.data
+        )
+        Object.entries(feed.listtit).forEach( 
+            ([key, value]) => feed.title[key] = value.innerText
+        )
+        listAllLink(feed);
+    } else {
+        insta_share.imageurl = doc.querySelector('.featured-image figure img').src;
+        insta_share.cat = doc.querySelector('.tag-related a[rel="category tag"]').textContent;
+        insta_share.game = doc.querySelector('.tag-related a:not([rel])').textContent;
+        insta_share.voto = doc.querySelector('.box-cont .cover-voto');
+        insta_share.title = doc.querySelector('.entry-title.single-title').textContent;
+        
+        if (insta_share.voto) {
+            insta_share.voto = doc.querySelector('.box-cont .cover-voto').textContent;
+        }
+        // qui ho tutto per creare un canvas con le info
+        log(insta_share );
+        initCanvas(insta_share);
     }
-    log(insta_share );
 }
+
+function listAllLink(feed) {
+    // elaboro la lista di titoli e link provenienti dal feed per fare la seconda tendina
+    if (feed.link) {
+        let secondSelect = document.querySelector('.second-select');
+        let cont = document.createElement("select");
+        secondSelect.appendChild(cont);
+        secondSelect = document.querySelector('.second-select select');
+        // creo option vuota iniziale
+        let node = document.createElement("option");                 
+        secondSelect.appendChild(node);
+        Object.entries(feed.link).forEach(
+            ([key, value]) => {
+                
+                node = document.createElement("option");
+                node.setAttribute("value", value);
+                textnode = document.createTextNode(feed.title[key]);
+                node.appendChild(textnode);
+                secondSelect.appendChild(node);
+            }
+        )
+        document.querySelector('.second-select select').addEventListener('change', function() {
+            // arrivati a questo punto possiamo selezionare un articolo dalla seconda tendina
+            if (this.value) {
+                do_fetch(cors + this.value, 'text', createHtml);
+            }
+        });
+    }
+}
+
+var fakeobject =  {imageurl: "https://console-tribe.com/wp-content/uploads/2020/12/Cyberpunk-2077-is-here.png", cat: "Recensione", game: "Cyberpunk 2077", voto: "80", title: "Cyberpunk 2077 - Recensione"}
+
+// parte canvas
+
+function initCanvas(postData) {
+    // creo il canvas finale    
+    var canvasfinal = document.querySelector('.final-canvas');
+    var ctxfinal = canvasfinal.getContext('2d');
+
+    // 1 creo il canvas finale vuoto e ci metto la foto di bg (sempre centrata e con altezza forzata)
+
+    var img = new Image();
+    img.setAttribute('crossOrigin', 'anonymous');
+
+    img.addEventListener("load", function(){
+        let margin = 50;
+        let logosize = 120;
+        let fontsize = 60;
+        let safewidthgame = canvasfinal.width - (margin * 2) - (logosize * 2) - (logosize / 2);
+
+        ctxfinal.font = "700 " + fontsize + "px Open Sans Condensed";
+
+        // mostro il canvas finale con il bg ridimensionato
+        drowImageFill(canvasfinal, ctxfinal, img);
+
+        // Creo il gradiente
+        var grd = ctxfinal.createLinearGradient(0, canvasfinal.height * 1.1, 0, canvasfinal.height/5);
+        grd.addColorStop(0, "black");
+        grd.addColorStop(1, "transparent");
+
+        // inserisco il gradiente nel canvas
+        ctxfinal.fillStyle = grd;
+        ctxfinal.fillRect(0, 0, canvasfinal.width, canvasfinal.height);
+
+        let imglogo = new Image();
+        imglogo.setAttribute('crossOrigin', 'anonymous');
+        // misuro il nome del gioco in un ciclo for e abbasso la font size fino a che non riesco a mettercelo
+        let textwidth = ctxfinal.measureText(postData.game).width;
+
+            for (let index = 0; textwidth > safewidthgame; index++) {
+                fontsize--;
+                ctxfinal.font = "700 " + fontsize + "px Open Sans Condensed";
+                textwidth = ctxfinal.measureText(postData.game).width;
+            }
+
+        imglogo.addEventListener("load", function(){
+            // mi assicuro che si sia caricato il logo
+            ctxfinal.drawImage(imglogo, margin, canvasfinal.height - margin - logosize, logosize, logosize);
+            // dopo il logo faccio il cerchio del voto
+            ctxfinal.beginPath();
+            ctxfinal.arc(canvasfinal.width - logosize / 2 - margin, canvasfinal.height - margin - logosize / 2, logosize / 2, 0, 2 * Math.PI);
+
+            ctxfinal.strokeStyle = '#f18f2a';
+            ctxfinal.lineWidth = 10;
+            ctxfinal.stroke();
+
+            // titolo
+            ctxfinal.fillStyle = '#FFF';
+            ctxfinal.fillText(postData.game, margin + logosize + logosize / 4, canvasfinal.height - margin);
+            // categoria
+            ctxfinal.font = "700 50px Open Sans Condensed";
+            ctxfinal.fillText(postData.cat.toUpperCase(), margin + logosize + logosize / 4, canvasfinal.height - margin - logosize + logosize / 3);
+            // voto
+            ctxfinal.font = "700 85px Open Sans Condensed";
+            if (postData.voto == 100) {
+                ctxfinal.font = "700 65px Open Sans Condensed";
+            } 
+            let metrics = ctxfinal.measureText(postData.voto);
+            let actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+            ctxfinal.fillText(  postData.voto,
+                                canvasfinal.width - margin - metrics.width/2 - logosize/2, 
+                                canvasfinal.height - margin - (logosize/2 - actualHeight/2)
+                            );
+            // per il salvataggio
+            var link = document.createElement('a');
+            var currentTime = new Date();
+            link.download = 'Social Share Insta ' + currentTime;
+            link.href = canvasfinal.toDataURL("image/jpeg",0.80);
+            link.click(); 
+        })
+        imglogo.src = 'img/logo-flat.png';
+    })
+
+    img.src = cors + postData.imageurl;
+    // img.src = cors + 'https://upload.wikimedia.org/wikipedia/commons/9/91/F-15_vertical_deploy.jpg';
+}
+
+function drowImageFill(canvas, ctx, img){
+    // calcola la ratio della foto e forza un resize delle dimensioni del canvas mettendola al centro
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //detect closet value to canvas edges
+    if( img.height / img.width * canvas.width > canvas.height) {
+    	// fill based on less image section loss if width matched
+        var width = canvas.width;
+        var height = img.height / img.width * width;
+        offset = (height - canvas.height) / 2;
+        ctx.drawImage(img, 0, -offset, width, height);
+    } else {
+        // fill based on less image section loss if height matched
+        var height = canvas.height;
+        var width = img.width / img.height * height;
+        offset = (width - canvas.width) / 2;
+        ctx.drawImage(img, -offset , 0, width, height);
+    }
+}
+
 
 
 // // global

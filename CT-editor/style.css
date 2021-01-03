@@ -1,0 +1,11 @@
+body {
+    font-family: 'Open Sans';
+}
+h1 {
+    font-family: 'Open Sans Condensed';
+}
+.final-canvas {
+    display: block;
+    max-width: 600px;
+    margin: 20px auto 0;
+}
