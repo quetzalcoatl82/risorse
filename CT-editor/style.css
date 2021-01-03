@@ -1,11 +1,19 @@
 body {
     font-family: 'Open Sans';
 }
+.container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+select {
+    max-width: 100%;
+}
 h1 {
     font-family: 'Open Sans Condensed';
 }
 .final-canvas {
     display: block;
-    max-width: 600px;
+    max-width: 100%;
     margin: 20px auto 0;
 }

@@ -105,9 +105,7 @@ function initCanvas(postData) {
     // creo il canvas finale    
     var canvasfinal = document.querySelector('.final-canvas');
     var ctxfinal = canvasfinal.getContext('2d');
-
-    // 1 creo il canvas finale vuoto e ci metto la foto di bg (sempre centrata e con altezza forzata)
-
+    // carico l'immagine bg
     var img = new Image();
     img.setAttribute('crossOrigin', 'anonymous');
 
@@ -175,7 +173,8 @@ function initCanvas(postData) {
             var currentTime = new Date();
             link.download = 'Social Share Insta ' + currentTime;
             link.href = canvasfinal.toDataURL("image/jpeg",0.80);
-            link.click(); 
+            link.click();
+            // link.touchstart();
         })
         imglogo.src = 'img/logo-flat.png';
     })
