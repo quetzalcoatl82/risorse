@@ -1,4 +1,6 @@
-const cors = 'https://cors-anywhere.herokuapp.com/';
+// const cors = 'https://cors-anywhere.herokuapp.com/';
+// const cors = 'https://test.cors.workers.dev/?';
+const cors = 'https://api.codetabs.com/v1/proxy?quest=';
 var insta_share = {};
 var feed = {};
 
@@ -12,13 +14,15 @@ document.querySelector('.cat-select').addEventListener('change', function() {
             feedvar = this.value + '/';
         }
         var feedlink = 'https://console-tribe.com/' + feedvar + 'feed/';
-        do_fetch(cors + feedlink, 'text', createHtml);
+        do_fetch(feedlink, 'text', createHtml);
     }
 });
 
 function do_fetch(url, type='json', then_function=log) {
     // funzione generica per fare fetch
-    fetch(url)
+    fetch('https://no-cors-single.console-tribe.workers.dev/?' + url,{
+        method: 'POST',
+        })
         .then(response => response[type]())
         .then(data => then_function(data))
         .catch(err => console.warn('Something went wrong.', err))
@@ -39,6 +43,7 @@ function createHtml(html) {
 
 function getPostData(doc) {
     // qui elaboro le pagine virtuali in modi diversi se vengono dal feed o dal sito normale
+    log(doc);
     feed.present = doc.querySelector('body rss');
     if (feed.present) {
         feed.link = {};
@@ -91,7 +96,7 @@ function listAllLink(feed) {
         document.querySelector('.second-select select').addEventListener('change', function() {
             // arrivati a questo punto possiamo selezionare un articolo dalla seconda tendina
             if (this.value) {
-                do_fetch(cors + this.value, 'text', createHtml);
+                do_fetch(this.value, 'text', createHtml);
             }
         });
     }
