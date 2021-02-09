@@ -1,7 +1,6 @@
-// const cors = 'https://cors-anywhere.herokuapp.com/';
-// const cors = 'https://test.cors.workers.dev/?';
-const cors = 'https://cors-anywhere.console-tribe.workers.dev/?';
 // const cors = 'https://api.codetabs.com/v1/proxy?quest=';
+const cors = 'https://cors-anywhere.console-tribe.workers.dev/?';
+
 var insta_share = {};
 var feed = {};
 
@@ -21,7 +20,7 @@ document.querySelector('.cat-select').addEventListener('change', function() {
 
 function do_fetch(url, type='json', then_function=log) {
     // funzione generica per fare fetch
-    fetch('https://no-cors-single.console-tribe.workers.dev/?' + url,{
+    fetch(cors + url,{
         method: 'POST',
         })
         .then(response => response[type]())
