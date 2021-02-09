@@ -1,6 +1,7 @@
 // const cors = 'https://cors-anywhere.herokuapp.com/';
 // const cors = 'https://test.cors.workers.dev/?';
-const cors = 'https://api.codetabs.com/v1/proxy?quest=';
+const cors = 'https://cors-anywhere.console-tribe.workers.dev/?';
+// const cors = 'https://api.codetabs.com/v1/proxy?quest=';
 var insta_share = {};
 var feed = {};
 
