@@ -12,6 +12,7 @@ select {
 }
 h1 {
     font-family: 'Open Sans Condensed';
+    text-align: center;
 }
 .final-canvas {
     display: block;
