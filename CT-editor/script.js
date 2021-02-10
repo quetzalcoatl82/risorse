@@ -227,11 +227,11 @@ function initCanvas(postData) {
                                 canvasfinal.height - margin - (logosize/2 - actualHeight/2)
                             );
             // per il salvataggio
-                // var link = document.createElement('a');
-                // var currentTime = new Date();
-                // link.download = 'Social Share Insta ' + currentTime;
-                // link.href = canvasfinal.toDataURL("image/jpeg",0.80);
-                // link.click();
+                var link = document.createElement('a');
+                var currentTime = new Date();
+                link.download = 'Social Share Insta ' + currentTime;
+                link.href = canvasfinal.toDataURL("image/jpeg",0.80);
+                link.click();
             // link.touchstart();
         })
         imglogo.src = 'img/logo-flat.png';
