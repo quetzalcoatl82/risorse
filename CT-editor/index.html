@@ -21,13 +21,26 @@
 
             <select class ="cat-select" name="cat-select" id="cat-select">
               <option value="" selected></option>
+              <option value="recensioni">Ultime Recensioni</option>
               <option value="last">Ultime Pubblicazioni</option>
               <option value="news">Ultime News</option>
-              <option value="recensioni">Ultime Recensioni</option>
             </select>
         </div>
         <div class="second-select"></div>
-
+        <form class="campi-aggiuntivi hide">
+            <label for="cat">Categoria:</label>
+            <input id="cat" class="cat" type="text"></input></br>
+            <label for="gioco">Nome Gioco:</label>
+            <input id="gioco" class="gioco" type="text"></input></br>
+            <label for="voto">Voto:</label>
+            <input id="voto" class="voto" type="text"></input></br>
+            <label for="titolo">Titolo news:</label>
+            <input id="titolo" class="titolo" type="text"></input></br>
+            <label for="img">Url immagine:</label>
+            <input id="img" class="img" type="text"></input></br>
+            <input type="submit" value="Submit">
+        </form>
+        
         <canvas class="final-canvas" width="1080" height="1080"></canvas>
 
     </section>

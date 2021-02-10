@@ -4,10 +4,18 @@ const cors = 'https://cors-anywhere.console-tribe.workers.dev/?';
 var insta_share = {};
 var feed = {};
 
+var form = document.querySelector('.campi-aggiuntivi');
+var form_cat = document.querySelector('.cat');
+var form_gioco = document.querySelector('.gioco');
+var form_voto = document.querySelector('.voto');
+var form_titolo = document.querySelector('.titolo');
+var form_image = document.querySelector('.img');
+
 document.querySelector('.cat-select').addEventListener('change', function() {
     // ogni volta che cambio value faccio partire la catena di ricerca post dal feed e svuoto la seconda tendina
     let secondSelect = document.querySelector('.second-select');
     secondSelect.innerHTML = '';
+    form.classList.add("hide");
     if (this.value) {
         let feedvar = '';
         if (this.value != 'last') {
@@ -60,7 +68,12 @@ function getPostData(doc) {
     } else {
         insta_share.imageurl = doc.querySelector('.featured-image figure img').src;
         insta_share.cat = doc.querySelector('.tag-related a[rel="category tag"]').textContent;
-        insta_share.game = doc.querySelector('.tag-related a:not([rel])').textContent;
+        insta_share.game = doc.querySelector('.tag-related a:not([rel])');
+        if (insta_share.game) {
+            insta_share.game = doc.querySelector('.tag-related a:not([rel])').textContent;
+        } else {
+            insta_share.game = '';
+        }
         insta_share.voto = doc.querySelector('.box-cont .cover-voto');
         insta_share.title = doc.querySelector('.entry-title.single-title').textContent;
         
@@ -69,8 +82,7 @@ function getPostData(doc) {
         }
         // qui ho tutto per creare un canvas con le info
         log(insta_share );
-        initCanvas(insta_share);
-        // initCanvas(fakeobject);
+        populateField(insta_share);
     }
 }
 
@@ -86,7 +98,6 @@ function listAllLink(feed) {
         secondSelect.appendChild(node);
         Object.entries(feed.link).forEach(
             ([key, value]) => {
-                
                 node = document.createElement("option");
                 node.setAttribute("value", value);
                 textnode = document.createTextNode(feed.title[key]);
@@ -95,6 +106,7 @@ function listAllLink(feed) {
             }
         )
         document.querySelector('.second-select select').addEventListener('change', function() {
+            form.classList.add("hide");
             // arrivati a questo punto possiamo selezionare un articolo dalla seconda tendina
             if (this.value) {
                 do_fetch(this.value, 'text', createHtml);
@@ -102,6 +114,32 @@ function listAllLink(feed) {
         });
     }
 }
+
+function populateField(insta_share) {
+    // mostro il canvas
+    form.classList.remove("hide");
+    // popolo i valori recuperati
+    form_cat.value = insta_share.cat;
+    form_gioco.value = insta_share.game;
+    form_voto.value = insta_share.voto;
+    form_titolo.value = insta_share.title;
+    form_image.value = insta_share.imageurl;
+    // mando un evento di submit coi valori presi automaticamente
+    var event = new Event('submit', {
+        'bubbles': true,
+        'cancelable': true
+    });
+    form.dispatchEvent(event);
+}
+
+function handleForm(event) {
+    // a ogni submit faccio il canvas così posso cambiare i valori dopo la prima volta
+    event.preventDefault();
+    let newobject =  {imageurl: form_image.value, cat: form_cat.value, game: form_gioco.value, voto: form_voto.value, title: form_titolo.value}
+    initCanvas(newobject);
+}
+// mi attacco all'evento per disegnare il canvas
+form.addEventListener('submit', handleForm);
 
 var fakeobject =  {imageurl: "https://console-tribe.com/wp-content/uploads/2020/12/Cyberpunk-2077-is-here.png", cat: "Recensione", game: "Titolo lunghissimo che guarda non so neanche se i giochi Capcom hanno dei titoli così lunghi", voto: "80", title: "Atelier Ryza 2: Lost Legends & The Secret Fairy Atelier Ryza 2: Lost Legends & The Secret Fairy - Recensione"}
 
@@ -149,7 +187,6 @@ function initCanvas(postData) {
             log(arraysplit);
             let textwidth1 = ctxfinal.measureText(arraysplit[0]);
             textHeight = textwidth1.actualBoundingBoxAscent + textwidth1.actualBoundingBoxDescent + (margin / 5);
-            log(textHeight);
             textwidth1 = textwidth1.width;
             let textwidth2 = ctxfinal.measureText(arraysplit[1]).width;
 
@@ -159,7 +196,6 @@ function initCanvas(postData) {
                 ctxfinal.font = "700 " + fontsize + "px Open Sans Condensed";
                 textwidth1 = ctxfinal.measureText(arraysplit[0]);
                 textHeight = textwidth1.actualBoundingBoxAscent + textwidth1.actualBoundingBoxDescent + (margin / 5);
-                log(textHeight);
                 textwidth1 = textwidth1.width;
                 textwidth2 = ctxfinal.measureText(arraysplit[1]).width;
             }            
