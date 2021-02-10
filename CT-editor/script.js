@@ -70,6 +70,7 @@ function getPostData(doc) {
         // qui ho tutto per creare un canvas con le info
         log(insta_share );
         initCanvas(insta_share);
+        // initCanvas(fakeobject);
     }
 }
 
@@ -102,7 +103,7 @@ function listAllLink(feed) {
     }
 }
 
-var fakeobject =  {imageurl: "https://console-tribe.com/wp-content/uploads/2020/12/Cyberpunk-2077-is-here.png", cat: "Recensione", game: "Cyberpunk 2077", voto: "80", title: "Cyberpunk 2077 - Recensione"}
+var fakeobject =  {imageurl: "https://console-tribe.com/wp-content/uploads/2020/12/Cyberpunk-2077-is-here.png", cat: "Recensione", game: "Titolo lunghissimo che guarda non so neanche se i giochi Capcom hanno dei titoli così lunghi", voto: "80", title: "Atelier Ryza 2: Lost Legends & The Secret Fairy Atelier Ryza 2: Lost Legends & The Secret Fairy - Recensione"}
 
 // parte canvas
 
@@ -121,6 +122,9 @@ function initCanvas(postData) {
         let safewidthgame = canvasfinal.width - (margin * 2) - (logosize * 2) - (logosize / 2);
 
         ctxfinal.font = "700 " + fontsize + "px Open Sans Condensed";
+        
+        let textHeight = ctxfinal.measureText('Pq');
+        textHeight = textHeight.actualBoundingBoxAscent + textHeight.actualBoundingBoxDescent + (margin / 2);
 
         // mostro il canvas finale con il bg ridimensionato
         drowImageFill(canvasfinal, ctxfinal, img);
@@ -136,14 +140,30 @@ function initCanvas(postData) {
 
         let imglogo = new Image();
         imglogo.setAttribute('crossOrigin', 'anonymous');
-        // misuro il nome del gioco in un ciclo for e abbasso la font size fino a che non riesco a mettercelo
+        // misuro il nome del gioco e se non ci sta abbasso la font size in un ciclo for fino a che non riesco a mettercelo
         let textwidth = ctxfinal.measureText(postData.game).width;
+        let arraysplit = [];
+        if (textwidth > safewidthgame) {
+            // prima di tutto spezzo la frase in due
+            arraysplit = splitter(postData.game);
+            log(arraysplit);
+            let textwidth1 = ctxfinal.measureText(arraysplit[0]);
+            textHeight = textwidth1.actualBoundingBoxAscent + textwidth1.actualBoundingBoxDescent + (margin / 5);
+            log(textHeight);
+            textwidth1 = textwidth1.width;
+            let textwidth2 = ctxfinal.measureText(arraysplit[1]).width;
 
-            for (let index = 0; textwidth > safewidthgame; index++) {
+            for (let index = 0; (textwidth1 > safewidthgame || textwidth2 > safewidthgame); index++) {
+                // diminuisco il font size fino a che non ci sta
                 fontsize--;
                 ctxfinal.font = "700 " + fontsize + "px Open Sans Condensed";
-                textwidth = ctxfinal.measureText(postData.game).width;
-            }
+                textwidth1 = ctxfinal.measureText(arraysplit[0]);
+                textHeight = textwidth1.actualBoundingBoxAscent + textwidth1.actualBoundingBoxDescent + (margin / 5);
+                log(textHeight);
+                textwidth1 = textwidth1.width;
+                textwidth2 = ctxfinal.measureText(arraysplit[1]).width;
+            }            
+        }
 
         imglogo.addEventListener("load", function(){
             // mi assicuro che si sia caricato il logo
@@ -157,12 +177,45 @@ function initCanvas(postData) {
             ctxfinal.stroke();
 
             // titolo
+            ctxfinal.textAlign = "center";
             ctxfinal.fillStyle = '#FFF';
-            ctxfinal.fillText(postData.game, margin + logosize + logosize / 4, canvasfinal.height - margin);
+            if (arraysplit[0] && arraysplit[1]) { // se siamo andati a capo scrivo 
+                ctxfinal.fillText(
+                    arraysplit[0],
+                    canvasfinal.width / 2,
+                    canvasfinal.height - margin - textHeight
+                );
+                ctxfinal.fillText(
+                    arraysplit[1],
+                    canvasfinal.width / 2,
+                    canvasfinal.height - margin
+                );
+            } else {
+                ctxfinal.fillText(
+                    postData.game,
+                    canvasfinal.width / 2,
+                    canvasfinal.height - margin
+                );
+            }
+
             // categoria
             ctxfinal.font = "700 50px Open Sans Condensed";
-            ctxfinal.fillText(postData.cat.toUpperCase(), margin + logosize + logosize / 4, canvasfinal.height - margin - logosize + logosize / 3);
+            if (arraysplit[0] && arraysplit[1]) { // se siamo andati a capo col titolo gioco
+                ctxfinal.fillText(
+                    postData.cat.toUpperCase(),
+                    canvasfinal.width / 2,
+                    canvasfinal.height - margin - (textHeight * 2)
+                );
+            } else {
+                ctxfinal.fillText(
+                    postData.cat.toUpperCase(),
+                    canvasfinal.width / 2,
+                    canvasfinal.height - margin - textHeight
+                );
+            }
+
             // voto
+            ctxfinal.textAlign = "left";
             ctxfinal.font = "700 85px Open Sans Condensed";
             if (postData.voto == 100) {
                 ctxfinal.font = "700 65px Open Sans Condensed";
@@ -174,11 +227,11 @@ function initCanvas(postData) {
                                 canvasfinal.height - margin - (logosize/2 - actualHeight/2)
                             );
             // per il salvataggio
-            var link = document.createElement('a');
-            var currentTime = new Date();
-            link.download = 'Social Share Insta ' + currentTime;
-            link.href = canvasfinal.toDataURL("image/jpeg",0.80);
-            link.click();
+                // var link = document.createElement('a');
+                // var currentTime = new Date();
+                // link.download = 'Social Share Insta ' + currentTime;
+                // link.href = canvasfinal.toDataURL("image/jpeg",0.80);
+                // link.click();
             // link.touchstart();
         })
         imglogo.src = 'img/logo-flat.png';
@@ -186,6 +239,27 @@ function initCanvas(postData) {
 
     img.src = cors + postData.imageurl;
     // img.src = cors + 'https://upload.wikimedia.org/wikipedia/commons/9/91/F-15_vertical_deploy.jpg';
+}
+
+function splitter(string) {
+
+    let middle = Math.floor(string.length / 2);
+    let before = string.lastIndexOf(' ', middle);
+    let after = string.indexOf(' ', middle + 1);
+
+    if (before == -1 || (after != -1 && middle - before >= after - middle)) {
+        middle = after;
+    } else {
+        middle = before;
+    }
+
+    let string1 = string.substr(0, middle);
+    let string2 = string.substr(middle + 1);
+
+    return arraystring = [string1, string2];
+
+    // $('.t1').text(s1);
+    // $('.t2').text(s2);
 }
 
 function drowImageFill(canvas, ctx, img){
