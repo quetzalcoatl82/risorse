@@ -149,20 +149,28 @@ function initCanvas(postData) {
     // creo il canvas finale    
     var canvasfinal = document.querySelector('.final-canvas');
     var ctxfinal = canvasfinal.getContext('2d');
+
+    let margin = 50;
+    let logosize = 120;
+    let fontsize = 60;
+    let fontsizegame = 60;
+    let fontsizetitle = 60;
+    let fontstylegame = 'Open Sans Condensed';
+    let fontstyletitle = 'Open Sans';
+    let safewidthgame = canvasfinal.width - (margin * 2) - (logosize * 2) - (logosize / 2);
+    let safewidthtitle = canvasfinal.width - (margin * 2);
+    let titlemarginbottom = 0;
+
+    ctxfinal.font = "700 " + fontsize + "px Open Sans Condensed";
+    
+    let textHeight = ctxfinal.measureText('Pq');
+    textHeight = textHeight.actualBoundingBoxAscent + textHeight.actualBoundingBoxDescent + (margin / 2);
+
     // carico l'immagine bg
     var img = new Image();
     img.setAttribute('crossOrigin', 'anonymous');
 
     img.addEventListener("load", function(){
-        let margin = 50;
-        let logosize = 120;
-        let fontsize = 60;
-        let safewidthgame = canvasfinal.width - (margin * 2) - (logosize * 2) - (logosize / 2);
-
-        ctxfinal.font = "700 " + fontsize + "px Open Sans Condensed";
-        
-        let textHeight = ctxfinal.measureText('Pq');
-        textHeight = textHeight.actualBoundingBoxAscent + textHeight.actualBoundingBoxDescent + (margin / 2);
 
         // mostro il canvas finale con il bg ridimensionato
         drowImageFill(canvasfinal, ctxfinal, img);
@@ -179,89 +187,104 @@ function initCanvas(postData) {
         let imglogo = new Image();
         imglogo.setAttribute('crossOrigin', 'anonymous');
         // misuro il nome del gioco e se non ci sta abbasso la font size in un ciclo for fino a che non riesco a mettercelo
-        let textwidth = ctxfinal.measureText(postData.game).width;
-        let arraysplit = [];
-        if (textwidth > safewidthgame) {
-            // prima di tutto spezzo la frase in due
-            arraysplit = splitter(postData.game);
-            log(arraysplit);
-            let textwidth1 = ctxfinal.measureText(arraysplit[0]);
-            textHeight = textwidth1.actualBoundingBoxAscent + textwidth1.actualBoundingBoxDescent + (margin / 5);
-            textwidth1 = textwidth1.width;
-            let textwidth2 = ctxfinal.measureText(arraysplit[1]).width;
 
-            for (let index = 0; (textwidth1 > safewidthgame || textwidth2 > safewidthgame); index++) {
-                // diminuisco il font size fino a che non ci sta
-                fontsize--;
-                ctxfinal.font = "700 " + fontsize + "px Open Sans Condensed";
-                textwidth1 = ctxfinal.measureText(arraysplit[0]);
-                textHeight = textwidth1.actualBoundingBoxAscent + textwidth1.actualBoundingBoxDescent + (margin / 5);
-                textwidth1 = textwidth1.width;
-                textwidth2 = ctxfinal.measureText(arraysplit[1]).width;
-            }            
-        }
+        let gametitle = twolines(postData.game, safewidthgame, fontsizegame, fontstylegame);        
+        let realtitle = twolines(postData.title, safewidthtitle, fontsizetitle, fontstyletitle);
 
         imglogo.addEventListener("load", function(){
-            // mi assicuro che si sia caricato il logo
-            ctxfinal.drawImage(imglogo, margin, canvasfinal.height - margin - logosize, logosize, logosize);
-            // dopo il logo faccio il cerchio del voto
-            ctxfinal.beginPath();
-            ctxfinal.arc(canvasfinal.width - logosize / 2 - margin, canvasfinal.height - margin - logosize / 2, logosize / 2, 0, 2 * Math.PI);
-
-            ctxfinal.strokeStyle = '#f18f2a';
-            ctxfinal.lineWidth = 10;
-            ctxfinal.stroke();
-
-            // titolo
+            // style font generico
             ctxfinal.textAlign = "center";
             ctxfinal.fillStyle = '#FFF';
-            if (arraysplit[0] && arraysplit[1]) { // se siamo andati a capo scrivo 
+            ctxfinal.font = "700 " + realtitle.fontsize + "px Open Sans";
+
+            if (postData.title && !postData.voto) {
+                // faccio il titolo solo se non c'è il voto
+                titlemarginbottom = realtitle.textheight;
+                // se c'è un titolo
                 ctxfinal.fillText(
-                    arraysplit[0],
+                    realtitle.string,
                     canvasfinal.width / 2,
-                    canvasfinal.height - margin - textHeight
+                    canvasfinal.height - margin - realtitle.textheight
                 );
-                ctxfinal.fillText(
-                    arraysplit[1],
-                    canvasfinal.width / 2,
-                    canvasfinal.height - margin
-                );
-            } else {
-                ctxfinal.fillText(
-                    postData.game,
-                    canvasfinal.width / 2,
-                    canvasfinal.height - margin
-                );
+                if (realtitle.string2) {
+                    titlemarginbottom = realtitle.textheight * 2;
+                    // se siamo andati a capo scrivo 
+                    ctxfinal.fillText(
+                        realtitle.string2,
+                        canvasfinal.width / 2,
+                        canvasfinal.height - margin
+                    );
+                }
             }
 
+            // mi assicuro che si sia caricato il logo
+            ctxfinal.drawImage(
+                imglogo,
+                margin,
+                canvasfinal.height - margin - logosize - titlemarginbottom,
+                logosize,
+                logosize
+            );
+
+            // titolo gioco
+
+            ctxfinal.font = "700 " + gametitle.fontsize + "px Open Sans Condensed";
+            if (gametitle.string2) {
+            // se siamo andati a capo scrivo 
+                ctxfinal.fillText(
+                    gametitle.string2,
+                    canvasfinal.width / 2,
+                    canvasfinal.height - margin - titlemarginbottom
+                );
+            }
+            ctxfinal.fillText(
+                gametitle.string,
+                canvasfinal.width / 2,
+                canvasfinal.height - margin - gametitle.textheight - titlemarginbottom
+            );
+
+            if (gametitle.string2) {
+                gametitle.textheight = gametitle.textheight * 2;
+            } else {
+                gametitle.textheight = textHeight;
+            }
             // categoria
             ctxfinal.font = "700 50px Open Sans Condensed";
-            if (arraysplit[0] && arraysplit[1]) { // se siamo andati a capo col titolo gioco
-                ctxfinal.fillText(
-                    postData.cat.toUpperCase(),
-                    canvasfinal.width / 2,
-                    canvasfinal.height - margin - (textHeight * 2)
-                );
-            } else {
-                ctxfinal.fillText(
-                    postData.cat.toUpperCase(),
-                    canvasfinal.width / 2,
-                    canvasfinal.height - margin - textHeight
-                );
-            }
+            ctxfinal.fillText(
+                postData.cat.toUpperCase(),
+                canvasfinal.width / 2,
+                canvasfinal.height - margin - gametitle.textheight - (margin / 8) - titlemarginbottom
+            );
 
-            // voto
-            ctxfinal.textAlign = "left";
-            ctxfinal.font = "700 85px Open Sans Condensed";
-            if (postData.voto == 100) {
-                ctxfinal.font = "700 65px Open Sans Condensed";
-            } 
-            let metrics = ctxfinal.measureText(postData.voto);
-            let actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-            ctxfinal.fillText(  postData.voto,
-                                canvasfinal.width - margin - metrics.width/2 - logosize/2, 
-                                canvasfinal.height - margin - (logosize/2 - actualHeight/2)
-                            );
+
+            if (postData.voto) {
+                // cerchio del voto
+                ctxfinal.beginPath();
+                ctxfinal.arc(
+                    canvasfinal.width - logosize / 2 - margin,
+                    canvasfinal.height - margin - (logosize / 2) - titlemarginbottom,
+                    logosize / 2, 0, 2 * Math.PI
+                );
+
+                ctxfinal.strokeStyle = '#f18f2a';
+                ctxfinal.lineWidth = 10;
+                ctxfinal.stroke();
+
+                // scrivo il voto
+                ctxfinal.textAlign = "left";
+                ctxfinal.font = "700 85px Open Sans Condensed";
+                if (postData.voto == 100) {
+                    ctxfinal.font = "700 65px Open Sans Condensed";
+                } 
+                let metrics = ctxfinal.measureText(postData.voto);
+                let actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                ctxfinal.fillText(  postData.voto,
+                                    canvasfinal.width - margin - metrics.width/2 - logosize/2, 
+                                    canvasfinal.height - margin - (logosize/2 - actualHeight/2) - titlemarginbottom
+                                );                
+            }
+            
+
             // per il salvataggio
                 var link = document.createElement('a');
                 var currentTime = new Date();
@@ -275,6 +298,43 @@ function initCanvas(postData) {
 
     img.src = cors + postData.imageurl;
     // img.src = cors + 'https://upload.wikimedia.org/wikipedia/commons/9/91/F-15_vertical_deploy.jpg';
+
+    function twolines(string, safewidth, font, style) {
+        // da questa funzione ricavo una o due linee, conseguente altezza del testo e fontsize da stampare
+        let obj = {
+            string : string,
+            fontsize: font,
+            textheight: 0
+        };
+        // funzione ripetibile per mettere su due righe le cose
+        ctxfinal.font = "700 " + font + "px " + style;
+        let textwidth = ctxfinal.measureText(string).width;
+    
+        if (textwidth > safewidth) {
+            // prima di tutto spezzo la frase in due
+            let arraysplit = splitter(string);
+            log(arraysplit);
+            let textwidth1 = ctxfinal.measureText(arraysplit[0]);
+            let height = textwidth1.actualBoundingBoxAscent + textwidth1.actualBoundingBoxDescent + (margin / 5);
+            textwidth1 = textwidth1.width;
+            let textwidth2 = ctxfinal.measureText(arraysplit[1]).width;
+    
+            for (let index = 0; (textwidth1 > safewidth || textwidth2 > safewidth); index++) {
+                // diminuisco il font size fino a che non ci sta
+                font--;
+                ctxfinal.font = "700 " + font + "px " + style;
+                textwidth1 = ctxfinal.measureText(arraysplit[0]);
+                height = textwidth1.actualBoundingBoxAscent + textwidth1.actualBoundingBoxDescent + (margin / 4);
+                textwidth1 = textwidth1.width;
+                textwidth2 = ctxfinal.measureText(arraysplit[1]).width;
+            }
+            obj.string = arraysplit[0];
+            obj.string2 = arraysplit[1];
+            obj.fontsize = font;
+            obj.textheight = height;
+        }
+        return obj;
+    }
 }
 
 function splitter(string) {
