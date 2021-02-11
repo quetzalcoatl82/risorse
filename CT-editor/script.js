@@ -199,7 +199,7 @@ function initCanvas(postData) {
 
             if (postData.title && !postData.voto) {
                 // faccio il titolo solo se non c'è il voto
-                titlemarginbottom = realtitle.textheight;
+                titlemarginbottom = textHeight + (margin / 3);
                 // se c'è un titolo
                 ctxfinal.fillText(
                     realtitle.string,
@@ -207,7 +207,7 @@ function initCanvas(postData) {
                     canvasfinal.height - margin - realtitle.textheight
                 );
                 if (realtitle.string2) {
-                    titlemarginbottom = realtitle.textheight * 2;
+                    titlemarginbottom = (realtitle.textheight * 2) + (margin / 3);
                     // se siamo andati a capo scrivo 
                     ctxfinal.fillText(
                         realtitle.string2,
