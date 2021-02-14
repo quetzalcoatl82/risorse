@@ -1,4 +1,4 @@
-var cors = 'https://cors-anywhere.herokuapp.com/';
+var cors = 'https://cors-anywhere.console-tribe.workers.dev/?';
 
 var APIurl = {};
 APIurl.ATM = 'https://giromilano.atm.it/proxy.ashx';
