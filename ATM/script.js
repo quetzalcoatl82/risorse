@@ -31,9 +31,9 @@ if (searchParams.has('quetz')) {
     // fermate.push(11175, 11176, 10890, 10893, 10887);
     // fermate.push(10335, 10332, 10326);
     fermate.push(10335, 10332);
-    stazioni.push('S01630:saronno;seregno');
+    //stazioni.push('S01630:saronno;seregno');
     if (time.hr > 12) {
-        stazioni.push('S01701:ALBAIRATE');
+        //stazioni.push('S01701:ALBAIRATE');
     }
 }
 if (searchParams.has('fermate')) {
