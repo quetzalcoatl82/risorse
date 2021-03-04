@@ -1,4 +1,12 @@
 var cors = 'https://cors-anywhere.console-tribe.workers.dev/?';
+var corsFS = 'https://no-cors-single.console-tribe.workers.dev/?';
+
+// chiamo file delle fermate
+    // se c'è posso aprire il menu e la ricerca
+
+// vedo se il localstorage è attivo
+    // se c'è posso salvare in locale le stazioni e recuperarle
+    // altrimenti uso la url
 
 var APIurl = {};
 APIurl.ATM = 'https://giromilano.atm.it/proxy.ashx';
@@ -33,7 +41,7 @@ if (searchParams.has('quetz')) {
     fermate.push(10335, 10332);
     //stazioni.push('S01630:saronno;seregno');
     if (time.hr > 12) {
-        //stazioni.push('S01701:ALBAIRATE');
+        stazioni.push('S01701:ALBAIRATE');
     }
 }
 if (searchParams.has('fermate')) {
@@ -166,7 +174,7 @@ function chiamafermata(fermataid, tipo) {
 }
 
 function chiamaregione(stazioneid, date, filtro) {
-    fetch(cors + APIurl.FFSS + 'regione/' + stazioneid, {
+    fetch(corsFS + APIurl.FFSS + 'regione/' + stazioneid, {
             method: 'GET'
         })
         .then(response => response.json())
@@ -199,7 +207,7 @@ function chiamastazione(stazioneid, date, filtro, regione) {
     html.setAttribute("data-id", stazioneid);
 
     stazionicont.appendChild(html);
-    fetch(cors + APIurl.FFSS + 'dettaglioStazione/' + stazioneid + '/' + regione, {
+    fetch(corsFS + APIurl.FFSS + 'dettaglioStazione/' + stazioneid + '/' + regione, {
             method: 'GET'
         })
         .then(response => response.json())
@@ -227,7 +235,7 @@ function chiamastazione(stazioneid, date, filtro, regione) {
 }
 
 function chiamapartenze(stazioneid, date, infostazione, filtro) {
-    fetch(cors + APIurl.FFSS + 'partenze/' + stazioneid + '/' + date.full, {
+    fetch(corsFS + APIurl.FFSS + 'partenze/' + stazioneid + '/' + date.full, {
             method: 'GET'
         })
         .then(response => response.json())
@@ -349,18 +357,18 @@ const escapeRegExp = (str) => // or better use 'escape-string-regexp' package
 
 const filterBy = (term) => {
     const re = new RegExp(escapeRegExp(term), 'i')
-        return person => {
-            for (let prop in person) {
-                if (!person.hasOwnProperty(prop)) {
-                    continue;
-                }
-                if (re.test(person[prop])) {
-                    return true;
-                }
+    return person => {
+        for (let prop in person) {
+            if (!person.hasOwnProperty(prop)) {
+                continue;
             }
-            return false;        
+            if (re.test(person[prop])) {
+                return true;
+            }
         }
+        return false;        
     }
+}
 
 function search_stazione() {
     var inputVal = this.value;
