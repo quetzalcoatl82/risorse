@@ -298,6 +298,9 @@ function initCanvas(postData) {
         })
         imglogo.src = 'img/logo-flat.png';
     })
+    // https://images.console-tribe.com/wp-content/uploads/2020/09/Tony-hawks-pro-skater-1-and-2-1280x720.jpg
+    // https://console-tribe-wp.s3.eu-central-003.backblazeb2.com/wp-content/uploads/2020/09/Tony-hawks-pro-skater-1-and-2-1280x720.jpg
+    postData.imageurl = postData.imageurl.replace("https://images.console-tribe.com", "https://console-tribe-wp.s3.eu-central-003.backblazeb2.com");
 
     img.src = cors + postData.imageurl;
     // img.src = cors + 'https://upload.wikimedia.org/wikipedia/commons/9/91/F-15_vertical_deploy.jpg';
