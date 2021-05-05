@@ -549,7 +549,7 @@ if(document.querySelector('body').getAttribute('data-video') == "1"){
 					}
 					if(sizeStrip != '3,1' && sizeStrip != '320,50' && sizeStrip != '320,100' && sizeStrip != '375,100'){
 						console.log('[push FE] slotRenderEnded gpt_strip: '+parseInt(performance.now() - startPageTimes.performanceNow));
-						isAnimationAllowed = isStripAnimationAllowed(event);
+						// isAnimationAllowed = isStripAnimationAllowed(event);
 					}
 					if(sizeStrip == '100,100'){
 						document.getElementById(divslotnameStrip).style.height = '1px';

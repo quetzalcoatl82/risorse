@@ -498,7 +498,7 @@ if(document.querySelector('body').getAttribute('data-video') == "1"){
                 if(event.slot===mm_stript1) {
 					if(sizeStrip != '3,1' && sizeStrip != '320,50' && sizeStrip != '320,100' && sizeStrip != '375,100'){
 						console.log('[push FE] slotOnload gpt_strip: '+parseInt(performance.now() - startPageTimes.performanceNow));
-						strip_animation();
+						AmeMh.strip_animation();
 					}
                     //comscore 
                     if(sizeStrip == '728,90'){
@@ -555,7 +555,7 @@ if(document.querySelector('body').getAttribute('data-video') == "1"){
 					}
 					if(sizeStrip != '3,1' && sizeStrip != '320,50' && sizeStrip != '320,100' && sizeStrip != '375,100'){
 						console.log('[push FE] slotRenderEnded gpt_strip: '+parseInt(performance.now() - startPageTimes.performanceNow));
-						isAnimationAllowed = isStripAnimationAllowed(event);
+						// isAnimationAllowed = isStripAnimationAllowed(event);
 					}
 					if(sizeStrip == '100,100'){
 						document.getElementById(divslotnameStrip).style.height = '1px';
