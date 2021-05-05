@@ -1,3 +1,51 @@
+// MEDIAMOND LOADER
+function mediamondLoader(objAttr, chainId = null, elementType = "script", target = document.body) {
+	return new Promise(function (resolve, reject) {
+		let element = document.createElement(elementType);
+
+		for (const property in objAttr) {
+			element.setAttribute(property, objAttr[property]);
+		}
+		let path = objAttr.src || objAttr.href;
+		element.onload = () => {
+			resolve(element);
+			console.log(`[mediamondLoader] ${path} caricato!`, "chainId_" + chainId + " Time: " + performance.now());
+		};
+		element.onerror = e => {
+			reject(
+				new Error(`[mediamondLoader] Errore sul caricamento di ${path}`)
+			);
+			console.log(e);
+		};
+
+		target.appendChild(element);
+	});
+}
+
+function wait(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+// END MEDIAMOND LOADER
+
+let startStripMobile = (initiator) => {
+	if (typeof startStripMobileCheck !== 'undefined') return false;
+	if (window.innerWidth > 480) return false;
+	console.log('[strip mobile 2021] initiator', initiator)
+	window.startStripMobileCheck = 1;
+	googletag.cmd.push(function () {
+		if (document.getElementById('gpt_stripmobile') && MMstatusStrip) {
+			window.stripmobile = googletag.defineSlot(MMsezioneTag, [[320, 50], [320, 100]], 'gpt_stripmobile').
+				setTargeting("pos", "1").
+				setCollapseEmptyDiv(true, true).
+				addService(googletag.pubads());
+
+			googletag.display('gpt_stripmobile');
+			googletag.pubads().refresh([stripmobile]);
+
+			AmeMh.callbackStripMobile();
+		}
+	})
+}
 // JavaScript Document
 //vengono definite delle variabili che poi verranno utilizzate nei js per l'erogazione dei formati
 var MMdatiSkin = new Array();
