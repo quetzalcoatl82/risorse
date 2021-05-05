@@ -251,13 +251,13 @@ function initTagGpt(){
 		
 		if(devTypeUtility == "mobile_web_ipad" || devTypeUtility == "mobile_web_android_tablet"){
 		      var mappingStrip = googletag.sizeMapping().
-            addSize([0, 0], [[320, 50],[320, 100],[720, 240]]).		
+            addSize([0, 0], [[720, 240]]).		
             addSize([600, 499], [720, 240]).
             addSize([971, 500], [[970, 250],[728, 90]]).
             build();
         }else{
               var mappingStrip = googletag.sizeMapping().
-            addSize([0, 0], [[320, 50],[320, 100],[720, 240]]).		
+            addSize([0, 0], [[720, 240]]).		
             addSize([971, 500], [[970, 250],[728, 90]]).
             build();
         }
@@ -339,9 +339,9 @@ function initTagGpt(){
             if (document.getElementById(divslotnameStrip) && MMstatusStrip){
 			if(event.slot===mm_stript1) {
                 document.getElementById(divslotnameStrip).style.display = 'block';
-				if(sizeStrip != '320,1' && sizeStrip != '320,50' && sizeStrip != '320,100' && sizeStrip != '375,100'){
-					strip_animation();
-					}
+				if(sizeStrip != '3,1' && sizeStrip != '320,50' && sizeStrip != '320,100' && sizeStrip != '375,100'){
+                    AmeMh.strip_animation();
+				}
 				if(MMlarghezzaSitoAdv <= 970 && sizeCompleta == '720,240'){
 					//console.log('chiamata resize iframe2');
 					ResizeIframe4();
@@ -379,12 +379,10 @@ function initTagGpt(){
                     jQuery("#strip_adv").removeClass("advCollapse");
                 }
 				if(MMlarghezzaSitoAdv <= 970 && sizeCompleta == '720,240'){
-					ChangePositionInitial();
 					ResizeIframe4();
 				}
 				if(MMlarghezzaSitoAdv <= 970 && (sizeStrip == '320,1' || sizeStrip == '320,50' || sizeStrip == '320,100' || sizeStrip == '375,100')){
 					//console.log('chiamata resize iframe2');
-					ChangePosition();
 				}
 				//piccola modifica x un cliente
 				if( campaignIdStrip == '2648687753'){
@@ -481,13 +479,7 @@ function initTagGpt(){
 /// FINE STRUTTURA SRA ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-function ChangePosition(){
-	//console.log('===>ChangePosition');
-	document.querySelector('#'+divslotnameStrip).setAttribute('style','left: 0; position:fixed; bottom:0;z-index:999999;text-align:center;width:100%;background-color:#fff;');
-}
-function ChangePositionInitial(){
-	document.querySelector('#'+divslotnameStrip).setAttribute("style", "position:initial;"); 
-}
+
 /////-----------------------------------------------------------------------------------
 var nRefresh = 1;
 
