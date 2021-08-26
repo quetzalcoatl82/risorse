@@ -124,7 +124,50 @@ Object.keys(myObject).map((key, index) => myObject[key] *= 2);
 
 console.log(myObject);
 // => { 'a': 2, 'b': 4, 'c': 6 }
+
 </pre>
+<h2>Metodo .some per un check su alcuni degli elementi in array</h2>
+<pre>
+console.log([2, 5, 8, 1, 4].some(x => x > 10)); // false
+console.log([12, 5, 8, 1, 4].some(x => x > 10)); // true
+
+const fruits = ['apple', 'banana', 'mango', 'guava'];
+
+function checkAvailability(arr, val) {
+  return arr.some(arrVal => val === arrVal);
+}
+
+console.log(checkAvailability(fruits, 'kela'));   // false
+console.log(checkAvailability(fruits, 'banana')); // true
+</pre>
+<h2>Metodo .every per un check su tutti gli elementi in array</h2>
+<pre>
+  console.log([12, 5, 8, 130, 44].every(x => x >= 10));   // false
+  console.log([12, 54, 18, 130, 44].every(x => x >= 10)); // true
+</pre>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 </body>
 <script>
     // const input = [ 1, 2, 3, 4, 5 ];
@@ -257,16 +300,20 @@ console.log(myObject);
 //   console.log(calldone);
 // });
 
+// console.log([2, 5, 8, 1, 4].some(x => x > 10)); // false
+// console.log([12, 5, 8, 1, 4].some(x => x > 10)); // true
 
+// const fruits = ['apple', 'banana', 'mango', 'guava'];
 
-//"infinite power!!!"
-//  "tttrrriiipppllleee"
-//  "°°°trogdor°°°"
+// function checkAvailability(arr, val) {
+//   return arr.some(arrVal => val === arrVal);
+// }
 
-//   "AAddrriiaann"
-//   "ssssssssnnaakkee"
+// console.log(checkAvailability(fruits, 'kela'));   // false
+// console.log(checkAvailability(fruits, 'banana')); // true
 
-    // console.log(ret);
+// console.log([12, 5, 8, 130, 44].every(x => x >= 10));   // false
+// console.log([12, 54, 18, 130, 44].every(x => x >= 10)); // true
 
 </script>
 </html>
