@@ -239,23 +239,23 @@ console.log(myObject);
 
 // parallel() // after 2 seconds, logs "slow" and then "fast"
 
-const fetchcall = async () => {
-  const response = await fetch(
-    'https://baconipsum.com/api/?type=all-meat&paras=2&start-with-lorem=1', {
-    method: 'GET'
-  })
-  .catch(function(err) {
-    console.log('errore chiamata' + err);
-  })
+// const fetchcall = async () => {
+//   const response = await fetch(
+//     'https://baconipsum.com/api/?type=all-meat&paras=2&start-with-lorem=1', {
+//     method: 'GET'
+//   })
+//   .catch(function(err) {
+//     console.log('errore chiamata' + err);
+//   })
 
 
-  const call = await response.json();
-  return call;
-}
+//   const call = await response.json();
+//   return call;
+// }
 
-fetchcall().then(calldone => {
-  console.log(calldone);
-});
+// fetchcall().then(calldone => {
+//   console.log(calldone);
+// });
 
 
 
