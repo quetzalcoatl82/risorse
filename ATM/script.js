@@ -41,7 +41,7 @@ if (searchParams.has('quetz')) {
     fermate.push(10335, 10332, 11176);
     //stazioni.push('S01630:saronno;seregno');
     if (time.hr > 12) {
-        stazioni.push('S01701:ALBAIRATE');
+        stazioni.push('S01715:VARESE;NOVARA');
     } else {
         stazioni.push('S01630:SARONNO');
     }
