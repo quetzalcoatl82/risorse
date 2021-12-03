@@ -40,8 +40,9 @@ if (searchParams.has('quetz')) {
     // fermate.push(10335, 10332, 10326);
     fermate.push(10335, 10332, 11176);
     //stazioni.push('S01630:saronno;seregno');
-    if (time.hr > 12) {
-        stazioni.push('S01715:VARESE;NOVARA');
+    if (time.hr > 12 && time.hr < 19) {
+        // ritorno
+        stazioni.push('S01715:VARESE;NOVARA','S01492:ALBAIRATE');
     } else {
         stazioni.push('S01630:SARONNO');
     }
@@ -181,25 +182,31 @@ function chiamaregione(stazioneid, date, filtro) {
         })
         .then(response => response.json())
         .then(function(data) {
+            
             // do something with server response data
             chiamastazione(stazioneid, date, filtro, data);
         })
         .catch(function(err) {
-            loader.classList.remove("show");
-
-            let html = document.createElement('div');
-            html.classList.add("home");
-            if (err.status == 404) {
-                // fermata non raggiungibile
-                html.innerHTML = '<p>La stazione richiesta <b>' + stazioneid + '</b> non è raggiungibile, controlla che il numero sia corretto prima di ricaricare la pagina</p>';
-                console.log(err);
+            if (stazioneid == 'S01492') { // eccezione per forlanini
+                chiamastazione(stazioneid, date, filtro, 1);
             } else {
-                // errore generico
-                html.innerHTML = '<p>Qualcosa è andato storto, prova a ricaricare e ad incrociare le dita. Giuro che di solito funziona!</p>';
-                console.log(err);
+                loader.classList.remove("show");
+
+                let html = document.createElement('div');
+                html.classList.add("home");
+                if (err.status == 404) {
+                    // fermata non raggiungibile
+                    html.innerHTML = '<p>La stazione richiesta <b>' + stazioneid + '</b> non è raggiungibile, controlla che il numero sia corretto prima di ricaricare la pagina</p>';
+                    console.log(err);
+                } else {
+                    // errore generico
+                    html.innerHTML = '<p>Qualcosa è andato storto, prova a ricaricare e ad incrociare le dita. Giuro che di solito funziona!</p>';
+                    console.log(err);
+                }
+                home.appendChild(html);
+                // handle your error logic here
             }
-            home.appendChild(html);
-            // handle your error logic here
+
         });
 }
 
@@ -209,6 +216,7 @@ function chiamastazione(stazioneid, date, filtro, regione) {
     html.setAttribute("data-id", stazioneid);
 
     stazionicont.appendChild(html);
+    console.log(corsFS + APIurl.FFSS + 'dettaglioStazione/' + stazioneid + '/' + regione);
     fetch(corsFS + APIurl.FFSS + 'dettaglioStazione/' + stazioneid + '/' + regione, {
             method: 'GET'
         })
@@ -218,21 +226,27 @@ function chiamastazione(stazioneid, date, filtro, regione) {
             chiamapartenze(stazioneid, date, data, filtro);
         })
         .catch(function(err) {
-            loader.classList.remove("show");
-
-            let html = document.createElement('div');
-            html.classList.add("home");
-            if (err.status == 404) {
-                // fermata non raggiungibile
-                html.innerHTML = '<p>La stazione richiesta <b>' + stazioneid + '</b> non è raggiungibile, controlla che il numero sia corretto prima di ricaricare la pagina</p>';
-                console.log(err);
+            if (stazioneid == 'S01492') { // eccezione per forlanini
+                // stampo dati finti per Forlanini perché l'API non me li dà
+                infostazione = {"codReg":1,"tipoStazione":3,"dettZoomStaz":[],"pstaz":[],"mappaCitta":{"urlImagePinpoint":"","urlImageBaloon":""},"codiceStazione":"S01492","codStazione":"S01630","lat":45.442404,"lon":9.130258,"latMappaCitta":0.0,"lonMappaCitta":0.0,"localita":{"nomeLungo":"MILANO FORLANINI","nomeBreve":"MI Forlanini","label":"","id":"S01492"},"esterno":false,"offsetX":0,"offsetY":0,"nomeCitta":"A"}
+                chiamapartenze(stazioneid, date, infostazione, filtro);
             } else {
-                // errore generico
-                html.innerHTML = '<p>Qualcosa è andato storto, prova a ricaricare e ad incrociare le dita. Giuro che di solito funziona!</p>';
-                console.log(err);
+                loader.classList.remove("show");
+
+                let html = document.createElement('div');
+                html.classList.add("home");
+                if (err.status == 404) {
+                    // fermata non raggiungibile
+                    html.innerHTML = '<p>La stazione richiesta <b>' + stazioneid + '</b> non è raggiungibile, controlla che il numero sia corretto prima di ricaricare la pagina</p>';
+                    console.log(err);
+                } else {
+                    // errore generico
+                    html.innerHTML = '<p>Qualcosa è andato storto, prova a ricaricare e ad incrociare le dita. Giuro che di solito funziona!</p>';
+                    console.log(err);
+                }
+                home.appendChild(html);
+                // handle your error logic here
             }
-            home.appendChild(html);
-            // handle your error logic here
         });
 }
 
