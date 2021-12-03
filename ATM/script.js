@@ -31,17 +31,19 @@ const fermatecont = document.querySelector('#fermate');
 
 if (searchParams.has('martina')) {
     // preimpostato per martina
-    fermate.push(10335, 10332);
-    stazioni.push('S01630');
+    fermate.push(10335, 10332, 11176);
+    stazioni.push('S01630:SARONNO','S01326:ALBAIRATE');
 }
 if (searchParams.has('quetz')) {
     // preimpostato per quetz
     // fermate.push(11175, 11176, 10890, 10893, 10887);
     // fermate.push(10335, 10332, 10326);
-    fermate.push(10335, 10332);
+    fermate.push(10335, 10332, 11176);
     //stazioni.push('S01630:saronno;seregno');
     if (time.hr > 12) {
         stazioni.push('S01701:ALBAIRATE');
+    } else {
+        stazioni.push('S01630:SARONNO');
     }
 }
 if (searchParams.has('fermate')) {
