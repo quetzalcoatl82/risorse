@@ -1,15 +1,178 @@
-<head>
-<style>
 
+
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+
+  <meta charset="UTF-8">
+  
+<link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+<meta name="apple-mobile-web-app-title" content="CodePen">
+
+<link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+
+<link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
+
+
+  <title>CodePen - Play Video</title>
+  
+  
+  <link rel='stylesheet' href='https://unpkg.com/swiper/swiper-bundle.min.css'>
+  
+<style>
+html,
+      body {
+        position: relative;
+        height: 100%;
+      }
+
+      body {
+        background: #eee;
+        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        color: #000;
+        margin: 0;
+        padding: 0;
+      }
+
+      .swiper {
+        width: 100%;
+        height: 100%;
+      }
+
+      .swiper-slide {
+        text-align: center;
+        font-size: 18px;
+        background: #fff;
+
+        /* Center slide text vertically */
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+      }
+
+      .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
 </style>
+
+  
+  
+  
+  
+
 </head>
 
-<body>
-    <div class="bottone" style="background-color:red">
-        pushami tutto
+<body translate="no" >
+  <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide slide1" data-video="59v1j8"><script src="https://ptp.stbm.it/v/59v1j8twcr?mode=apertura"></script></div>
+        <div class="swiper-slide slide2" data-video="t1lnwv"><script src="https://ptp.stbm.it/v/t1lnwvtwcr?mode=apertura"></script></div>
+        
+      </div>
     </div>
-    <div class="dm20-anastasia-video">
-        <script src="https://ptp.stbm.it/v/65vqsydmfn"></script>
-    </div>
-    <script async src="classe.js"></script>
+  
+  <script src='https://unpkg.com/swiper/swiper-bundle.min.js'></script>
+      <script id="rendered-js" >
+var swiper = new Swiper(".mySwiper", {
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
+  },
+});
+
+swiper.on('slideChange', function (el) {
+  let prev = document.querySelector('.swiper-slide-active');
+  checkvideo('pause',prev,prev.dataset.video);
+});
+
+swiper.on('slideChangeTransitionEnd', function (el) {
+  let current = document.querySelector('.swiper-slide-active');
+  checkvideo('event',current, current.dataset.video)
+  checkvideo('play',current, current.dataset.video);
+});
+
+let firstvideo = false;
+let intervalstop = false;
+
+function checkvideo(action,el,videoid) {
+  let iframe = el.querySelector('iframe');
+  let video = iframe.contentWindow.document.querySelector('video');
+  if (video) {
+    if(action == 'pause'){
+      videoArr[videoid][0].api.pause();
+      intervalstop = true;
+    }
+    if(action == 'play'){
+      videoArr[videoid][0].api.play();
+    }
+    if(action == 'event'){
+      if (!firstvideo) {
+        // autoplay
+        firstvideo = true;
+        console.log('autoplay solo muto');
+        // videoArr[videoid][0].api.setMuted(true);
+        videoArr[videoid][0].api.play();
+      }
+
+      video.onended = function() {
+        console.log('ho finito il video');
+        swiper.slideNext();
+      }
+      video.onplay = function() {
+        console.log('sono in play');
+      }
+      
+      // if (!iframe.classList.contains('watching')) {
+      //   iframe.classList.add("watching");
+      //   console.log('click event');
+
+      //   video.addEventListener("click", function(){
+      //     console.log('click');
+      //   });  
+      // }
+    }
+  }
+}
+
+function observeVideo() {
+  let interval = setInterval(() => {
+    if (intervalstop) {
+      console.log('intervallo fermo');
+      clearInterval(interval);
+    } else {
+      let video = document.querySelector('.swiper-slide-active');
+      checkvideo('event',video,video.dataset.video)
+    }
+  }, 500);
+}
+// in mancanza di evento
+// per il primo video
+observeVideo();
+
+
+// videoArr['59v1j8'][0].api.play()
+// videoArr['59v1j8'][0].api.pause()
+// videoArr['59v1j8'][0].api.getStatus()
+// videoArr['59v1j8'][0].api.setMuted(false)
+    </script>
+
+  
+
 </body>
+
+</html>
+ 
