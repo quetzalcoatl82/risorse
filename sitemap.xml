@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="https://quetzalcoatl82.github.io/risorse/blog/sitemap.xsl"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<url>
+<loc>https://quetzalcoatl82.github.io/risorse/blog/</loc>
+</url>
+<url>
+<loc>https://quetzalcoatl82.github.io/risorse/blog/questo-e-leditor-a-blocchi.html</loc>
+<lastmod>2022-10-20T13:58:28+02:00</lastmod>
+<image:image>
+<image:loc>https://quetzalcoatl82.github.io/risorse/blog/media/posts/2/unnamed-2.jpg</image:loc>
+<image:title><![CDATA[]]></image:title>
+</image:image>
+</url>
+<url>
+<loc>https://quetzalcoatl82.github.io/risorse/blog/questo-e-un-titolo.html</loc>
+<lastmod>2022-10-20T13:53:58+02:00</lastmod>
+<image:image>
+<image:loc>https://quetzalcoatl82.github.io/risorse/blog/media/posts/1/milano-dettaglio.png</image:loc>
+<image:title><![CDATA[]]></image:title>
+</image:image>
+</url>
+</urlset>

@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://quetzalcoatl82.github.io/risorse/blog/sitemap.xml
