@@ -1,0 +1,40 @@
+.home {
+    display: flex;
+    max-width: 800px;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+.piatto {
+    flex: 0 0 33%;
+}
+.piatto img {
+    max-width: 100%;
+}
+.piatto[data-tipo="1"]:before {
+    content:'primo';
+    display: block;
+}
+.piatto[data-tipo="2"]:before {
+    content:'secondo';
+    display: block;
+}
+.piatto[data-tipo="4"]:before {
+    content:'contorno';
+    display: block;
+}
+.piatto[data-tipo="5"]:before {
+    content:'frutta';
+    display: block;
+}
+.piatto[data-tipo="12"]:before {
+    content:'pizza';
+    display: block;
+}
+.piatto[data-tipo="17"]:before {
+    content:'insalata';
+    display: block;
+}
+.piatto[data-tipo="20"]:before {
+    content:'piatto unico';
+    display: block;
+}

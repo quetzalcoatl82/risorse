@@ -1,0 +1,45 @@
+<head>
+<style>
+:root{
+    --color-1: green;
+    --color-2: cyan;
+}
+
+.icon {
+    max-width: 100px;
+}
+.fillred {
+    fill: red;
+}
+.fillblue {
+    fill: blue;
+}
+.palette2 {
+    --color-1: purple;
+    --color-2: yellow;
+}
+</style>
+</head>
+
+<body>
+    <h2>Fill dall'esterno</h2>
+    <p>In questo modo possiamo modificare tutti i path senza il fill specificato</p>
+    <svg viewBox="0 0 39 36" class="icon fillred">
+        <use xlink:href="icons.svg#dm20-gallery"></use>
+    </svg>
+    <svg viewBox="0 0 39 36" class="icon fillblue">
+        <use xlink:href="icons.svg#dm20-gallery"></use>
+    </svg>
+    <h2>Fill dall'esterno con variabili</h2>
+    <p>In questo modo possiamo modificare tutti i path con variabile specificata</p>
+    <svg viewBox="0 0 39 36" class="icon ">
+        <use xlink:href="icons.svg#dm20-gallery-var"></use>
+    </svg>
+    <svg viewBox="0 0 39 36" class="icon palette2">
+        <use xlink:href="icons.svg#dm20-gallery-var"></use>
+    </svg>
+    
+    <a href="fb-messenger://share?link=https://ricette.donnamoderna.com/la-salsa-di-albicocche&text=La salsa di albicocche">link foglia</a>
+
+    <a href="fb-messenger://share?link=https%3A%2F%2Fwww.donnamoderna.com%2Fbellezza%2Fviso-e-corpo%2Ffaccia-stanca-occhiaie-rimedi&text=Rimedi%20energizzanti%20e%20anti-fatica%20contro%20il%20viso%20stanco">link amp</a>
+</body>

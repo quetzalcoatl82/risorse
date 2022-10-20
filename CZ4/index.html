@@ -1,0 +1,114 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+      google.charts.load("current", {packages:["timeline"], 'language': 'it'});
+      
+      google.charts.setOnLoadCallback(drawChart);
+      
+      function drawChart() {{
+      
+      var container = document.getElementById('timeline');
+      var chart = new google.visualization.Timeline(container);
+      var dataTable = new google.visualization.DataTable();
+      dataTable.addColumn({ type: 'string', id: 'Position' });
+      dataTable.addColumn({ type: 'string', id: 'Name' });
+      dataTable.addColumn({ type: 'date', id: 'Start' });
+      dataTable.addColumn({ type: 'date', id: 'End' });
+      dataTable.addRows([
+        // il mese va da 0 a 11
+        [ '1', 'Elena', new Date(2006, 0, 1), new Date(2018, 3, 1) ],
+        [ '2', 'Niccol\xF2', new Date(2006, 0, 1), new Date(2009, 0, 1)],
+        [ '2', 'Niccol\xF2', new Date(2010, 0, 1), new Date(2012, 1, 1)],
+        //[ '3', '', new Date(2006, 1, 1), new Date(2007, 2, 22)],
+        //[ '4', '', new Date(2006, 1, 1), new Date(2007, 11, 31)],
+        //[ '5', '', new Date(2006, 1, 1), new Date(2007, 7, 20)],
+        [ '6', 'Francesca', new Date(2006, 1, 1), new Date(2012, 4, 1)],
+        [ '7', 'Marta', new Date(2009, 9, 1), new Date(2010, 9, 1)],
+        //[ '8', '', new Date(2006, 1, 1), new Date(2007, 2, 4)],
+        //[ '9', '', new Date(2006, 1, 1), new Date(2007, 4, 1)],
+        [ '10', 'Ilario', new Date(2010, 5, 1), new Date(2011, 5, 1)],
+        [ '11', 'Alessia', new Date(2010, 9, 1), new Date()],
+        [ '12', 'Federico', new Date(2011, 5, 1), new Date(2020, 9, 1)],
+        [ '13', 'Tiziano', new Date(2012, 1, 1), new Date(2012, 7, 1)],
+        [ '13', 'Tiziano', new Date(2012, 8, 1), new Date(2013, 8, 1)],
+        [ '13.5', 'Marteen', new Date(2012, 7, 1), new Date(2012, 8, 1)],
+        [ '14', 'Nicoletta', new Date(2012, 4, 1), new Date(2012, 9, 1)],
+        [ '15', 'Federica', new Date(2012, 9, 1), new Date(2014, 7, 1)],
+        [ '16', 'Ilenia', new Date(2013, 8, 1), new Date(2015, 8, 1)],
+        [ '17', 'Claire', new Date(2014, 7, 1), new Date(2016, 3, 1)],
+        [ '18', 'Giuditta', new Date(2015, 8, 1), new Date(2019, 2, 1)],
+        [ '18', 'Giuditta', new Date(2019, 8, 1), new Date()],
+        [ '18.5', 'Claudia', new Date(2019, 2, 1), new Date(2019, 8, 1)],
+        [ '19', 'Paolo', new Date(2016, 3, 1), new Date(2018, 6, 1)],
+        [ '20', 'Alice', new Date(2018, 3, 1), new Date(2019, 9, 1)],
+        [ '21', 'Margherita', new Date(2018, 6, 1), new Date()],
+        [ '22', 'Virginia', new Date(2019, 9, 1), new Date(2020, 1, 1)],
+        [ '23', 'Serena', new Date(2020, 1, 1), new Date()],
+        [ '24', 'Alessia', new Date(2020, 8, 1), new Date()],
+        [ '25', 'Rosa', new Date(2020, 9, 1), new Date()]
+      ]);
+      
+      var height = dataTable.getNumberOfRows() * 41 + 30;
+      var options = {'height':height};
+  
+            chart.draw(dataTable, options);
+          }
+      }
+      
+      
+      google.charts.setOnLoadCallback(drawChartStanze);
+      
+      function drawChartStanze() {{
+      
+      var container = document.getElementById('timeline-stanze');
+      var chart = new google.visualization.Timeline(container);
+      var dataTable = new google.visualization.DataTable();
+      dataTable.addColumn({ type: 'string', id: 'Position' });
+      dataTable.addColumn({ type: 'string', id: 'Name' });
+      dataTable.addColumn({ type: 'date', id: 'Start' });
+      dataTable.addColumn({ type: 'date', id: 'End' });
+      dataTable.addRows([
+        // il mese va da 0 a 11
+        [ '1', 'Elena', new Date(2006, 0, 1), new Date(2013, 8, 1) ],
+        [ '1', 'Giuditta', new Date(2015, 8, 1), new Date(2019, 2, 1)],
+        [ '1', 'Giuditta', new Date(2019, 8, 1), new Date(2020,8,1)],
+        [ '1', 'Ilenia', new Date(2013, 8, 1), new Date(2015, 8, 1)],
+        [ '2', 'Marta', new Date(2009, 9, 1), new Date(2010, 9, 1)],
+        [ '2', 'Alessia', new Date(2010, 9, 1), new Date(2018, 3, 1)],
+        [ '3', 'Elena', new Date(2013, 8, 1), new Date(2018, 3, 1) ],
+        [ '3', 'Federico', new Date(2011, 5, 1), new Date(2013, 8, 1)],
+        [ '3', 'Niccol\xF2', new Date(2006, 0, 1), new Date(2009, 0, 1)],
+        [ '3', 'Niccol\xF2', new Date(2010, 0, 1), new Date(2011, 5, 1)],
+        [ '3', 'Alessia', new Date(2018, 3, 1), new Date()],
+        [ '4', 'Niccol\xF2', new Date(2011, 5, 1), new Date(2012, 1, 1)],
+        [ '4', 'Federico', new Date(2013, 8, 1), new Date(2020, 9, 1)],
+        [ '5', 'Francesca', new Date(2006, 1, 1), new Date(2012, 4, 1)],
+        [ '4', 'Tiziano', new Date(2012, 1, 1), new Date(2012, 7, 1)],
+        [ '5', 'Federica', new Date(2012, 9, 1), new Date(2014, 7, 1)],
+        [ '4', 'Tiziano', new Date(2012, 8, 1), new Date(2013, 8, 1)],
+        [ '4', 'Ilario', new Date(2010, 5, 1), new Date(2011, 5, 1)],
+        [ '5', 'Margherita', new Date(2018, 6, 1), new Date()],
+        [ '4', 'Marteen', new Date(2012, 7, 1), new Date(2012, 8, 1)],
+        [ '5', 'Claire', new Date(2014, 7, 1), new Date(2016, 3, 1)],
+        [ '5', 'Nicoletta', new Date(2012, 4, 1), new Date(2012, 9, 1)],
+        [ '5', 'Paolo', new Date(2016, 3, 1), new Date(2018, 6, 1)],
+        [ '2', 'Alice', new Date(2018, 3, 1), new Date(2019, 9, 1)],
+        [ '1', 'Claudia', new Date(2019, 2, 1), new Date(2019, 8, 1)],
+        [ '2', 'Virginia', new Date(2019, 9, 1), new Date(2020, 1, 1)],
+        [ '2', 'Serena', new Date(2020, 1, 1), new Date()],
+        [ '1', 'Alessia', new Date(2020, 8, 1), new Date()],
+        [ '4', 'Rosa', new Date(2020, 9, 1), new Date()],
+      ]);
+      
+      var height = 6 * 41 + 30;
+      var options = {'height':height};
+  
+            chart.draw(dataTable, options);
+          }
+      }      
+</script>
+<h2>Timeline CZ4</h2>   
+<div id="timeline"></div>
+<h2>Timeline Stanze</h2>
+<div id="timeline-stanze"></div>
+   

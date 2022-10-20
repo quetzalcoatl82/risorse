@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Recupero orari bus, tram e treni</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <section class="container">
+        <header class="head">
+            <label class="plus-switch-label" for="plus-switch"></label>
+        </header>
+        <input type="checkbox" name="plus-switch" class="plus-switch-checkbox" id="plus-switch">
+        <aside id="aside" class="aside">
+            <form>
+                <input type="text" class="search" id="search" name="search" value="" placeholder="Cerca la stazione o la fermata">
+                <input type="submit" value="Invia">
+            </form>
+            <ul id="tendina" class="tendina"></ul>
+        </aside>
+        <div id="home"></div>
+        <table id="fermate"></table>
+        <div id="stazioni"></div>
+        <div class="loader">
+            <div class="lds-default"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
+        <!-- <div class="loader">
+            <div class="bg">
+                <img class="tram-albero" src="img/albero.svg">
+                <img class="tram-banchina" src="img/banchina.svg">
+                <div class="tram-strada"></div>
+                <div class="tram">
+                    <img class="tram-body vibrate-1" src="img/tram-body.svg">
+                    <img class="tram-bg" src="img/tram-bg.svg">
+                </div>
+                <div class="tram-filo"></div>
+                <img class="tram-albero front" src="img/albero.svg">
+                <div class="tram-erba front"></div>
+            </div>
+        </div> -->
+    </section>
+<script async src="script.js"></script>    
+</body>
+</html>
