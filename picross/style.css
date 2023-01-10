@@ -1,0 +1,259 @@
+* {
+    box-sizing: border-box;
+    /* vars */
+    --value-x: 0;
+    --value-y: 0;
+}
+[data-x="1"],
+[data-x="1"] .grid-head-x,
+[data-x="1"] .grid-head-y,
+[data-x="1"] .grid {
+    --value-x: 1;
+}
+[data-x="2"],
+[data-x="2"] .grid-head-x,
+[data-x="2"] .grid-head-y,
+[data-x="2"] .grid {
+    --value-x: 2;
+}
+[data-x="3"],
+[data-x="3"] .grid-head-x,
+[data-x="3"] .grid-head-y,
+[data-x="3"] .grid {
+    --value-x: 3;
+}
+[data-x="4"],
+[data-x="4"] .grid-head-x,
+[data-x="4"] .grid-head-y,
+[data-x="4"] .grid {
+    --value-x: 4;
+}
+[data-x="5"],
+[data-x="5"] .grid-head-x,
+[data-x="5"] .grid-head-y,
+[data-x="5"] .grid {
+    --value-x: 5;
+}
+[data-x="6"],
+[data-x="6"] .grid-head-x,
+[data-x="6"] .grid-head-y,
+[data-x="6"] .grid {
+    --value-x: 6;
+}
+[data-x="7"],
+[data-x="7"] .grid-head-x,
+[data-x="7"] .grid-head-y,
+[data-x="7"] .grid {
+    --value-x: 7;
+}
+[data-x="8"],
+[data-x="8"] .grid-head-x,
+[data-x="8"] .grid-head-y,
+[data-x="8"] .grid {
+    --value-x: 8;
+}
+[data-x="9"],
+[data-x="9"] .grid-head-x,
+[data-x="9"] .grid-head-y,
+[data-x="9"] .grid {
+    --value-x: 9;
+}
+[data-x="10"],
+[data-x="10"] .grid-head-x,
+[data-x="10"] .grid-head-y,
+[data-x="10"] .grid {
+    --value-x: 10;
+}
+[data-x="11"],
+[data-x="11"] .grid-head-x,
+[data-x="11"] .grid-head-y,
+[data-x="11"] .grid {
+    --value-x: 11;
+}
+[data-x="12"],
+[data-x="12"] .grid-head-x,
+[data-x="12"] .grid-head-y,
+[data-x="12"] .grid {
+    --value-x: 12;
+}
+[data-x="13"],
+[data-x="13"] .grid-head-x,
+[data-x="13"] .grid-head-y,
+[data-x="13"] .grid {
+    --value-x: 13;
+}
+[data-x="14"],
+[data-x="14"] .grid-head-x,
+[data-x="14"] .grid-head-y,
+[data-x="14"] .grid {
+    --value-x: 115;
+}
+[data-x="15"],
+[data-x="15"] .grid-head-x,
+[data-x="15"] .grid-head-y,
+[data-x="15"] .grid {
+    --value-x: 15;
+}
+[data-y="1"],
+[data-y="1"] .grid-head-x,
+[data-y="1"] .grid-head-y,
+[data-y="1"] .grid {
+    --value-y: 1;
+}
+[data-y="2"],
+[data-y="2"] .grid-head-x,
+[data-y="2"] .grid-head-y,
+[data-y="2"] .grid {
+    --value-y: 2;
+}
+[data-y="3"],
+[data-y="3"] .grid-head-x,
+[data-y="3"] .grid-head-y,
+[data-y="3"] .grid {
+    --value-y: 3;
+}
+[data-y="4"],
+[data-y="4"] .grid-head-x,
+[data-y="4"] .grid-head-y,
+[data-y="4"] .grid {
+    --value-y: 4;
+}
+[data-y="5"],
+[data-y="5"] .grid-head-x,
+[data-y="5"] .grid-head-y,
+[data-y="5"] .grid {
+    --value-y: 5;
+}
+[data-y="6"],
+[data-y="6"] .grid-head-x,
+[data-y="6"] .grid-head-y,
+[data-y="6"] .grid {
+    --value-y: 6;
+}
+[data-y="7"],
+[data-y="7"] .grid-head-x,
+[data-y="7"] .grid-head-y,
+[data-y="7"] .grid {
+    --value-y: 7;
+}
+[data-y="8"],
+[data-y="8"] .grid-head-x,
+[data-y="8"] .grid-head-y,
+[data-y="8"] .grid {
+    --value-y: 8;
+}
+[data-y="9"],
+[data-y="9"] .grid-head-x,
+[data-y="9"] .grid-head-y,
+[data-y="9"] .grid {
+    --value-y: 9;
+}
+[data-y="10"],
+[data-y="10"] .grid-head-x,
+[data-y="10"] .grid-head-y,
+[data-y="10"] .grid {
+    --value-y: 10;
+}
+[data-y="11"],
+[data-y="11"] .grid-head-x,
+[data-y="11"] .grid-head-y,
+[data-y="11"] .grid {
+    --value-y: 11;
+}
+[data-y="12"],
+[data-y="12"] .grid-head-x,
+[data-y="12"] .grid-head-y,
+[data-y="12"] .grid {
+    --value-y: 12;
+}
+[data-y="13"],
+[data-y="13"] .grid-head-x,
+[data-y="13"] .grid-head-y,
+[data-y="13"] .grid {
+    --value-y: 13;
+}
+[data-y="14"],
+[data-y="14"] .grid-head-x,
+[data-y="14"] .grid-head-y,
+[data-y="14"] .grid {
+    --value-y: 115;
+}
+[data-y="15"],
+[data-y="15"] .grid-head-x,
+[data-y="15"] .grid-head-y,
+[data-y="15"] .grid {
+    --value-y: 15;
+}
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+}
+.grid-cont {
+    background-color: red;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    max-width: 650px;
+    margin: 0 auto;
+    max-height: 100vh;
+    overflow: hidden;
+    grid-template-areas:    ". ."
+                            ". head-x"
+                            "head-y grid-cell"
+                            "colors colors"
+                            ". .";
+    grid-template-columns: clamp(20%, 30% ,35%) 1fr;
+    grid-template-rows: 1fr clamp(15%, 22% ,30%) 1fr 1fr 1fr;
+}
+.grid-head-x {
+    grid-area: head-x;
+    display: grid;
+    grid-template-columns: repeat(var(--value-x), 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    width: 100%;
+    height: 100%;
+    border: 5px solid black;
+    border-bottom: 0;
+}
+.grid-head-y {
+    grid-area: head-y;
+    display: grid;
+    grid-template-rows: repeat(var(--value-y), 1fr);
+    width: 100%;
+    height: 100%;
+    border: 5px solid black;
+    border-right: 0;
+}
+.grid {
+    grid-area: grid-cell;
+    display: grid;
+    grid-template-columns: repeat(var(--value-x), 1fr);
+    grid-template-rows: repeat(var(--value-y), 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    width: clamp(100px, 100%, 100%);
+    aspect-ratio: var(--value-x)/var(--value-y);
+    border: 5px solid black;
+}
+.grid-cell {
+}
+.color-pick:nth-child(even),
+.grid-head-cell:nth-child(even),
+.grid-cell:nth-child(even) {
+    background-color: aqua;
+}
+.color-pick:nth-child(odd),
+.grid-head-cell:nth-child(odd),
+.grid-cell:nth-child(odd) {
+    background-color:antiquewhite;
+}
+.color-selector {
+    grid-area: colors;
+    height: 100px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+}
