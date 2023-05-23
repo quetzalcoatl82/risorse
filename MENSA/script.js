@@ -2,7 +2,7 @@
 let unixtime = Math.round(+new Date()/1000);
 let today = new Date().getDay();
 
-const cors = 'https://cors-anywhere.herokuapp.com/';
+const cors = 'https://thingproxy.freeboard.io/fetch/';
 let url = 'https://mondadori.pellegrinicloud.it/menu/'+ unixtime + '/0/368';
 let welnessurl = 'https://mondadori.pellegrinicloud.it/menu/'+ unixtime + '/0/370';
 // inizializzo l'array che conterrà il menu
