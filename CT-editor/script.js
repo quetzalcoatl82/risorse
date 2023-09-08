@@ -297,7 +297,7 @@ function initCanvas(postData) {
             save_button.classList.remove("hide");
 
         })
-        imglogo.src = 'img/logo-flat.png';
+        imglogo.src = cors + 'https://images.console-tribe.com/wp-content/uploads/2023/09/favicon-1.png';
     })
     // https://images.console-tribe.com/wp-content/uploads/2020/09/Tony-hawks-pro-skater-1-and-2-1280x720.jpg
     // https://console-tribe-wp.s3.eu-central-003.backblazeb2.com/wp-content/uploads/2020/09/Tony-hawks-pro-skater-1-and-2-1280x720.jpg
