@@ -15,6 +15,16 @@ var form_image = document.querySelector('.img');
 var form_button = document.querySelector('.submit');
 var save_button = document.querySelector('.savebutton');
 
+document.querySelector('.type-select').addEventListener('change', function(e) {
+    log(e.target.value);
+    canvasfinal = document.querySelector('.final-canvas');
+    if (e.target.value == 'quadrato') {
+        canvasfinal.height = 1080;
+    } else {
+        canvasfinal.height = 1920;
+    }
+})
+
 document.querySelector('.cat-select').addEventListener('change', function() {
     // ogni volta che cambio value faccio partire la catena di ricerca post dal feed e svuoto la seconda tendina
     let secondSelect = document.querySelector('.second-select');
@@ -71,11 +81,16 @@ function getPostData(doc) {
         listAllLink(feed);
     } else {
         insta_share.imageurl = doc.querySelector('.main-image img').src;
-        insta_share.imageurl.replace('https://console-tribe-wp.s3.eu-central-003.backblazeb2.com/wp-content','https://images.console-tribe.com/wp-content',insta_share.imageurl)
+        // insta_share.imageurl.replace('https://console-tribe-wp.s3.eu-central-003.backblazeb2.com/wp-content','https://images.console-tribe.com/wp-content',insta_share.imageurl)
         insta_share.cat = doc.querySelector('.head-article .cat').textContent.trim();
         insta_share.game = doc.querySelector('.box-title');
+        if (insta_share.cat == 'Recensione') {
+            insta_share.game = doc.querySelector('.box-title');
+        } else {
+            insta_share.game = doc.querySelector('.tag-related a');
+        }
         if (insta_share.game) {
-            insta_share.game = doc.querySelector('.box-title').textContent;
+            insta_share.game = insta_share.game.textContent;
         } else {
             insta_share.game = '';
         }
@@ -142,7 +157,9 @@ function handleForm(event) {
 // mi attacco all'evento per disegnare il canvas
 form.addEventListener('submit', handleForm);
 
-var fakeobject =  {imageurl: "https://console-tribe.com/wp-content/uploads/2020/12/Cyberpunk-2077-is-here.png", cat: "Recensione", game: "Titolo lunghissimo che guarda non so neanche se i giochi Capcom hanno dei titoli così lunghi", voto: "80", title: "Atelier Ryza 2: Lost Legends & The Secret Fairy Atelier Ryza 2: Lost Legends & The Secret Fairy - Recensione"}
+// var fakeobject =  {imageurl: "https://images.console-tribe.com/wp-content/uploads/2020/12/Cyberpunk-2077-is-here.png", cat: "Recensione", game: "Titolo lunghissimo che guarda non so neanche se i giochi Capcom hanno dei titoli così lunghi", voto: "80", title: "Atelier Ryza 2: Lost Legends & The Secret Fairy Atelier Ryza 2: Lost Legends & The Secret Fairy - Recensione"}
+// var fakeobject =  {imageurl: "https://images.console-tribe.com/wp-content/uploads/2020/12/Cyberpunk-2077-is-here.png", cat: "News", title: "Titolo lunghissimo che guarda non so neanche se i giochi Capcom hanno dei titoli così lunghi", game: "Nome del gioco"}
+// initCanvas(fakeobject);
 
 // parte canvas
 

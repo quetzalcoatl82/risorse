@@ -33,7 +33,8 @@ h1 {
     flex: 0 0 110px;
 }
 .form-cont input,
-.first-select .cat-select {
+.first-select .cat-select,
+.first-select .type-select {
     flex: 1 0 auto;
 }
 .second-select select,

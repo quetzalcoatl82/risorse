@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Immagini social</title>
-    <link rel="stylesheet" type="text/css" href="style.css?2">
+    <link rel="stylesheet" type="text/css" href="style.css?3">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -17,6 +17,14 @@
     <section class="container">
         <h1>Tool per lo share</h1>
         <div class="first-select">
+            <label for="type-select">Share quadrato o verticale:</label>
+            <select class ="type-select" name="type-select" id="type-select">
+                <option value="quadrato" selected>Quadrato</option>
+                <option value="verticale">Verticale</option>
+            </select>
+        </div>
+        <div class="first-select">
+           
             <label for="cat-select">Scegli una categoria dalla lista:</label>
 
             <select class ="cat-select" name="cat-select" id="cat-select">
@@ -56,7 +64,7 @@
         <button class="savebutton hide">SALVA</button>
 
     </section>
-    <script async src="script.js?2"></script>
+    <script async src="script.js?3"></script>
 </body>
 
 </html>
