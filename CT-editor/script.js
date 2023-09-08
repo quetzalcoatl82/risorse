@@ -32,7 +32,6 @@ document.querySelector('.cat-select').addEventListener('change', function() {
 
 function do_fetch(url, type='json', then_function=log) {
     // funzione generica per fare fetch
-    console.log(cors + url);
     fetch(cors + url,{
         method: 'POST',
         })
@@ -73,7 +72,7 @@ function getPostData(doc) {
     } else {
         insta_share.imageurl = doc.querySelector('.main-image img').src;
         insta_share.imageurl.replace('https://console-tribe-wp.s3.eu-central-003.backblazeb2.com/wp-content','https://images.console-tribe.com/wp-content',insta_share.imageurl)
-        insta_share.cat = doc.querySelector('.head-article .cat').textContent;
+        insta_share.cat = doc.querySelector('.head-article .cat').textContent.trim();
         insta_share.game = doc.querySelector('.box-title');
         if (insta_share.game) {
             insta_share.game = doc.querySelector('.box-title').textContent;
@@ -302,7 +301,7 @@ function initCanvas(postData) {
     })
     // https://images.console-tribe.com/wp-content/uploads/2020/09/Tony-hawks-pro-skater-1-and-2-1280x720.jpg
     // https://console-tribe-wp.s3.eu-central-003.backblazeb2.com/wp-content/uploads/2020/09/Tony-hawks-pro-skater-1-and-2-1280x720.jpg
-    postData.imageurl = postData.imageurl.replace("https://images.console-tribe.com", "https://console-tribe-wp.s3.eu-central-003.backblazeb2.com");
+    // postData.imageurl = postData.imageurl.replace("https://images.console-tribe.com", "https://console-tribe-wp.s3.eu-central-003.backblazeb2.com");
 
     img.src = cors + postData.imageurl;
     // img.src = cors + 'https://upload.wikimedia.org/wikipedia/commons/9/91/F-15_vertical_deploy.jpg';
