@@ -32,6 +32,7 @@ document.querySelector('.cat-select').addEventListener('change', function() {
 
 function do_fetch(url, type='json', then_function=log) {
     // funzione generica per fare fetch
+    console.log(cors + url);
     fetch(cors + url,{
         method: 'POST',
         })
@@ -70,19 +71,20 @@ function getPostData(doc) {
         )
         listAllLink(feed);
     } else {
-        insta_share.imageurl = doc.querySelector('.featured-image figure img').src;
-        insta_share.cat = doc.querySelector('.tag-related a[rel="category tag"]').textContent;
-        insta_share.game = doc.querySelector('.tag-related a:not([rel])');
+        insta_share.imageurl = doc.querySelector('.main-image img').src;
+        insta_share.imageurl.replace('https://console-tribe-wp.s3.eu-central-003.backblazeb2.com/wp-content','https://images.console-tribe.com/wp-content',insta_share.imageurl)
+        insta_share.cat = doc.querySelector('.head-article .cat').textContent;
+        insta_share.game = doc.querySelector('.box-title');
         if (insta_share.game) {
-            insta_share.game = doc.querySelector('.tag-related a:not([rel])').textContent;
+            insta_share.game = doc.querySelector('.box-title').textContent;
         } else {
             insta_share.game = '';
         }
-        insta_share.voto = doc.querySelector('.box-cont .cover-voto');
+        insta_share.voto = doc.querySelector('.cover-voto');
         insta_share.title = doc.querySelector('.entry-title.single-title').textContent;
         
         if (insta_share.voto) {
-            insta_share.voto = doc.querySelector('.box-cont .cover-voto').textContent;
+            insta_share.voto = doc.querySelector('.cover-voto').textContent;
         }
         // qui ho tutto per creare un canvas con le info
         log(insta_share );
