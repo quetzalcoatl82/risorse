@@ -16,6 +16,232 @@
         }.wb-sidebar{position:relative}.wb-sidebar:before{content:"";position:absolute;top:0;z-index:-1;height:100%;width:2px;background-color:var(--white-03);transform:translateX(calc((var(--h-gap)/2) - 2px))}}</style>
     <!-- END Critical Style -->
 
+
+    <style>
+
+.wb-header-overlay-opened .wb-header-overlay{
+	right: 0;
+	width: 100%;
+	transition: opacity .3s ease-in-out, z-index .3s ease-in-out, width 0s linear 0s;
+}
+
+.wb-header-overlay-opened .wb-header-overlay,
+.wb-header-overlay-opened .wb-header-overlay-container{
+	z-index: 214748361;
+	opacity: 1;
+}
+
+.wb-header-overlay-opened .wb-header-overlay-container{
+	transform: scale(1);
+}
+.wb-header-overlay-opened .wb-header-overlay-close{
+	background-color: var(--white-01);
+}
+.wb-header-overlay-close{
+    display: block;
+    position: absolute;
+    top: 6px;
+    right: var(--h-gap);
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 214748362;
+    background-color: transparent;
+    transition: background-color 0s linear 0s;
+    border: none;
+}
+
+.wb-header-overlay-close:before,
+.wb-header-overlay-close:after{
+    content: '';
+    background-color: rgb(var(--white-01));
+    height: 3px;
+    width: 28px;
+    border-radius: 1.5px;
+    position: absolute;
+    top: 19px;
+    left: 7px;
+}
+
+.wb-header-overlay-close:before{
+    transform: rotate(45deg);
+}
+
+.wb-header-overlay-close:after{
+    transform: rotate(-45deg);
+}
+
+.wb-header-overlay-nav{
+	margin-bottom: 30px;
+	padding-bottom: 30px;
+	border-bottom: 2px solid var(--white-01);
+}
+.wb-header-overlay-head {
+	margin-top: 15px;
+	margin-bottom: 20px;
+}
+.wb-header-overlay-grid {
+	display: grid;
+	grid-template-columns: 158px max-content max-content max-content;
+	grid-gap: 15px;
+}
+.wb-header-overlay-grid svg{
+	fill: rgb(var(--white-01))
+}
+.wb-header-overlay-link.wb-title-font {
+	margin-right: 5px;
+}
+[class^="wo-header-overlay-social-"] {
+	border: 2px solid white;
+    border-radius: 100%;
+	width: 30px;
+    height: 30px;
+}
+.wb-header-overlay-social-in {
+	border: none;
+	width: 36px;
+    height: 36px;
+    margin-top: 1px;
+}
+.wb-header-overlay-social-tt {
+	padding: 5px 4px 5px 6px;
+}
+.wb-header-overlay-grid.wb-header-overlay-title {
+	display: grid;
+	grid-template-columns: max-content max-content max-content max-content;
+	margin-bottom: 5px;
+	font-size: 2.25rem;
+	line-height: 1;
+	font-weight: 300;
+	text-transform: uppercase;
+}
+.wb-header-overlay-section a {
+	color: rgb(var(--white-01));
+}
+.wb-header-overlay-title a {
+	color: rgb(var(--color-section));
+}
+.wb-header-overlay-title svg {
+	fill: rgb(var(--color-section));
+	border-color: rgb(var(--color-section));
+}
+
+.wb-header-overlay-section {
+	margin-bottom: 15px;
+}
+.wb-header-overlay-ullist {
+	display: flex;
+	flex-wrap: wrap;
+    gap: 10px;
+	text-transform: uppercase;
+	font-size: 1.125rem;
+	font-weight: 500;
+	line-height: .6;
+}
+.wb-header-overlay-nav a {
+	display: inline-block;
+	position: relative;
+}
+.wb-header-overlay-nav a:hover:before {
+    content: '';
+    display: block;
+    background: rgba(var(--color-section),.6);
+    height: 10px;
+    position: absolute;
+    width: 110%;
+    bottom: -20%;
+	left: -5%;
+    z-index: -1;
+	opacity: .6;
+}
+.wb-header-overlay-container .wb-header {
+    margin: 0 calc(var(--h-gap) * -1);
+    margin-bottom: calc(var(--fixed-h-gap)*2);
+}
+.wb-header-overlay-container .wb-section-name a {
+    color: rgb(var(--color-font-alt));
+}
+.wb-overlay-menu a {
+    color: rgb(var(--color-accent-3));
+    font-size: var(--r38px);
+    text-transform: uppercase;
+    font-weight: var(--medium);
+    display: inline-block;
+    transition: var(--transition);
+}
+.wb-overlay-menu a:hover {
+    color: rgb(var(--color-font-alt));
+}
+.wb-overlay-menu-cont .wb-overlay-menu .current-menu-item a {
+    color: rgb(var(--color-font-alt));
+}
+.wb-overlay-menu-cont .wb-overlay-menu .current-menu-item a:before {
+    content: '';
+    -webkit-box-shadow: 0 0.75em 0 .25em rgb(var(--color-font));
+    box-shadow: 0 0.75em 0 .25em rgb(var(--color-font));
+    display: block;
+}
+/* per avere il menu con gradiente */
+.wb-overlay-menu-cont .wb-overlay-menu {
+    background: linear-gradient(0deg,rgba(var(--pink-01),1) 0%,rgba(var(--pink-03),1) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+.wb-overlay-menu-cont .wb-overlay-menu a {
+    color: transparent;
+}
+.wb-overlay-menu-cont .wb-overlay-menu a:hover {
+    color: rgb(var(--color-font-alt));
+}
+.wb-header-overlay-container .wb-header-socials {
+    display: flex;
+    margin: 0;
+    margin-top: var(--fixed-h-gap);
+    gap: 15px;
+    margin-bottom: var(--fixed-h-gap);
+}
+.wb-header-overlay-container .wb-header-socials .wb-icon {
+    background-color: transparent;
+}
+.wb-header-overlay-container .wb-header-socials .wb-icon svg {
+    fill: rgb(var(--color-accent-3));
+    max-height: none;
+    transition: var(--transition);
+}
+.wb-header-overlay-container .wb-header-socials .wb-icon:hover svg {
+    fill: rgb(var(--color-font-alt));
+}
+.wb-header-overlay-container .wb-icon use[href$="#wb-social-mail"] {
+    stroke: rgb(var(--color-accent-3));
+    transition: var(--transition);
+}
+.wb-header-overlay-container .wb-icon:hover use[href$="#wb-social-mail"] {
+    stroke: rgb(var(--color-font-alt));
+}
+.wb-header-overlay-container .wb-cont-search-form {
+    margin-bottom: var(--fixed-h-gap);
+}
+.wb-header-overlay-container .wb-cont-search-field {
+    border-radius: var(--r30px);
+    background-color: rgb(var(--color-font-alt));
+    border: none;
+    padding: var(--r13px) var(--r13px) var(--r13px) calc(var(--r30px)*2);
+}
+.wb-header-overlay-container .wb-cont-search-submit {
+    right: auto;
+    left: 0;
+    width: 55px;
+    height: 45px;
+}
+.wb-header-overlay-container .wb-cont-search-submit svg {
+    max-height: 22px;
+}
+.wb-header-overlay-container .wb-cont-search-submit svg use {
+    stroke: rgb(var(--color-accent-3));
+}
+    </style>
+
 </head>
 <body>
 
@@ -54,22 +280,12 @@
         <div class="wb-overlay-menu wb-overlay-menu-home">
             <a href="/">Home</a>
         </div>
-        <div role="search" class="wb-cont-search-form-wrapper">
-            <form method="get" class="wb-cont-search-form" action="https://www.webboh.it/">
-                <input type="search" class="wb-cont-search-field" placeholder="Cerca..." value="" name="s" title="Cerca">
-                <button class="wb-icon wb-cont-search-submit">
-                    <svg id="wb-cont-search" viewBox="0 0 14 13">
-                        <use href="icons.svg#wb-icon-search"></use>
-                    </svg>
-                </button>
-            </form>
-        </div>
         <nav id="wb-overlay-menu-cont" class="wb-overlay-menu-cont"><ul id="wb-overlay-menu" class="wb-overlay-menu"><li id="menu-item-121881" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-121881"><a href="https://www.webboh.it/category/value/">Value</a></li>
             <li id="menu-item-488" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-488"><a href="https://www.webboh.it/category/gossip/">People</a></li>
             <li id="menu-item-489" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-489"><a href="https://www.webboh.it/category/flashnews/">Flash</a></li>
             <li id="menu-item-33326" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-33326"><a href="https://www.webboh.it/category/test-quiz/">Test</a></li>
             <li id="menu-item-33324" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-33324"><a href="https://www.webboh.it/category/quando-e-nato/">Compleanni</a></li>
-            <li id="menu-item-490" class="menu-item menu-item-type-taxonomy menu-item-object-category current-menu-item menu-item-490"><a href="https://www.webboh.it/category/wiki/" aria-current="page">Wiki</a></li>
+            <li id="menu-item-490" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-490"><a href="https://www.webboh.it/category/wiki/" aria-current="page">Wiki</a></li>
             <li id="menu-item-33325" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-33325"><a href="https://www.webboh.it/category/cosa-significa/">Cosa significa?</a></li>
             <li id="menu-item-6163" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-6163"><a href="https://www.webboh.it/category/televisione/">TV</a></li>
             <li id="menu-item-134643" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-134643"><a href="https://www.webboh.it/tiktoker-italiani-famosi-classifica/">Classifica TikTok</a></li>
@@ -283,6 +499,120 @@
         </div>        
     </footer><!-- .footer -->
 </div>
+
+<script>
+// init config 
+var sw              = document.documentElement.clientWidth,
+isTouch             = "ontouchstart"in window||navigator.msMaxTouchPoints>0,
+device              = sw>1000&&!isTouch?"desktop":1000>sw&&sw>670||sw>1000&&isTouch?"tablet":"smartphone",
+isPushing           = false,
+is_bnzm_pdown       = false,
+esclusioneTagGpt300x600 = false,
+hideMH = false,
+hideMiniMH = false,
+hideSkin = false;
+
+(function(){
+	if(typeof WBheader === "undefined") { WBheader = {}; }
+
+	var body,
+		html,
+		hamburger,
+		close_button,
+		close_panel,
+		open_menu,
+		search_button,
+		search_form,
+		search_field,
+		pageYOffset;
+
+	function init(){
+		html = document.getElementsByTagName("html")[0];
+		body = document.getElementsByTagName("body")[0];
+		hamburger = document.getElementById("wb-header-hamburger");
+		open_menu = document.getElementsByClassName("wb-header-open-menu");
+		close_button = document.getElementById("wb-header-overlay-close");
+		close_panel = document.getElementById("wb-header-overlay-close-panel");
+		search_button = document.querySelector(".wb-search-icon");
+		search_form = document.querySelector(".wb-search-form");
+		search_field = document.querySelector(".wb-search-field");
+		bindHandlers();
+	}
+
+	function bindHandlers(){
+		hamburger.addEventListener("click", toggleOverlay, false);
+		for (var i = 0; i < open_menu.length; i++) {
+			open_menu[i].addEventListener("click", toggleOverlay, false);
+		}
+		close_button.addEventListener("click", toggleOverlay, false);
+		close_panel.addEventListener("click", hideOverlay, false);
+		searchLogic();
+	}
+
+	function toggleOverlay(ev){
+		ev.preventDefault();
+		ev.stopImmediatePropagation();
+		if(body.classList.contains("wb-header-overlay-opened")){
+			body.classList.remove("wb-header-overlay-opened");
+			window.scrollTo(0,pageYOffset);
+			document.removeEventListener("touchmove", preventScroll, false);
+		} else {
+			pageYOffset = window.pageYOffset;
+			body.classList.add("wb-header-overlay-opened");
+			document.addEventListener("touchmove", preventScroll, false);
+		}
+	}
+
+	function preventScroll(ev){
+	    if(!findParentByClassName(ev.target, "wb-header-overlay-opened")){
+	    	ev.preventDefault();
+	    }
+	}
+
+	function findParentByClassName(el,className) {
+    	while (el.parentNode && el.parentElement !== html) {
+        	el = el.parentNode;
+        	if (el.classList.contains(className)){
+            	return el;
+        	}
+    	}
+    	return null;
+	}
+
+	function hideOverlay(ev){
+		if(body.classList.contains("wb-header-overlay-opened")){
+			body.classList.remove("wb-header-overlay-opened");
+			document.removeEventListener("touchmove", preventScroll, false);
+		}
+	}
+
+	function searchLogic() {
+		if (search_button) {
+			search_button.addEventListener("click", openSearch, false);
+		}
+	}
+	function openSearch(ev) {
+		if (!search_form.classList.contains('wb-open')) {
+			// al click da chiuso apro il form
+			ev.preventDefault();
+			search_form.classList.add('wb-open');
+			search_field.addEventListener('focusout', closeSearch);
+			search_field.focus();
+		}
+	}
+	function closeSearch(ev) {
+		if (search_field.value === "") {
+			// chiudo solo se non c'è testo
+			search_form.classList.remove('wb-open');
+			search_field.removeEventListener('focusout', closeSearch);
+		}
+	}
+
+	WBheader.handlers = init;
+}());
+
+WBheader.handlers();
+</script>
     
 </body>
 </html>
