@@ -84,7 +84,8 @@ function getPostData(doc) {
         // insta_share.imageurl.replace('https://console-tribe-wp.s3.eu-central-003.backblazeb2.com/wp-content','https://images.console-tribe.com/wp-content',insta_share.imageurl)
         insta_share.cat = doc.querySelector('.head-article .cat').textContent.trim();
         insta_share.game = doc.querySelector('.box-title');
-        if (insta_share.cat == 'Recensione') {
+        if (insta_share.cat == 'Recensioni') {
+            insta_share.cat = 'Recensione';
             insta_share.game = doc.querySelector('.box-title');
         } else {
             insta_share.game = doc.querySelector('.tag-related a');
@@ -314,7 +315,8 @@ function initCanvas(postData) {
             save_button.classList.remove("hide");
 
         })
-        imglogo.src = cors + 'https://images.console-tribe.com/wp-content/uploads/2023/09/favicon-1.png';
+        // imglogo.src = cors + 'https://images.console-tribe.com/wp-content/uploads/2023/09/favicon-1.png';
+        imglogo.src = 'img/logo-flat.jpg';
     })
     // https://images.console-tribe.com/wp-content/uploads/2020/09/Tony-hawks-pro-skater-1-and-2-1280x720.jpg
     // https://console-tribe-wp.s3.eu-central-003.backblazeb2.com/wp-content/uploads/2020/09/Tony-hawks-pro-skater-1-and-2-1280x720.jpg
