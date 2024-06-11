@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarklet</title>
+
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: lightblue;
+        }
+        .button {
+            text-decoration: none;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 5px;
+            display: inline-block;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bookmarklet</h1>
+    <p>Trascina il bookmarklet nella tua barra dei preferiti</p>
+    <a class="button" href="javascript:(function()%7Bconst%20local_items%20%3D%20%7B%20...localStorage%20%7D%0A%0AObject.keys(local_items).forEach(function%20(key)%20%7B%0A%20%20%20%20if%20(key.startsWith('adk_'))%20%7B%0A%20%20%20%20%20%20%20%20console.log('Rimuovo%20la%20chiave'%2C%20key)%3B%0A%20%20%20%20%20%20%20%20localStorage.removeItem(key)%3B%0A%20%20%20%20%7D%0A%7D)%7D)()%3B">Cancella tutte le chiavi adk_ da localstorage</a>
+    
+</body>
+</html>
