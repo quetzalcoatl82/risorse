@@ -1,0 +1,1 @@
+outlook.live.com##div[data-focuszone-id] + div,div[data-focuszone-id] + div,div[data-app-section="MessageList"] div.full:style(display: none;)
