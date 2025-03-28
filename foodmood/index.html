@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodMood - Dove mangiamo oggi?</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FoodMood</h1>
+            <p>Non sai dove andare a mangiare? Seleziona chi c'è e lascia decidere al caso!</p>
+        </header>
+
+        <main>
+            <section class="selection-panel">
+                <h2>Chi viene a pranzo oggi?</h2>
+                <div id="people-list" class="checkbox-list">
+                    <!-- Le persone verranno aggiunte dinamicamente dal JavaScript -->
+                </div>
+                
+                <h2>In the mood for...</h2>
+                <div id="mood-tags" class="tag-list">
+                    <!-- I tag mood verranno aggiunti dinamicamente dal JavaScript -->
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="find-place" class="primary-button">Trova un posto!</button>
+                    <button id="reset" class="secondary-button">Reset</button>
+                </div>
+            </section>
+
+            <section id="result-panel" class="result-panel hidden">
+                <h2>Oggi si mangia a:</h2>
+                <div id="result" class="result-box">
+                    <!-- Il risultato verrà inserito qui dal JavaScript -->
+                </div>
+                <button id="try-again" class="secondary-button">Riprova</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>FoodMood - Creato il 28 marzo 2025</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
