@@ -48,7 +48,7 @@ const bingoStrings = [
     { title: "Qualcuno prova a integrare un branch in sviluppo sul quale ha lavorato solo lui", subtitle: "e condanna due branch a morte certa" },
     { title: "Qualcuno dice IABBONE", subtitle: "" },
     { title: "Il collega che dice 'ah ho capito'", subtitle: "ma è l'unico che ha capito" },
-    { title: "Qualcuno perde mezz'ora a risolvere problemi fuori dalla lavorazione", subtitle: "" },
+    { title: "Qualcuno perde mezz'ora di riunione a risolvere problemi fuori dalla lavorazione", subtitle: "" },
     { title: "Tutti guardano una persona che fa codice sulla tv", subtitle: "e nessuno sa di cosa sta parlando" },
 ]; 
 
