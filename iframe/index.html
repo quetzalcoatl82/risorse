@@ -91,6 +91,8 @@
     </section>
 
     <script>
+        // stampo i parametri per vedere che passano correttamente
+        // solo per la demo
         (function () {
             function formatValue(value) {
                 if (value === null) return 'null';
@@ -146,48 +148,53 @@
 
                 output.replaceWith(dl);
             }
-
-            function extractConsentValue(data) {
-                if (data && typeof data === 'object' && 'value' in data) {
-                    return data.value;
-                }
-                return data;
-            }
-
-            function renderConsent(value) {
-                var output = document.getElementById('consent-output');
-                output.className = '';
-                output.textContent = formatValue(value);
-            }
-
-            window.addEventListener('message', function (event) {
-                var data = event.data;
-
-                if (typeof data === 'string') {
-                    try {
-                        data = JSON.parse(data);
-                    } catch (e) {
-                        if (data !== 'IUB_CONSENT') return;
-                        renderConsent(data);
-                        return;
-                    }
-                }
-
-                if (data === 'IUB_CONSENT') {
-                    renderConsent(data);
-                    return;
-                }
-
-                if (!data || typeof data !== 'object') return;
-
-                var eventName = data.event || data.type || data.name;
-                if (eventName !== 'IUB_CONSENT') return;
-
-                renderConsent(extractConsentValue(data));
-            });
-
             renderUrlParams();
         })();
+
+        (function () { // gestione del consenso con Google Analytics a partire dal parent
+            
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+
+            // array di origin dei parent consentiti
+            var PARENT_ORIGINS = ["https://www.smartworld.it", "https://www.giallozafferano.it"];
+
+            // Passo 1: default denied, in attesa del messaggio dal parent
+            gtag("consent", "default", {
+                ad_storage:              "denied",
+                ad_user_data:            "denied",
+                ad_personalization:      "denied",
+                analytics_storage:       "denied",
+                functionality_storage:   "denied",
+                personalization_storage: "denied",
+                security_storage:        "granted",
+                wait_for_update: 1500
+            });
+
+            // Passo 2: ricevi il consenso dal parent
+            window.addEventListener("message", function (e) {
+                if (!PARENT_ORIGINS.includes(e.origin)) return;
+                var data = e.data;
+                if (!data || data.type !== "AME_CONSENT" || !data.consentMode) return;
+
+                gtag("consent", "update", data.consentMode);
+
+                // Disponibile per altri usi nell'iframe
+                window.AME_CONSENT_CACHE = data;
+                window.dispatchEvent(new CustomEvent("ameConsentReceived", { detail: data }));
+            });
+
+            // Passo 3: handshake — chiede snapshot al parent se già pronto
+            try {
+                parent.postMessage({ type: "AME_CONSENT_REQUEST", v: 1 }, PARENT_ORIGIN);
+            } catch (err) { /* parent non raggiungibile */ }
+
+        })();
     </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX"></script>
+    <script>
+        gtag("js", new Date());
+        gtag("config", "G-XXXXXXXX");
+    </script>    
 </body>
 </html>
