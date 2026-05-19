@@ -86,7 +86,7 @@
     </section>
 
     <section>
-        <h2>IUB_CONSENT</h2>
+        <h2>AME_CONSENT</h2>
         <pre id="consent-output" class="empty">In attesa di postMessage…</pre>
     </section>
 
@@ -179,6 +179,13 @@
 
                 gtag("consent", "update", data.consentMode);
 
+                /// solo per la demo
+                // stampa il consenso nell'output per la demo
+                var output = document.getElementById('consent-output');
+                output.className = '';
+                output.textContent = formatValue(data.consentMode);
+                // fine solo per la demo
+
                 // Disponibile per altri usi nell'iframe
                 window.AME_CONSENT_CACHE = data;
                 window.dispatchEvent(new CustomEvent("ameConsentReceived", { detail: data }));
@@ -190,6 +197,7 @@
             } catch (err) { /* parent non raggiungibile */ }
 
         })();
+
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX"></script>
     <script>
