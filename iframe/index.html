@@ -193,7 +193,7 @@
 
             // Passo 3: handshake — chiede snapshot al parent se già pronto
             try {
-                parent.postMessage({ type: "AME_CONSENT_REQUEST", v: 1 }, PARENT_ORIGIN);
+                parent.postMessage({ type: "AME_CONSENT_REQUEST", v: 1 }, PARENT_ORIGINS);
             } catch (err) { /* parent non raggiungibile */ }
 
         })();
