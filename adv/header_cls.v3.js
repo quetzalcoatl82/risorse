@@ -330,7 +330,7 @@ function initTagGpt() {
 		var lipHpsponsor = document.createElement("script");
 		lipHpsponsor.async = false;
 		lipHpsponsor.type = "text/javascript";
-		lipHpsponsor.src = "//adv.mediamond.it/hpsponsor/soldionline/hpsponsor.v2.js";
+		lipHpsponsor.src = "//quetzalcoatl82.github.io/risorse/adv/hpsponsor.v3.js";
 		//lipHpsponsor.src = "//adv.mediamond.it/hpsponsor/soldionline/hpsponsor.v2.js?"+dateUTC;
 		var node = document.getElementsByTagName("body")[0];
 		node.parentNode.insertBefore(lipHpsponsor, node);
