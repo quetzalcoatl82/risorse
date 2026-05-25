@@ -5,6 +5,9 @@ var larghezzaSitoAdv = window.innerWidth;
 var riferimentoLarghezza = 1300; 
 var marginTopSidebarSkin;
 var maginTopContenitore;
+var headerHeight = 145; // altezza della testata
+var mhHeight = 0;
+var topHeight = headerHeight + mhHeight;
 
 if(document.querySelector(".sol-page")){//home cucina
 	eefPoint = document.querySelector("main");
@@ -59,6 +62,7 @@ googletag.cmd.push(function () {
             let elemento = document.getElementById(slotId);
             let altezzaElemento = elemento.offsetHeight;
             document.documentElement.style.setProperty('--mm-mh-height', altezzaElemento + 'px');
+            topHeight = headerHeight + altezzaElemento;
 		}
 	})
 })
@@ -121,7 +125,8 @@ function loadSkinWeb(colore_sfondo_w,img_web_w,posizione_w,altezza_testata_w,url
 		'--mm-skin-content-offset': maginTopContenitore + 'px',
 		'--mm-skin-content-offset-low': maginTopContenitoreLow + 'px',
 		'--mm-skin-bg-size': '1764px auto',
-		'--mm-skin-bg-size-md': '1471px auto'
+		'--mm-skin-bg-size-md': '1471px auto',
+        '--mm-mh-height': mhHeight + 'px'
 	});
 
 	console.log('--> skin web 2.2');
@@ -186,7 +191,7 @@ function loadSkinWeb(colore_sfondo_w,img_web_w,posizione_w,altezza_testata_w,url
 		 //console.log('[mediamond][skin]===>sizeStrip null');
 	}
     
-    marginTopSidebarSkin = sizeStrip[1]+70+50;
+    marginTopSidebarSkin = sizeStrip[1]+headerHeight;
 	
 	var mediamondSkinIas = {topMarginSkin: topMarginSkin, larghezzaSito: 1200, idDiv: 'div-gpt-skin'};
 	initDivIasSkin(topMarginSkin);
@@ -239,7 +244,8 @@ function loadSkinWeb2(configSkin){
 		'--mm-skin-content-offset': maginTopContenitore + 'px',
 		'--mm-skin-content-offset-low': maginTopContenitoreLow + 'px',
 		'--mm-skin-bg-size': '1764px auto',
-		'--mm-skin-bg-size-md': '1471px auto'
+		'--mm-skin-bg-size-md': '1471px auto',
+        '--mm-mh-height': mhHeight + 'px'
 	});
 
 	var urlLinkAdvEsterno = document.getElementById("adv_esterno");
@@ -302,7 +308,7 @@ function loadSkinWeb2(configSkin){
 		 //console.log('[mediamond][skin]===>sizeStrip null');
 	}
     
-    marginTopSidebarSkin = sizeStrip[1]+70+50;
+    marginTopSidebarSkin = sizeStrip[1]+headerHeight;
 	
 	var mediamondSkinIas = {topMarginSkin: topMarginSkin, larghezzaSito: 1200, idDiv: 'div-gpt-skin'};
 	//initDivIasSkin(topMarginSkin); dismesso
@@ -323,7 +329,7 @@ checkSkinPosition = () => {
 		var scrollPos = document.body.scrollTop || document.documentElement.scrollTop
 		if (MMstatusPersonalizzazioniWeb == true) {
 			//da popolare
-			if (scrollPos >= (marginTopSidebarSkin + marginTopSidebarSkin)) {
+			if (scrollPos >= topHeight) {
 				document.body.classList.add("skinPositionScrollBody");
 				document.querySelector(".mh2021Page").classList.add("skinPositionScrollBody");
 				document.querySelector("#adv_esterno").classList.add("skinPositionScrollLink");
@@ -452,7 +458,7 @@ function initDivIasSkin(altezza_testata_w){
                 var scrollPosIas =  document.body.scrollTop  || document.documentElement.scrollTop
                 //per ias
                 //console.log('[mediamond][skin][ias]===>scrollPosIas:'+scrollPosIas);
-                if(scrollPosIas >= (marginTopSidebarSkin + marginTopSidebarSkin)){
+                if(scrollPosIas >= topHeight){
 					document.getElementById('div-gpt-skin').classList.add("divSidebarPosScroll");
                 }else{
 					document.getElementById('div-gpt-skin').classList.remove("divSidebarPosScroll");
