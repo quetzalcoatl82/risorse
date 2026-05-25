@@ -53,9 +53,12 @@ googletag.cmd = googletag.cmd || [];
 googletag.cmd.push(function () {
 	googletag.pubads().addEventListener('slotRenderEnded', function (event) {
 		let slotId = event.slot.getSlotElementId();
-		if (slotId == 'adv-gpt-masthead-leaderboard-container1' && event.size) {
-			console.log('prv_:',slotId)
-			console.log('prv_:',event.size)
+		if (slotId == 'adv-gpt-masthead-leaderboard-container1') {
+            console.log('slotId:',slotId);
+            // prendi l'altezza dell'elemento con id slotId
+            let elemento = document.getElementById(slotId);
+            let altezzaElemento = elemento.offsetHeight;
+            console.log('altezzaElemento:',altezzaElemento);
 		}
 	})
 })
