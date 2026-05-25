@@ -58,7 +58,7 @@ googletag.cmd.push(function () {
             // prendi l'altezza dell'elemento con id slotId
             let elemento = document.getElementById(slotId);
             let altezzaElemento = elemento.offsetHeight;
-            console.log('altezzaElemento:',altezzaElemento);
+            document.documentElement.style.setProperty('--mm-mh-height', altezzaElemento + 'px');
 		}
 	})
 })
