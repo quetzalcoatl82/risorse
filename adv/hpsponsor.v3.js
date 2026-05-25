@@ -131,7 +131,7 @@ function loadSkinWeb(colore_sfondo_w,img_web_w,posizione_w,altezza_testata_w,url
 	if(gapHeight>=scrollPosInitial) // non faccio espandere il container se l'utente ha scrollato
 	cssSkinWeb += '#contenitore-sito-x-adv{width:1200px; margin:0 auto;}';
 	
-	cssSkinWeb += '.mh2021Page {background-image: var(--mm-skin-bg-image) !important; var(--mm-skin-bg-color) background-repeat: no-repeat !important;background-position-x: center !important;background-position-y: var(--mm-skin-top-margin)!important;background-size:var(--mm-skin-bg-size) !important;}';
+	cssSkinWeb += '.mh2021Page {background-image: var(--mm-skin-bg-image) !important; background-color: var(--mm-skin-bg-color) !important; background-repeat: no-repeat !important;background-position-x: center !important;background-position-y: var(--mm-skin-top-margin)!important;background-size:var(--mm-skin-bg-size) !important;}';
 	
 	cssSkinWeb += '@media only screen and (max-width: 1440px) and (min-width: 1025px) { body,.mh2021Page{background-size:var(--mm-skin-bg-size-md) !important;}}';
 		
