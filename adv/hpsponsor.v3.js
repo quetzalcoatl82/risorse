@@ -247,7 +247,7 @@ function loadSkinWeb2(configSkin){
 	
 	cssSkinWeb += '.skinPositionScrollLink{position: fixed !important;}';
 
-	cssSkinWeb += '.skinPositionScrollContainer + .mm-skin-main {transform:translateY(var(--mm-skin-content-offset));transition:transform 0.5s ease-out;}';
+	cssSkinWeb += '.skinPositionScrollContainer + .mm-skin-main, .skinPositionScrollContainer + .mm-skin-main ~ * {transform:translateY(var(--mm-skin-content-offset));transition:transform 0.5s ease-out;}';
 
 
 	cssSkinWeb += 'nav#main-navigation,.sub-header{position: relative;z-index: 1;}.advstrip {position: relative;z-index: 1;}';
