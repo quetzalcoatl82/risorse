@@ -152,7 +152,7 @@ function loadSkinWeb(colore_sfondo_w,img_web_w,posizione_w,altezza_testata_w,url
 	
 	cssSkinWeb += '.skinPositionScrollLink{position: fixed !important;}';
 
-	cssSkinWeb += '.skinPositionScrollContainer {margin-bottom: var(--mm-mh-height); transition: margin-bottom 0.5s ease-out;}';
+	cssSkinWeb += '.skinPositionScrollContainer {margin-bottom: var(--mm-skin-content-offset); transition: margin-bottom 0.5s ease-out;}';
 
 	cssSkinWeb += 'nav#main-navigation,.sub-header{position: relative;z-index: 1;}.advstrip {position: relative;z-index: 1;}';
 	cssSkinWeb += '.leaf .content article .content-leaf{margin-top:0px;}';
@@ -266,7 +266,7 @@ function loadSkinWeb2(configSkin){
 	
 	cssSkinWeb += '.skinPositionScrollLink{position: fixed !important;}';
 
-	cssSkinWeb += '.skinPositionScrollContainer {margin-bottom: var(--mm-mh-height) !important; transition: margin-bottom 0.5s ease-out;}';
+	cssSkinWeb += '.skinPositionScrollContainer {margin-bottom: var(--mm-skin-content-offset) !important; transition: margin-bottom 0.5s ease-out;}';
 
 
 	cssSkinWeb += 'nav#main-navigation,.sub-header{position: relative;z-index: 1;}.advstrip {position: relative;z-index: 1;}';
