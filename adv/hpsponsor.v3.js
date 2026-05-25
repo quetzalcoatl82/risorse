@@ -77,6 +77,13 @@ function setSkinRootVars(vars) {
 function loadSkinWeb(colore_sfondo_w,img_web_w,posizione_w,altezza_testata_w,url_puntamento_personalizzazione_w,statusStrip_w,status300x100_w,statusRichMedia_w){
 	console.log('--> skin web 2.2');
 
+    // check sul colore predominante dell'immagine in modo da mettere un colore che si adatti meglio
+	if(colore_sfondo_w == '#fdfaf9'){
+		bgcolor = '';
+	}else{
+		bgcolor = 'background-color: ' + colore_sfondo_w + ' !important;';
+	}
+
 	document.body.classList.add("sol-skin-visible");
 	
 	maginTopContenitore = (parseInt(altezza_testata_w) + 17);
@@ -110,7 +117,6 @@ function loadSkinWeb(colore_sfondo_w,img_web_w,posizione_w,altezza_testata_w,url
 		'--mm-skin-top-margin': topMarginSkin + 'px',
 		'--mm-skin-content-offset': maginTopContenitore + 'px',
 		'--mm-skin-content-offset-low': maginTopContenitoreLow + 'px',
-		'--mm-skin-bg-color': colore_sfondo_w === '#fdfaf9' ? '' : colore_sfondo_w,
 		'--mm-skin-bg-size': '1764px auto',
 		'--mm-skin-bg-size-md': '1471px auto'
 	});
@@ -130,7 +136,7 @@ function loadSkinWeb(colore_sfondo_w,img_web_w,posizione_w,altezza_testata_w,url
 	if(gapHeight>=scrollPosInitial) // non faccio espandere il container se l'utente ha scrollato
 	cssSkinWeb += '#contenitore-sito-x-adv{width:1200px; margin:0 auto;}';
 	
-	cssSkinWeb += '.mh2021Page {background-image: url(' + img_web_w + ')!important; background-color: var(--mm-skin-bg-color) !important; background-repeat: no-repeat !important;background-position-x: center !important;background-position-y: var(--mm-skin-top-margin)!important;background-size:var(--mm-skin-bg-size) !important;}';
+	cssSkinWeb += '.mh2021Page {background-image: url(' + img_web_w + ')!important; '+bgcolor+' background-repeat: no-repeat !important;background-position-x: center !important;background-position-y: var(--mm-skin-top-margin)!important;background-size:var(--mm-skin-bg-size) !important;}';
 	
 	cssSkinWeb += '@media only screen and (max-width: 1440px) and (min-width: 1025px) { body,.mh2021Page{background-size:var(--mm-skin-bg-size-md) !important;}}';
 		
@@ -189,6 +195,13 @@ function loadSkinWeb(colore_sfondo_w,img_web_w,posizione_w,altezza_testata_w,url
 function loadSkinWeb2(configSkin){
 	console.log('mediamond][skin]===>skin web 3.0');
 
+    // check sul colore predominante dell'immagine in modo da mettere un colore che si adatti meglio
+	if(colore_sfondo_w == '#fdfaf9'){
+		bgcolor = '';
+	}else{
+		bgcolor = 'background-color: ' + colore_sfondo_w + ' !important;';
+	}
+
 	document.body.classList.add("sol-skin-visible");
 	
 	maginTopContenitore = (parseInt(configSkin.altezza_testata) + 17);
@@ -222,7 +235,6 @@ function loadSkinWeb2(configSkin){
 		'--mm-skin-top-margin': topMarginSkin + 'px',
 		'--mm-skin-content-offset': maginTopContenitore + 'px',
 		'--mm-skin-content-offset-low': maginTopContenitoreLow + 'px',
-		'--mm-skin-bg-color': configSkin.colore_sfondo === '#fdfaf9' ? '' : configSkin.colore_sfondo,
 		'--mm-skin-bg-size': '1764px auto',
 		'--mm-skin-bg-size-md': '1471px auto'
 	});
@@ -237,7 +249,7 @@ function loadSkinWeb2(configSkin){
 	if(gapHeight>=scrollPosInitial) // non faccio espandere il container se l'utente ha scrollato
 	cssSkinWeb += '#contenitore-sito-x-adv{height:var(--mm-skin-content-offset) !important;width:1200px;margin:0 auto;-webkit-transition:height 0.5s ease-out;-moz-transition:height 0.5s ease-out;-o-transition:height 0.5s ease-out;transition:height 0.5s ease-out;}';
 	
-	cssSkinWeb += '.mh2021Page {background-image:url(' + img_web_w + ')!important;background-color:var(--mm-skin-bg-color,transparent) !important;background-repeat:no-repeat !important;background-position-x:center !important;background-position-y:var(--mm-skin-top-margin) !important;background-size:var(--mm-skin-bg-size) !important;}';
+	cssSkinWeb += '.mh2021Page {background-image:url(' + img_web_w + ')!important; '+bgcolor+' background-repeat:no-repeat !important;background-position-x:center !important;background-position-y:var(--mm-skin-top-margin) !important;background-size:var(--mm-skin-bg-size) !important;}';
 	
 	cssSkinWeb += '@media only screen and (max-width: 1440px) and (min-width: 1025px) { body,.mh2021Page{background-size:var(--mm-skin-bg-size-md) !important;}#contenitore-sito-x-adv{height:var(--mm-skin-content-offset-low)}}';
 		
