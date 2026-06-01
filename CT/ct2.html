@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Console Tribe — Il portale dei videogiochi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ===== TOKENS ===== */
+    :root {
+      --c-bg:        #0d0f14;
+      --c-surface:   #161921;
+      --c-surface2:  #1e2130;
+      --c-border:    #2a2d3a;
+      --c-text:      #e8eaf0;
+      --c-muted:     #7c8099;
+      --c-accent:    #4f9cf9;
+      --c-accent-h:  #3a85e8;
+      --c-score-hi:  #22c55e;
+      --c-score-mid: #f59e0b;
+      --c-score-lo:  #ef4444;
+      --c-rec:       #4f9cf9;
+      --c-news:      #8b8fa8;
+      --c-art:       #a78bfa;
+      --c-cin:       #2dd4bf;
+      --c-retro:     #f59e0b;
+      --c-ps5:       #00439c;
+      --c-xbox:      #107c10;
+      --c-switch:    #e4000f;
+      --radius-sm:   6px;
+      --radius-md:   10px;
+      --radius-lg:   16px;
+      --shadow-card: 0 2px 16px rgba(0,0,0,.4);
+    }
+
+    [data-theme="light"] {
+      --c-bg:       #f4f5f7;
+      --c-surface:  #ffffff;
+      --c-surface2: #eef0f5;
+      --c-border:   #e0e3ec;
+      --c-text:     #111318;
+      --c-muted:    #6b7280;
+      --c-shadow:   rgba(0,0,0,.08);
+      --shadow-card: 0 2px 12px rgba(0,0,0,.08);
+    }
+
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--c-bg);
+      color: var(--c-text);
+      font-size: 15px;
+      line-height: 1.55;
+      transition: background .2s, color .2s;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+
+    /* ===== LAYOUT ===== */
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--c-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--c-border);
+    }
+    .section-title a {
+      color: var(--c-accent);
+      font-size: 11px;
+      white-space: nowrap;
+      margin-left: auto;
+    }
+
+    /* ===== CATEGORY PILLS ===== */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .pill--rec    { background: color-mix(in srgb, var(--c-rec) 15%, transparent);    color: var(--c-rec); }
+    .pill--news   { background: color-mix(in srgb, var(--c-news) 15%, transparent);   color: var(--c-muted); }
+    .pill--art    { background: color-mix(in srgb, var(--c-art) 15%, transparent);    color: var(--c-art); }
+    .pill--cin    { background: color-mix(in srgb, var(--c-cin) 15%, transparent);    color: var(--c-cin); }
+    .pill--retro  { background: color-mix(in srgb, var(--c-retro) 15%, transparent);  color: var(--c-retro); }
+
+    /* ===== SCORE BADGE ===== */
+    .score {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; font-weight: 800;
+      flex-shrink: 0;
+      border: 2px solid;
+    }
+    .score--hi  { background: color-mix(in srgb, var(--c-score-hi)  20%, transparent); color: var(--c-score-hi);  border-color: var(--c-score-hi); }
+    .score--mid { background: color-mix(in srgb, var(--c-score-mid) 20%, transparent); color: var(--c-score-mid); border-color: var(--c-score-mid); }
+    .score--lo  { background: color-mix(in srgb, var(--c-score-lo)  20%, transparent); color: var(--c-score-lo);  border-color: var(--c-score-lo); }
+
+    /* ===== HEADER ===== */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--c-surface);
+      border-bottom: 1px solid var(--c-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      display: flex; align-items: center; gap: 24px;
+      height: 60px;
+    }
+    .logo {
+      font-size: 20px; font-weight: 800;
+      letter-spacing: -.02em;
+      white-space: nowrap;
+      color: var(--c-text);
+    }
+    .logo span { color: var(--c-accent); }
+
+    .nav-primary {
+      display: flex; align-items: center; gap: 4px;
+      flex: 1;
+    }
+    .nav-primary a {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 14px; font-weight: 600;
+      color: var(--c-muted);
+      transition: color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .nav-primary a:hover,
+    .nav-primary a.active { color: var(--c-text); background: var(--c-surface2); }
+
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+
+    .search-bar {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--c-surface2);
+      border: 1px solid var(--c-border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      transition: border-color .15s;
+    }
+    .search-bar:focus-within { border-color: var(--c-accent); }
+    .search-bar input {
+      background: none; border: none; outline: none;
+      font: inherit; color: var(--c-text); font-size: 13px;
+      width: 160px;
+    }
+    .search-bar input::placeholder { color: var(--c-muted); }
+    .search-bar svg { color: var(--c-muted); flex-shrink: 0; }
+
+    .btn-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--c-surface2);
+      border: 1px solid var(--c-border);
+      color: var(--c-muted);
+      transition: color .15s, background .15s;
+    }
+    .btn-icon:hover { color: var(--c-text); background: var(--c-border); }
+
+    /* Platform filter bar */
+    .platform-bar {
+      background: var(--c-bg);
+      border-bottom: 1px solid var(--c-border);
+    }
+    .platform-bar-inner {
+      display: flex; align-items: center; gap: 6px;
+      height: 42px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .platform-bar-inner::-webkit-scrollbar { display: none; }
+    .plat-tag {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px; font-weight: 600;
+      white-space: nowrap;
+      border: 1px solid transparent;
+      transition: all .15s;
+      color: var(--c-muted);
+    }
+    .plat-tag:hover { background: var(--c-surface2); color: var(--c-text); }
+    .plat-tag.active { background: var(--c-accent); color: #fff; border-color: var(--c-accent); }
+    .plat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ===== HERO CAROUSEL ===== */
+    .hero { padding: 32px 0 0; }
+    .hero-carousel-wrap { position: relative; overflow: hidden; border-radius: var(--radius-lg); }
+    .hero-track { display: flex; transition: transform .4s cubic-bezier(.25,.46,.45,.94); }
+    .hero-slide {
+      min-width: 100%; position: relative;
+      aspect-ratio: 21/9;
+      background: var(--c-surface2);
+      overflow: hidden;
+    }
+    @media (max-width: 768px) { .hero-slide { aspect-ratio: 4/3; } }
+
+    .hero-slide-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .6s ease;
+    }
+    .hero-carousel-wrap:hover .hero-slide-img { transform: scale(1.02); }
+    .hero-gradient {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.3) 50%, transparent 100%);
+    }
+    .hero-content {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 32px 36px;
+      display: flex; align-items: flex-end; gap: 20px;
+    }
+    .hero-text { flex: 1; }
+    .hero-text .pill { margin-bottom: 10px; }
+    .hero-title {
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 800; line-height: 1.2;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .hero-meta { font-size: 13px; color: rgba(255,255,255,.6); }
+    .hero-score .score { width: 56px; height: 56px; font-size: 20px; }
+
+    .carousel-btn {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(0,0,0,.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.15);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+      z-index: 2;
+    }
+    .carousel-btn:hover { background: rgba(0,0,0,.75); }
+    .carousel-btn--prev { left: 16px; }
+    .carousel-btn--next { right: 16px; }
+
+    .carousel-dots {
+      position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 2;
+    }
+    .carousel-dot {
+      width: 6px; height: 6px; border-radius: 3px;
+      background: rgba(255,255,255,.35);
+      transition: width .25s, background .25s;
+    }
+    .carousel-dot.active { width: 18px; background: #fff; }
+
+    /* ===== FEATURED REVIEWS ===== */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .reviews-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 580px) { .reviews-grid { grid-template-columns: 1fr; } }
+
+    .review-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: var(--shadow-card);
+    }
+    .review-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,.35); }
+    .review-card-img {
+      aspect-ratio: 16/9;
+      background: var(--c-surface2);
+      overflow: hidden;
+      position: relative;
+    }
+    .review-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .review-card:hover .review-card-img img { transform: scale(1.05); }
+    .review-card-img .score {
+      position: absolute; bottom: 10px; right: 10px;
+    }
+    .review-card-body { padding: 14px 16px; }
+    .review-card-body .pill { margin-bottom: 8px; }
+    .review-card-title { font-size: 15px; font-weight: 700; line-height: 1.3; margin-bottom: 6px; }
+    .review-card-meta { font-size: 12px; color: var(--c-muted); }
+    .review-card-platform {
+      display: inline-block;
+      font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 3px;
+      background: var(--c-surface2);
+      color: var(--c-muted);
+      margin-top: 8px;
+    }
+
+    /* ===== TWO-COLUMN SECTION ===== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 1024px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* Featured Article */
+    .featured-article {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+    .featured-article-img {
+      aspect-ratio: 16/7;
+      background: var(--c-surface2);
+      overflow: hidden;
+    }
+    .featured-article-img img { width: 100%; height: 100%; object-fit: cover; }
+    .featured-article-body { padding: 24px; }
+    .featured-article-body .pill { margin-bottom: 12px; }
+    .featured-article-title { font-size: 22px; font-weight: 800; line-height: 1.25; margin-bottom: 10px; }
+    .featured-article-excerpt { font-size: 14px; color: var(--c-muted); line-height: 1.6; margin-bottom: 16px; }
+    .featured-article-meta { font-size: 12px; color: var(--c-muted); display: flex; gap: 12px; align-items: center; }
+
+    /* Sidebar */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .sidebar-articles-list { display: flex; flex-direction: column; gap: 4px; }
+    .sidebar-article {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      transition: background .15s;
+    }
+    .sidebar-article:hover { background: var(--c-surface2); }
+    .sidebar-article-img {
+      width: 72px; height: 52px; border-radius: 6px;
+      background: var(--c-surface2);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .sidebar-article-img img { width: 100%; height: 100%; object-fit: cover; }
+    .sidebar-article-body {}
+    .sidebar-article-body .pill { margin-bottom: 4px; }
+    .sidebar-article-title { font-size: 13px; font-weight: 600; line-height: 1.3; }
+    .sidebar-article-meta { font-size: 11px; color: var(--c-muted); margin-top: 4px; }
+
+    /* ===== NEWS SECTION ===== */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 1100px) { .news-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 750px)  { .news-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px)  { .news-grid { grid-template-columns: 1fr; } }
+
+    .news-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: var(--shadow-card);
+    }
+    .news-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.3); }
+    .news-card-img {
+      aspect-ratio: 16/9;
+      background: var(--c-surface2);
+      overflow: hidden;
+    }
+    .news-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+    .news-card:hover .news-card-img img { transform: scale(1.04); }
+    .news-card-body { padding: 12px 14px 14px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .news-card-body .pill { align-self: flex-start; }
+    .news-card-title { font-size: 13px; font-weight: 600; line-height: 1.35; flex: 1; }
+    .news-card-meta { font-size: 11px; color: var(--c-muted); }
+
+    /* Load more */
+    .load-more-wrap { text-align: center; margin-top: 32px; }
+    .btn-load-more {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 28px;
+      border-radius: 20px;
+      border: 1px solid var(--c-border);
+      background: var(--c-surface);
+      color: var(--c-text);
+      font-size: 13px; font-weight: 600;
+      transition: all .15s;
+    }
+    .btn-load-more:hover { background: var(--c-surface2); border-color: var(--c-accent); color: var(--c-accent); }
+
+    /* ===== UPCOMING GAMES ===== */
+    .upcoming-scroll {
+      display: flex; gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--c-border) transparent;
+    }
+    .upcoming-card {
+      flex-shrink: 0;
+      width: 140px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: transform .2s;
+    }
+    .upcoming-card:hover { transform: translateY(-2px); }
+    .upcoming-card-img {
+      aspect-ratio: 3/4;
+      background: var(--c-surface2);
+      overflow: hidden;
+    }
+    .upcoming-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .upcoming-card-body { padding: 10px; }
+    .upcoming-card-title { font-size: 12px; font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
+    .upcoming-card-date { font-size: 11px; color: var(--c-accent); font-weight: 600; }
+    .upcoming-card-plat { font-size: 10px; color: var(--c-muted); margin-top: 2px; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      border-top: 1px solid var(--c-border);
+      background: var(--c-surface);
+      margin-top: 64px;
+    }
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding: 48px 0 40px;
+    }
+    @media (max-width: 800px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .footer-inner { grid-template-columns: 1fr; } }
+    .footer-brand .logo { font-size: 22px; margin-bottom: 12px; }
+    .footer-brand p { font-size: 13px; color: var(--c-muted); line-height: 1.6; }
+    .footer-col h4 { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--c-muted); margin-bottom: 14px; }
+    .footer-col a { display: block; font-size: 13px; color: var(--c-muted); padding: 3px 0; transition: color .15s; }
+    .footer-col a:hover { color: var(--c-text); }
+    .footer-bottom {
+      border-top: 1px solid var(--c-border);
+      padding: 16px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: var(--c-muted);
+      flex-wrap: wrap; gap: 8px;
+    }
+
+    /* ===== SECTIONS SPACING ===== */
+    .section { padding: 40px 0; }
+    .section + .section { padding-top: 0; }
+
+    /* ===== PLACEHOLDER IMG COLORS (placeholder backgrounds) ===== */
+    .ph { background: var(--c-surface2); position: relative; }
+    .ph::after {
+      content: attr(data-game);
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--c-muted);
+      text-align: center; padding: 8px;
+    }
+    /* unique tints for each placeholder */
+    .ph-1  { background: linear-gradient(135deg,#1a1330,#2d2050); }
+    .ph-2  { background: linear-gradient(135deg,#0f1f3a,#0a3060); }
+    .ph-3  { background: linear-gradient(135deg,#1a2510,#2a3d18); }
+    .ph-4  { background: linear-gradient(135deg,#2a1010,#451818); }
+    .ph-5  { background: linear-gradient(135deg,#1a1818,#302a2a); }
+    .ph-6  { background: linear-gradient(135deg,#10201a,#183028); }
+    .ph-7  { background: linear-gradient(135deg,#1e1408,#3a2810); }
+    .ph-8  { background: linear-gradient(135deg,#08101e,#101830); }
+    .ph-9  { background: linear-gradient(135deg,#200820,#340a34); }
+    .ph-10 { background: linear-gradient(135deg,#0a0a1e,#141440); }
+    .ph-11 { background: linear-gradient(135deg,#1e1008,#302018); }
+    .ph-12 { background: linear-gradient(135deg,#081810,#102818); }
+
+    /* Search overlay */
+    .search-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding-top: 80px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s;
+    }
+    .search-overlay.open { opacity: 1; pointer-events: all; }
+    .search-box {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--radius-lg);
+      width: 100%; max-width: 600px;
+      margin: 0 24px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,.5);
+    }
+    .search-box-inner {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--c-border);
+    }
+    .search-box-inner input {
+      flex: 1; background: none; border: none; outline: none;
+      font: inherit; font-size: 17px; color: var(--c-text);
+    }
+    .search-box-inner input::placeholder { color: var(--c-muted); }
+    .search-hints { padding: 12px 20px 16px; }
+    .search-hints p { font-size: 11px; color: var(--c-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+    .search-hints-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .search-hint-tag {
+      font-size: 12px; padding: 4px 12px; border-radius: 12px;
+      background: var(--c-surface2); border: 1px solid var(--c-border);
+      color: var(--c-muted); cursor: pointer;
+      transition: all .15s;
+    }
+    .search-hint-tag:hover { color: var(--c-text); border-color: var(--c-accent); }
+
+    /* Mobile nav toggle */
+    .nav-toggle {
+      display: none;
+      width: 36px; height: 36px;
+      border-radius: var(--radius-sm);
+      background: var(--c-surface2);
+      border: 1px solid var(--c-border);
+      flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 5px;
+    }
+    .nav-toggle span {
+      width: 18px; height: 2px;
+      background: var(--c-text);
+      border-radius: 1px;
+      transition: all .2s;
+    }
+    @media (max-width: 900px) {
+      .nav-toggle { display: flex; }
+      .nav-primary { display: none; position: absolute; top: 60px; left: 0; right: 0;
+        background: var(--c-surface); border-bottom: 1px solid var(--c-border);
+        flex-direction: column; padding: 8px 16px; gap: 2px; }
+      .nav-primary.open { display: flex; }
+      .search-bar input { width: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== SEARCH OVERLAY ===== -->
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Cerca">
+  <div class="search-box">
+    <div class="search-box-inner">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-muted)" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="search" placeholder="Cerca giochi, recensioni, notizie…" id="searchInput" aria-label="Cerca nel sito">
+      <button class="btn-icon" onclick="closeSearch()" aria-label="Chiudi ricerca">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="search-hints">
+      <p>Tendenze</p>
+      <div class="search-hints-tags">
+        <span class="search-hint-tag">Elden Ring Nightreign</span>
+        <span class="search-hint-tag">Switch 2</span>
+        <span class="search-hint-tag">Doom: The Dark Ages</span>
+        <span class="search-hint-tag">GTA VI</span>
+        <span class="search-hint-tag">Metaphor ReFantazio</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="header" role="banner">
+  <div class="container">
+    <nav class="header-inner" aria-label="Navigazione principale">
+      <a href="#" class="logo">Console<span>Tribe</span></a>
+
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navPrimary" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-primary" id="navPrimary" role="list">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Recensioni</a></li>
+        <li><a href="#">News</a></li>
+        <li><a href="#">Articoli</a></li>
+        <li><a href="#">Cinema & TV</a></li>
+        <li><a href="#">Retrogaming</a></li>
+        <li><a href="#">Uscite</a></li>
+      </ul>
+
+      <div class="header-actions">
+        <div class="search-bar" role="search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="search" placeholder="Cerca…" aria-label="Cerca nel sito" onfocus="openSearch()">
+        </div>
+        <button class="btn-icon" id="themeToggle" aria-label="Cambia tema" title="Cambia tema">
+          <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Platform filter bar -->
+<div class="platform-bar" role="navigation" aria-label="Filtra per piattaforma">
+  <div class="container">
+    <ul class="platform-bar-inner" role="list">
+      <li><a href="#" class="plat-tag active">Tutto</a></li>
+      <li><a href="#" class="plat-tag"><span class="plat-dot" style="background:#00439c"></span>PS5</a></li>
+      <li><a href="#" class="plat-tag"><span class="plat-dot" style="background:#107c10"></span>Xbox Series X|S</a></li>
+      <li><a href="#" class="plat-tag"><span class="plat-dot" style="background:#e4000f"></span>Switch 2</a></li>
+      <li><a href="#" class="plat-tag"><span class="plat-dot" style="background:#666"></span>PC</a></li>
+      <li><a href="#" class="plat-tag"><span class="plat-dot" style="background:#2dd4bf"></span>Cinema & TV</a></li>
+      <li><a href="#" class="plat-tag"><span class="plat-dot" style="background:#f59e0b"></span>Retrogaming</a></li>
+      <li><a href="#" class="plat-tag">Giochi in Uscita</a></li>
+    </ul>
+  </div>
+</div>
+
+<main>
+
+  <!-- ===== HERO CAROUSEL — FEATURED REVIEWS ===== -->
+  <section class="hero section" aria-label="Recensioni in evidenza">
+    <div class="container">
+      <div class="hero-carousel-wrap" id="heroCarousel">
+        <div class="hero-track" id="heroTrack" role="list">
+
+          <!-- Slide 1 -->
+          <article class="hero-slide" role="listitem" aria-label="Recensione 1 di 4">
+            <div class="hero-slide-img ph ph-1" data-game="Elden Ring: Nightreign" aria-hidden="true"></div>
+            <div class="hero-gradient" aria-hidden="true"></div>
+            <div class="hero-content">
+              <div class="hero-text">
+                <span class="pill pill--rec">Recensione</span>
+                <h2 class="hero-title">Elden Ring: Nightreign — FromSoftware reinventa il co-op senza tradire la visione</h2>
+                <p class="hero-meta">di Luca Morandini &nbsp;·&nbsp; 28 maggio 2026 &nbsp;·&nbsp; PS5, Xbox, PC</p>
+              </div>
+              <div class="hero-score" aria-label="Voto: 9 su 10">
+                <div class="score score--hi">9</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Slide 2 -->
+          <article class="hero-slide" role="listitem" aria-label="Recensione 2 di 4">
+            <div class="hero-slide-img ph ph-2" data-game="Doom: The Dark Ages" aria-hidden="true"></div>
+            <div class="hero-gradient" aria-hidden="true"></div>
+            <div class="hero-content">
+              <div class="hero-text">
+                <span class="pill pill--rec">Recensione</span>
+                <h2 class="hero-title">Doom: The Dark Ages — la bestia medievale di id Software è devastante</h2>
+                <p class="hero-meta">di Marco Ferrari &nbsp;·&nbsp; 15 maggio 2026 &nbsp;·&nbsp; PS5, Xbox Series X, PC</p>
+              </div>
+              <div class="hero-score" aria-label="Voto: 8 su 10">
+                <div class="score score--hi">8</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Slide 3 -->
+          <article class="hero-slide" role="listitem" aria-label="Recensione 3 di 4">
+            <div class="hero-slide-img ph ph-3" data-game="Nintendo Switch 2" aria-hidden="true"></div>
+            <div class="hero-gradient" aria-hidden="true"></div>
+            <div class="hero-content">
+              <div class="hero-text">
+                <span class="pill pill--rec">Recensione Hardware</span>
+                <h2 class="hero-title">Nintendo Switch 2: la prova completa della console più attesa dell'anno</h2>
+                <p class="hero-meta">di Sara Conti &nbsp;·&nbsp; 5 maggio 2026 &nbsp;·&nbsp; Switch 2</p>
+              </div>
+              <div class="hero-score" aria-label="Voto: 9 su 10">
+                <div class="score score--hi">9</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Slide 4 -->
+          <article class="hero-slide" role="listitem" aria-label="Recensione 4 di 4">
+            <div class="hero-slide-img ph ph-4" data-game="Stellar Blade: Ascendant" aria-hidden="true"></div>
+            <div class="hero-gradient" aria-hidden="true"></div>
+            <div class="hero-content">
+              <div class="hero-text">
+                <span class="pill pill--rec">Recensione</span>
+                <h2 class="hero-title">Stellar Blade: Ascendant — un'espansione che vale un gioco intero</h2>
+                <p class="hero-meta">di Giovanni Rossi &nbsp;·&nbsp; 20 aprile 2026 &nbsp;·&nbsp; PS5</p>
+              </div>
+              <div class="hero-score" aria-label="Voto: 7 su 10">
+                <div class="score score--mid">7</div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <button class="carousel-btn carousel-btn--prev" id="heroPrev" aria-label="Recensione precedente">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button class="carousel-btn carousel-btn--next" id="heroNext" aria-label="Recensione successiva">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+
+        <div class="carousel-dots" id="heroDots" aria-hidden="true">
+          <button class="carousel-dot active" onclick="goToSlide(0)" aria-label="Vai alla recensione 1"></button>
+          <button class="carousel-dot" onclick="goToSlide(1)" aria-label="Vai alla recensione 2"></button>
+          <button class="carousel-dot" onclick="goToSlide(2)" aria-label="Vai alla recensione 3"></button>
+          <button class="carousel-dot" onclick="goToSlide(3)" aria-label="Vai alla recensione 4"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RECENT REVIEWS GRID ===== -->
+  <section class="section" aria-labelledby="rec-title">
+    <div class="container">
+      <h2 class="section-title" id="rec-title">Ultime recensioni <a href="#">Vedi tutte →</a></h2>
+      <div class="reviews-grid" role="list">
+
+        <article class="review-card" role="listitem">
+          <div class="review-card-img">
+            <div class="ph ph-5" style="width:100%;height:100%" data-game="Clair Obscur" aria-hidden="true"></div>
+            <div class="score score--hi" style="position:absolute;bottom:10px;right:10px" aria-label="Voto 9">9</div>
+          </div>
+          <div class="review-card-body">
+            <span class="pill pill--rec">Recensione</span>
+            <h3 class="review-card-title">Clair Obscur: Expedition 33 — il JRPG francese che cambia le regole</h3>
+            <p class="review-card-meta">di Alessia Bianchi &nbsp;·&nbsp; 22 apr 2026</p>
+            <span class="review-card-platform">PS5 · PC · Xbox</span>
+          </div>
+        </article>
+
+        <article class="review-card" role="listitem">
+          <div class="review-card-img">
+            <div class="ph ph-6" style="width:100%;height:100%" data-game="Hollow Knight: Silksong" aria-hidden="true"></div>
+            <div class="score score--hi" style="position:absolute;bottom:10px;right:10px" aria-label="Voto 10">10</div>
+          </div>
+          <div class="review-card-body">
+            <span class="pill pill--rec">Recensione</span>
+            <h3 class="review-card-title">Hollow Knight: Silksong — l'attesa è finita, e ne valeva la pena</h3>
+            <p class="review-card-meta">di Marco Ferrari &nbsp;·&nbsp; 10 apr 2026</p>
+            <span class="review-card-platform">Switch 2 · PC · PS5</span>
+          </div>
+        </article>
+
+        <article class="review-card" role="listitem">
+          <div class="review-card-img">
+            <div class="ph ph-7" style="width:100%;height:100%" data-game="Metaphor: ReFantazio DLC" aria-hidden="true"></div>
+            <div class="score score--mid" style="position:absolute;bottom:10px;right:10px" aria-label="Voto 7">7</div>
+          </div>
+          <div class="review-card-body">
+            <span class="pill pill--rec">Recensione DLC</span>
+            <h3 class="review-card-title">Metaphor: ReFantazio — il DLC Sanctum amplia l'universo senza sorprendere</h3>
+            <p class="review-card-meta">di Luca Morandini &nbsp;·&nbsp; 2 apr 2026</p>
+            <span class="review-card-platform">PS5 · Xbox · PC</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ARTICLE + SIDEBAR ===== -->
+  <section class="section" aria-labelledby="art-title">
+    <div class="container">
+      <h2 class="section-title" id="art-title">Articoli in evidenza <a href="#">Vedi tutti →</a></h2>
+      <div class="two-col">
+
+        <article class="featured-article">
+          <div class="featured-article-img">
+            <div class="ph ph-8" style="width:100%;height:100%" data-game="10 anni di Dark Souls" aria-hidden="true"></div>
+          </div>
+          <div class="featured-article-body">
+            <span class="pill pill--art">Articolo</span>
+            <h3 class="featured-article-title">Dieci anni di Dark Souls III: come FromSoftware ha riscritto il linguaggio del game design</h3>
+            <p class="featured-article-excerpt">Dal 12 aprile 2016 ad oggi, il terzo capitolo della serie soulsborne ha lasciato un segno indelebile nel settore. Ripercorriamo l'eredità di un capolavoro imperfetto che continua a influenzare ogni studio del pianeta, dal game design alla narrativa ambientale fino all'approccio alla difficoltà.</p>
+            <div class="featured-article-meta">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              8 min di lettura
+              <span>·</span>
+              di Giovanni Rossi
+              <span>·</span>
+              1 giu 2026
+            </div>
+          </div>
+        </article>
+
+        <aside aria-label="Altri articoli recenti">
+          <div class="sidebar">
+            <div class="sidebar-articles-list" role="list">
+
+              <a href="#" class="sidebar-article" role="listitem">
+                <div class="sidebar-article-img">
+                  <div class="ph ph-9" style="width:100%;height:100%" data-game="" aria-hidden="true"></div>
+                </div>
+                <div class="sidebar-article-body">
+                  <span class="pill pill--art">Articolo</span>
+                  <p class="sidebar-article-title">I migliori giochi indie del 2026 (finora)</p>
+                  <p class="sidebar-article-meta">5 min · 30 mag 2026</p>
+                </div>
+              </a>
+
+              <a href="#" class="sidebar-article" role="listitem">
+                <div class="sidebar-article-img">
+                  <div class="ph ph-10" style="width:100%;height:100%" data-game="" aria-hidden="true"></div>
+                </div>
+                <div class="sidebar-article-body">
+                  <span class="pill pill--cin">Cinema & TV</span>
+                  <p class="sidebar-article-title">The Last of Us S3: tutto quello che sappiamo</p>
+                  <p class="sidebar-article-meta">4 min · 28 mag 2026</p>
+                </div>
+              </a>
+
+              <a href="#" class="sidebar-article" role="listitem">
+                <div class="sidebar-article-img">
+                  <div class="ph ph-11" style="width:100%;height:100%" data-game="" aria-hidden="true"></div>
+                </div>
+                <div class="sidebar-article-body">
+                  <span class="pill pill--retro">Retrogaming</span>
+                  <p class="sidebar-article-title">PS2 compie 26 anni: il lascito di una console leggendaria</p>
+                  <p class="sidebar-article-meta">6 min · 4 mar 2026</p>
+                </div>
+              </a>
+
+              <a href="#" class="sidebar-article" role="listitem">
+                <div class="sidebar-article-img">
+                  <div class="ph ph-12" style="width:100%;height:100%" data-game="" aria-hidden="true"></div>
+                </div>
+                <div class="sidebar-article-body">
+                  <span class="pill pill--art">Articolo</span>
+                  <p class="sidebar-article-title">GTA VI e l'open world del futuro: le aspettative dei fan</p>
+                  <p class="sidebar-article-meta">7 min · 25 mag 2026</p>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== UPCOMING GAMES ===== -->
+  <section class="section" aria-labelledby="upcoming-title">
+    <div class="container">
+      <h2 class="section-title" id="upcoming-title">Prossime uscite <a href="#">Calendario completo →</a></h2>
+      <div class="upcoming-scroll" role="list">
+
+        <article class="upcoming-card" role="listitem">
+          <div class="upcoming-card-img ph ph-1" data-game="" aria-hidden="true"></div>
+          <div class="upcoming-card-body">
+            <p class="upcoming-card-title">GTA VI</p>
+            <p class="upcoming-card-date">26 mag 2026</p>
+            <p class="upcoming-card-plat">PS5 · Xbox</p>
+          </div>
+        </article>
+
+        <article class="upcoming-card" role="listitem">
+          <div class="upcoming-card-img ph ph-3" data-game="" aria-hidden="true"></div>
+          <div class="upcoming-card-body">
+            <p class="upcoming-card-title">Metroid Prime 4: Beyond</p>
+            <p class="upcoming-card-date">5 giu 2026</p>
+            <p class="upcoming-card-plat">Switch 2</p>
+          </div>
+        </article>
+
+        <article class="upcoming-card" role="listitem">
+          <div class="upcoming-card-img ph ph-5" data-game="" aria-hidden="true"></div>
+          <div class="upcoming-card-body">
+            <p class="upcoming-card-title">Death Stranding 2</p>
+            <p class="upcoming-card-date">26 giu 2026</p>
+            <p class="upcoming-card-plat">PS5</p>
+          </div>
+        </article>
+
+        <article class="upcoming-card" role="listitem">
+          <div class="upcoming-card-img ph ph-7" data-game="" aria-hidden="true"></div>
+          <div class="upcoming-card-body">
+            <p class="upcoming-card-title">Mafia: The Old Country</p>
+            <p class="upcoming-card-date">8 ago 2026</p>
+            <p class="upcoming-card-plat">PS5 · Xbox · PC</p>
+          </div>
+        </article>
+
+        <article class="upcoming-card" role="listitem">
+          <div class="upcoming-card-img ph ph-9" data-game="" aria-hidden="true"></div>
+          <div class="upcoming-card-body">
+            <p class="upcoming-card-title">Dragon Age: The Veilguard 2</p>
+            <p class="upcoming-card-date">Q3 2026</p>
+            <p class="upcoming-card-plat">PS5 · Xbox · PC</p>
+          </div>
+        </article>
+
+        <article class="upcoming-card" role="listitem">
+          <div class="upcoming-card-img ph ph-11" data-game="" aria-hidden="true"></div>
+          <div class="upcoming-card-body">
+            <p class="upcoming-card-title">Fable</p>
+            <p class="upcoming-card-date">Q4 2026</p>
+            <p class="upcoming-card-plat">Xbox · PC</p>
+          </div>
+        </article>
+
+        <article class="upcoming-card" role="listitem">
+          <div class="upcoming-card-img ph ph-2" data-game="" aria-hidden="true"></div>
+          <div class="upcoming-card-body">
+            <p class="upcoming-card-title">Borderlands 4</p>
+            <p class="upcoming-card-date">12 set 2026</p>
+            <p class="upcoming-card-plat">PS5 · Xbox · PC</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NEWS GRID ===== -->
+  <section class="section" aria-labelledby="news-title">
+    <div class="container">
+      <h2 class="section-title" id="news-title">Ultime notizie</h2>
+      <div class="news-grid" id="newsGrid" role="list">
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-1" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--news">News</span>
+            <h3 class="news-card-title">GTA VI: Rockstar conferma la data di uscita con un nuovo trailer</h3>
+            <p class="news-card-meta">2 ore fa &nbsp;·&nbsp; PS5, Xbox</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-2" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--news">News</span>
+            <h3 class="news-card-title">Switch 2: nuovo aggiornamento firmware risolve problemi di connettività online</h3>
+            <p class="news-card-meta">3 ore fa &nbsp;·&nbsp; Switch 2</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-3" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--news">News</span>
+            <h3 class="news-card-title">Xbox Game Pass: ecco i titoli in arrivo a giugno 2026</h3>
+            <p class="news-card-meta">4 ore fa &nbsp;·&nbsp; Xbox</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-4" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--cin">Cinema & TV</span>
+            <h3 class="news-card-title">Arcane Stagione 3: Netflix annuncia la data di uscita della serie finale</h3>
+            <p class="news-card-meta">5 ore fa &nbsp;·&nbsp; Cinema</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-5" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--news">News</span>
+            <h3 class="news-card-title">PS5 Pro riceve un taglio di prezzo permanente in Europa</h3>
+            <p class="news-card-meta">6 ore fa &nbsp;·&nbsp; PS5</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-6" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--retro">Retrogaming</span>
+            <h3 class="news-card-title">Nintendo Online espande il catalogo N64 con 6 classici inediti</h3>
+            <p class="news-card-meta">7 ore fa &nbsp;·&nbsp; Switch 2</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-7" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--news">News</span>
+            <h3 class="news-card-title">Elden Ring: Nightreign supera 5 milioni di copie in una settimana</h3>
+            <p class="news-card-meta">8 ore fa &nbsp;·&nbsp; PS5, Xbox, PC</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-8" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--news">News</span>
+            <h3 class="news-card-title">Summer Game Fest 2026: tutte le date e i giochi attesi all'evento</h3>
+            <p class="news-card-meta">10 ore fa &nbsp;·&nbsp; Multipiattaforma</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-9" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--news">News</span>
+            <h3 class="news-card-title">Doom: The Dark Ages è già il Doom di maggior successo commerciale di sempre</h3>
+            <p class="news-card-meta">ieri &nbsp;·&nbsp; PS5, Xbox, PC</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-10" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--cin">Cinema & TV</span>
+            <h3 class="news-card-title">Fallout Stagione 2: Amazon rivela le prime immagini dal set</h3>
+            <p class="news-card-meta">ieri &nbsp;·&nbsp; Cinema</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-11" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--news">News</span>
+            <h3 class="news-card-title">Fortnite Chapter 6 Season 3: leaked map, armi e skin del nuovo update</h3>
+            <p class="news-card-meta">ieri &nbsp;·&nbsp; Multipiattaforma</p>
+          </div>
+        </article>
+
+        <article class="news-card" role="listitem">
+          <div class="news-card-img ph ph-12" data-game="" aria-hidden="true"></div>
+          <div class="news-card-body">
+            <span class="pill pill--news">News</span>
+            <h3 class="news-card-title">Microsoft acquisisce un nuovo studio indie: cosa aspettarsi nei prossimi anni</h3>
+            <p class="news-card-meta">ieri &nbsp;·&nbsp; Xbox</p>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="load-more-wrap">
+        <button class="btn-load-more" id="loadMoreBtn" aria-label="Carica altre notizie">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M12 8v8M8 12l4 4 4-4"/></svg>
+          Carica altre notizie
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="logo">Console<span>Tribe</span></a>
+        <p>Il portale italiano dedicato ai videogiochi su console, con recensioni, news, articoli e approfondimenti dal 2010.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Contenuti</h4>
+        <a href="#">Recensioni</a>
+        <a href="#">News</a>
+        <a href="#">Articoli</a>
+        <a href="#">Cinema & TV</a>
+        <a href="#">Retrogaming</a>
+      </div>
+      <div class="footer-col">
+        <h4>Piattaforme</h4>
+        <a href="#">PlayStation 5</a>
+        <a href="#">Xbox Series X|S</a>
+        <a href="#">Nintendo Switch 2</a>
+        <a href="#">PC Gaming</a>
+        <a href="#">Giochi in Uscita</a>
+      </div>
+      <div class="footer-col">
+        <h4>Console Tribe</h4>
+        <a href="#">Chi siamo</a>
+        <a href="#">Contatti</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Collabora con noi</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Console Tribe. Tutti i diritti riservati.</span>
+      <span>Fatto con ♥ in Italia</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ===== THEME TOGGLE =====
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon   = document.getElementById('themeIcon');
+  const html        = document.documentElement;
+
+  const moonIcon = `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>`;
+  const sunIcon  = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+
+  function applyTheme(theme) {
+    html.dataset.theme = theme;
+    themeIcon.innerHTML = theme === 'dark' ? moonIcon : sunIcon;
+    themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Passa al tema chiaro' : 'Passa al tema scuro');
+    localStorage.setItem('ct-theme', theme);
+  }
+
+  themeToggle.addEventListener('click', () => {
+    applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+  });
+
+  // restore saved theme
+  const saved = localStorage.getItem('ct-theme');
+  if (saved) applyTheme(saved);
+
+  // ===== HERO CAROUSEL =====
+  const track   = document.getElementById('heroTrack');
+  const slides  = track.querySelectorAll('.hero-slide');
+  const dots    = document.querySelectorAll('.carousel-dot');
+  let current   = 0;
+  let autoTimer;
+
+  function goToSlide(n) {
+    current = (n + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  document.getElementById('heroPrev').addEventListener('click', () => { goToSlide(current - 1); resetAuto(); });
+  document.getElementById('heroNext').addEventListener('click', () => { goToSlide(current + 1); resetAuto(); });
+
+  // Keyboard navigation
+  document.getElementById('heroCarousel').addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft')  { goToSlide(current - 1); resetAuto(); }
+    if (e.key === 'ArrowRight') { goToSlide(current + 1); resetAuto(); }
+  });
+
+  // Touch/swipe support
+  let touchStartX = 0;
+  track.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { goToSlide(current + (dx < 0 ? 1 : -1)); resetAuto(); }
+  });
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => goToSlide(current + 1), 6000);
+  }
+  resetAuto();
+
+  // Pause on hover / focus
+  const carousel = document.getElementById('heroCarousel');
+  carousel.addEventListener('mouseenter', () => clearInterval(autoTimer));
+  carousel.addEventListener('mouseleave', resetAuto);
+
+  // ===== PLATFORM FILTER =====
+  document.querySelectorAll('.plat-tag').forEach(tag => {
+    tag.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.plat-tag').forEach(t => t.classList.remove('active'));
+      tag.classList.add('active');
+    });
+  });
+
+  // ===== SEARCH OVERLAY =====
+  function openSearch() {
+    document.getElementById('searchOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  }
+  function closeSearch() {
+    document.getElementById('searchOverlay').classList.remove('open');
+  }
+  document.getElementById('searchOverlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeSearch();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeSearch();
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+  });
+
+  // ===== MOBILE NAV =====
+  document.getElementById('navToggle').addEventListener('click', () => {
+    const nav  = document.getElementById('navPrimary');
+    const open = nav.classList.toggle('open');
+    document.getElementById('navToggle').setAttribute('aria-expanded', open);
+  });
+
+  // ===== LOAD MORE (demo) =====
+  const moreNews = [
+    { ph: 'ph-1',  cat: 'news',  title: 'Sony annuncia PlayStation Plus Premium: 50 nuovi giochi classici disponibili',   meta: '2 giorni fa · PS5' },
+    { ph: 'ph-3',  cat: 'news',  title: 'Capcom svela Monster Hunter Wilds: primo DLC con nuovi ecosistemi e mostri',      meta: '2 giorni fa · Multipiattaforma' },
+    { ph: 'ph-5',  cat: 'art',   title: 'Come Nintendo ha trasformato il platformer con Mario Wonder',                     meta: '3 giorni fa · Switch 2' },
+    { ph: 'ph-7',  cat: 'news',  title: 'Cyberpunk 2077: CD Projekt RED tease un nuovo update grafico per PS5 Pro',        meta: '3 giorni fa · PS5' },
+    { ph: 'ph-9',  cat: 'cin',   title: 'Halo: la serie TV di Paramount+ è stata cancellata dopo due stagioni',            meta: '4 giorni fa · Cinema' },
+    { ph: 'ph-11', cat: 'news',  title: 'Indie World: Nintendo ha mostrato 12 titoli indie in arrivo su Switch 2',         meta: '4 giorni fa · Switch 2' },
+    { ph: 'ph-2',  cat: 'retro', title: 'GameBoy compie 36 anni: la storia della console che ha cambiato il gaming portatile', meta: '5 giorni fa · Retrogaming' },
+    { ph: 'ph-4',  cat: 'news',  title: 'Overwatch 3 ufficiale: Blizzard annuncia la prossima iterazione del franchise',   meta: '5 giorni fa · PC, PS5, Xbox' },
+  ];
+
+  let loaded = false;
+  document.getElementById('loadMoreBtn').addEventListener('click', () => {
+    if (loaded) return;
+    loaded = true;
+    const grid = document.getElementById('newsGrid');
+    const catMap = { news: 'pill--news', art: 'pill--art', cin: 'pill--cin', retro: 'pill--retro' };
+    const labelMap = { news: 'News', art: 'Articolo', cin: 'Cinema & TV', retro: 'Retrogaming' };
+    moreNews.forEach(n => {
+      const el = document.createElement('article');
+      el.className = 'news-card';
+      el.setAttribute('role', 'listitem');
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(12px)';
+      el.style.transition = 'opacity .3s, transform .3s';
+      el.innerHTML = `
+        <div class="news-card-img ph ${n.ph}" aria-hidden="true"></div>
+        <div class="news-card-body">
+          <span class="pill ${catMap[n.cat]}">${labelMap[n.cat]}</span>
+          <h3 class="news-card-title">${n.title}</h3>
+          <p class="news-card-meta">${n.meta}</p>
+        </div>`;
+      grid.appendChild(el);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+      });
+    });
+    const btn = document.getElementById('loadMoreBtn');
+    btn.textContent = 'Sei aggiornato! ✓';
+    btn.disabled = true;
+    btn.style.opacity = '.5';
+    btn.style.cursor = 'default';
+  });
+</script>
+</body>
+</html>
