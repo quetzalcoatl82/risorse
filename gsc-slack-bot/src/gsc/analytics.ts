@@ -24,7 +24,7 @@ export interface PageStats {
   clicks: number;
   impressions: number;
   ctr: number;
-  position: number;
+  position?: number;
 }
 
 export interface QueryStats {
@@ -32,7 +32,7 @@ export interface QueryStats {
   clicks: number;
   impressions: number;
   ctr: number;
-  position: number;
+  position?: number;
 }
 
 export interface WeekComparison {
@@ -40,7 +40,7 @@ export interface WeekComparison {
   previous: PageStats;
   clicksDelta: number;
   clicksDeltaPct: number | null;
-  positionDelta: number;
+  positionDelta?: number;
 }
 
 export interface TrendItem {
@@ -95,9 +95,9 @@ async function queryAnalytics(
 function rowToPage(row: GscRow): PageStats {
   return {
     url: row.keys[0],
-    clicks: row.clicks,
-    impressions: row.impressions,
-    ctr: row.ctr,
+    clicks: row.clicks ?? 0,
+    impressions: row.impressions ?? 0,
+    ctr: row.ctr ?? 0,
     position: row.position,
   };
 }
@@ -105,9 +105,9 @@ function rowToPage(row: GscRow): PageStats {
 function rowToQuery(row: GscRow): QueryStats {
   return {
     query: row.keys[0],
-    clicks: row.clicks,
-    impressions: row.impressions,
-    ctr: row.ctr,
+    clicks: row.clicks ?? 0,
+    impressions: row.impressions ?? 0,
+    ctr: row.ctr ?? 0,
     position: row.position,
   };
 }
@@ -256,7 +256,6 @@ export async function comparePageWeeks(
     clicks: 0,
     impressions: 0,
     ctr: 0,
-    position: 0,
   };
 
   const current = currentRows.length ? rowToPage(currentRows[0]) : empty;
@@ -270,7 +269,10 @@ export async function comparePageWeeks(
     previous,
     clicksDelta,
     clicksDeltaPct,
-    positionDelta: current.position - previous.position,
+    positionDelta:
+      current.position != null && previous.position != null
+        ? current.position - previous.position
+        : undefined,
   };
 }
 

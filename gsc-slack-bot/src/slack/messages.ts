@@ -27,13 +27,20 @@ function footer(): SlackBlock {
   };
 }
 
-function formatNumber(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
-  return String(n);
+function formatNumber(n: number | undefined | null): string {
+  const value = n ?? 0;
+  if (value >= 1000) return `${(value / 1000).toFixed(1)}k`;
+  return String(value);
 }
 
-function formatPct(n: number): string {
+function formatPct(n: number | undefined | null): string {
+  if (n == null) return "n/d";
   return `${(n * 100).toFixed(1)}%`;
+}
+
+function formatPosition(n: number | undefined | null): string {
+  if (n == null) return "n/d";
+  return n.toFixed(1);
 }
 
 function formatDelta(delta: number, pct: number | null): string {
@@ -109,7 +116,7 @@ export function topPagesMessage(
       ? ["_Nessun dato nel periodo selezionato._"]
       : pages.map(
           (p, i) =>
-            `${i + 1}. *${displayUrl(p.url)}* — ${formatNumber(p.clicks)} click · CTR ${formatPct(p.ctr)} · pos. ${p.position.toFixed(1)}`
+            `${i + 1}. *${displayUrl(p.url)}* — ${formatNumber(p.clicks)} click · CTR ${formatPct(p.ctr)} · pos. ${formatPosition(p.position)}`
         );
 
   return {
@@ -149,7 +156,7 @@ export function pageStatsMessage(stats: PageStats, days: number): SlackMessage {
           { type: "mrkdwn", text: `*Click*\n${formatNumber(stats.clicks)}` },
           { type: "mrkdwn", text: `*Impressioni*\n${formatNumber(stats.impressions)}` },
           { type: "mrkdwn", text: `*CTR*\n${formatPct(stats.ctr)}` },
-          { type: "mrkdwn", text: `*Posizione media*\n${stats.position.toFixed(1)}` },
+          { type: "mrkdwn", text: `*Posizione media*\n${formatPosition(stats.position)}` },
         ],
       },
       {
@@ -167,7 +174,7 @@ export function queryStatsMessage(
   topPages: PageStats[]
 ): SlackMessage {
   const statsBlock = stats
-    ? `*${stats.query}*\n${formatNumber(stats.clicks)} click · ${formatNumber(stats.impressions)} impressioni · CTR ${formatPct(stats.ctr)} · pos. ${stats.position.toFixed(1)}`
+    ? `*${stats.query}*\n${formatNumber(stats.clicks)} click · ${formatNumber(stats.impressions)} impressioni · CTR ${formatPct(stats.ctr)} · pos. ${formatPosition(stats.position)}`
     : `_Nessun dato per «${query}» negli ultimi 7 giorni._`;
 
   const pagesBlock =
@@ -207,7 +214,7 @@ export function keywordsMessage(queries: QueryStats[]): SlackMessage {
       ? ["_Nessun dato._"]
       : queries.map(
           (q, i) =>
-            `${i + 1}. *${q.query}* — ${formatNumber(q.clicks)} click · pos. ${q.position.toFixed(1)}`
+            `${i + 1}. *${q.query}* — ${formatNumber(q.clicks)} click · pos. ${formatPosition(q.position)}`
         );
 
   return {
@@ -250,7 +257,14 @@ export function trendMessage(items: TrendItem[], direction: "up" | "down"): Slac
 
 export function compareMessage(comparison: WeekComparison): SlackMessage {
   const { current, previous, clicksDelta, clicksDeltaPct, positionDelta } = comparison;
-  const posArrow = positionDelta < 0 ? "↑ migliorata" : positionDelta > 0 ? "↓ peggiorata" : "→ stabile";
+  const posArrow =
+    positionDelta == null
+      ? "n/d"
+      : positionDelta < 0
+        ? "↑ migliorata"
+        : positionDelta > 0
+          ? "↓ peggiorata"
+          : "→ stabile";
 
   return {
     response_type: "in_channel",
@@ -269,11 +283,11 @@ export function compareMessage(comparison: WeekComparison): SlackMessage {
         fields: [
           {
             type: "mrkdwn",
-            text: `*Settimana corrente*\n${formatNumber(current.clicks)} click · pos. ${current.position.toFixed(1)}`,
+            text: `*Settimana corrente*\n${formatNumber(current.clicks)} click · pos. ${formatPosition(current.position)}`,
           },
           {
             type: "mrkdwn",
-            text: `*Settimana precedente*\n${formatNumber(previous.clicks)} click · pos. ${previous.position.toFixed(1)}`,
+            text: `*Settimana precedente*\n${formatNumber(previous.clicks)} click · pos. ${formatPosition(previous.position)}`,
           },
         ],
       },
@@ -281,7 +295,7 @@ export function compareMessage(comparison: WeekComparison): SlackMessage {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `*Variazione click:* ${formatDelta(clicksDelta, clicksDeltaPct)}\n*Posizione:* ${posArrow} (${Math.abs(positionDelta).toFixed(1)} punti)`,
+          text: `*Variazione click:* ${formatDelta(clicksDelta, clicksDeltaPct)}\n*Posizione:* ${posArrow} (${positionDelta == null ? "n/d" : `${Math.abs(positionDelta).toFixed(1)} punti`})`,
         },
       },
       footer(),
@@ -319,7 +333,7 @@ export function weeklyDigestMessage(data: {
     .slice(0, 10)
     .map(
       (q, i) =>
-        `${i + 1}. *${q.query}* — ${formatNumber(q.clicks)} click · pos. ${q.position.toFixed(1)}`
+        `${i + 1}. *${q.query}* — ${formatNumber(q.clicks)} click · pos. ${formatPosition(q.position)}`
     )
     .join("\n");
   blocks.push({
