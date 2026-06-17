@@ -1,6 +1,7 @@
 import type { PageStats, QueryStats, TrendItem, WeekComparison } from "../gsc/analytics";
 import { getDataThroughDate } from "../gsc/analytics";
 import { getWeekLabel } from "../config";
+import { articleLink, articleTitle } from "./articles";
 
 export interface SlackMessage {
   response_type?: "in_channel" | "ephemeral";
@@ -47,15 +48,6 @@ function formatDelta(delta: number, pct: number | null): string {
   const arrow = delta > 0 ? "↑" : delta < 0 ? "↓" : "→";
   const pctStr = pct !== null ? ` (${pct > 0 ? "+" : ""}${pct.toFixed(0)}%)` : "";
   return `${arrow} ${formatNumber(Math.abs(delta))}${pctStr}`;
-}
-
-function displayUrl(url: string): string {
-  try {
-    const parsed = new URL(url);
-    return parsed.pathname || url;
-  } catch {
-    return url;
-  }
 }
 
 export function helpMessage(): SlackMessage {
@@ -116,7 +108,7 @@ export function topPagesMessage(
       ? ["_Nessun dato nel periodo selezionato._"]
       : pages.map(
           (p, i) =>
-            `${i + 1}. *${displayUrl(p.url)}* — ${formatNumber(p.clicks)} click · CTR ${formatPct(p.ctr)} · pos. ${formatPosition(p.position)}`
+            `${i + 1}. ${articleLink(p.url)} — ${formatNumber(p.clicks)} click · CTR ${formatPct(p.ctr)} · pos. ${formatPosition(p.position)}`
         );
 
   return {
@@ -140,13 +132,13 @@ export function topPagesMessage(
 export function pageStatsMessage(stats: PageStats, days: number): SlackMessage {
   return {
     response_type: "in_channel",
-    text: `Statistiche ${displayUrl(stats.url)}`,
+    text: `Statistiche ${articleTitle(stats.url)}`,
     blocks: [
       {
         type: "header",
         text: {
           type: "plain_text",
-          text: `📄 ${displayUrl(stats.url)}`,
+          text: `📄 ${articleTitle(stats.url)}`,
           emoji: true,
         },
       },
@@ -180,7 +172,7 @@ export function queryStatsMessage(
   const pagesBlock =
     topPages.length > 0
       ? topPages
-          .map((p, i) => `${i + 1}. ${displayUrl(p.url)} — ${formatNumber(p.clicks)} click`)
+          .map((p, i) => `${i + 1}. ${articleLink(p.url)} — ${formatNumber(p.clicks)} click`)
           .join("\n")
       : "";
 
@@ -268,13 +260,13 @@ export function compareMessage(comparison: WeekComparison): SlackMessage {
 
   return {
     response_type: "in_channel",
-    text: `Confronto ${displayUrl(current.url)}`,
+    text: `Confronto ${articleTitle(current.url)}`,
     blocks: [
       {
         type: "header",
         text: {
           type: "plain_text",
-          text: `📊 Confronto settimanale — ${displayUrl(current.url)}`,
+          text: `📊 Confronto settimanale — ${articleTitle(current.url)}`,
           emoji: true,
         },
       },
@@ -350,12 +342,12 @@ export function weeklyDigestMessage(data: {
   }
   if (data.surprise) {
     highlights.push(
-      `*Articolo sorpresa:* ${displayUrl(data.surprise.url)} — ${formatNumber(data.surprise.clicks)} click (nuovo in top 5 Search)`
+      `*Articolo sorpresa:* ${articleLink(data.surprise.url)} — ${formatNumber(data.surprise.clicks)} click (nuovo in top 5 Search)`
     );
   }
   if (data.attention.length) {
     highlights.push(
-      `*Attenzione:*\n${data.attention.map((a) => `• ${displayUrl(a.key)} ${formatDelta(a.delta, a.deltaPct)}`).join("\n")}`
+      `*Attenzione:*\n${data.attention.map((a) => `• ${articleLink(a.key)} ${formatDelta(a.delta, a.deltaPct)}`).join("\n")}`
     );
   }
   if (highlights.length) {
@@ -378,7 +370,7 @@ function sectionList(title: string, pages: PageStats[], max: number): SlackBlock
     .slice(0, max)
     .map(
       (p, i) =>
-        `${i + 1}. *${displayUrl(p.url)}* — ${formatNumber(p.clicks)} click · CTR ${formatPct(p.ctr)}`
+        `${i + 1}. ${articleLink(p.url)} — ${formatNumber(p.clicks)} click · CTR ${formatPct(p.ctr)}`
     )
     .join("\n");
   return {
