@@ -1,0 +1,18 @@
+{
+  "name": "gsc-slack-bot",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "login": "wrangler login",
+    "whoami": "wrangler whoami",
+    "kv:create": "wrangler kv namespace create GSC_CACHE && wrangler kv namespace create GSC_CACHE --preview"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "typescript": "^5.7.3",
+    "wrangler": "^3.109.2"
+  }
+}

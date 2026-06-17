@@ -1,0 +1,12 @@
+name = "gsc-slack-bot"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+account_id = "597cb81a158c2483f71869750b52aef8"
+
+[triggers]
+crons = ["0 8 * * 1"]
+
+[[kv_namespaces]]
+binding = "GSC_CACHE"
+id = "de3ff49ad95c4e3fb70462b81996e9be"
+preview_id = "0dfc7668e1a744b0a89cb33197884fda"
