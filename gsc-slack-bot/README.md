@@ -63,6 +63,7 @@ cd gsc-slack-bot
 npm install
 npm run login    # una tantum, se non autenticato
 npm run whoami   # verifica account
+npm run types    # rigenera worker-configuration.d.ts dopo modifiche a wrangler.toml
 ```
 
 KV namespace (già configurato in `wrangler.toml`; per ricrearli):

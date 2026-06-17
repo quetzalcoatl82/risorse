@@ -1,4 +1,3 @@
-import type { Env } from "../config";
 import {
   getAttentionPages,
   getRisingKeywords,

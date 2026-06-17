@@ -1,4 +1,3 @@
-import type { Env } from "./config";
 import { runWeeklyDigest } from "./jobs/weekly-digest";
 import { processSlashCommand } from "./slack/commands";
 import { parseSlashCommand, verifySlackSignature } from "./slack/verify";

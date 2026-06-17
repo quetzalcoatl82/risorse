@@ -1,12 +1,3 @@
-export interface Env {
-  SLACK_BOT_TOKEN: string;
-  SLACK_SIGNING_SECRET: string;
-  GOOGLE_SERVICE_ACCOUNT_JSON: string;
-  GSC_SITE_URL: string;
-  SLACK_CHANNEL_ID: string;
-  GSC_CACHE: KVNamespace;
-}
-
 export const GSC_SCOPE = "https://www.googleapis.com/auth/webmasters.readonly";
 export const GSC_API_BASE = "https://www.googleapis.com/webmasters/v3";
 export const CACHE_TTL_SECONDS = 6 * 60 * 60;

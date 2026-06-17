@@ -1,7 +1,6 @@
 import {
   getDateRange,
   getPreviousDateRange,
-  type Env,
   type SearchAppearance,
 } from "../config";
 import { gscFetch, withCache } from "./client";

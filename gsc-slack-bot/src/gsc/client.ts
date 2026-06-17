@@ -1,4 +1,4 @@
-import { GSC_API_BASE, GSC_SCOPE, type Env } from "../config";
+import { GSC_API_BASE, GSC_SCOPE } from "../config";
 
 interface ServiceAccountKey {
   client_email: string;
