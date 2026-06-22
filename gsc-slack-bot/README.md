@@ -122,4 +122,5 @@ npx wrangler dev --test-scheduled
 
 - I dati GSC hanno un ritardo di **2–3 giorni**; il bot lo segnala in ogni risposta.
 - La cache KV dura **6 ore** per ridurre le chiamate API.
-- Il cron `0 8 * * 1` corrisponde alle 09:00 in Italia (ora solare); con ora legale sarà alle 10:00.
+- Il cron `0 8 * * mon` corrisponde alle 09:00 in Italia (ora solare); con ora legale sarà alle 10:00.
+- Su Cloudflare i giorni della settimana vanno da **1 = domenica** a **7 = sabato** (non come cron Unix). Usa `mon` o `2` per il lunedì.

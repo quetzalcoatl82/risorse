@@ -4,7 +4,7 @@ compatibility_date = "2026-06-01"
 account_id = "597cb81a158c2483f71869750b52aef8"
 
 [triggers]
-crons = ["0 8 * * 1"]
+crons = ["30 8 * * mon"]
 
 [[kv_namespaces]]
 binding = "GSC_CACHE"
