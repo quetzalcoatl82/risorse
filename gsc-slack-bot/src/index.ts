@@ -27,12 +27,13 @@ export default {
     return new Response("Not found", { status: 404 });
   },
 
-  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(
-      runWeeklyDigest(env).catch((err) => {
-        const message = err instanceof Error ? err.message : "Errore imprevisto";
-        console.error(JSON.stringify({ event: "weekly_digest_error", error: message }));
-      })
-    );
+  async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext): Promise<void> {
+    try {
+      await runWeeklyDigest(env);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Errore imprevisto";
+      console.error(JSON.stringify({ event: "weekly_digest_error", error: message }));
+      throw err;
+    }
   },
 };
