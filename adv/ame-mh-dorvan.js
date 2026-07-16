@@ -26,8 +26,7 @@ class AmeMh extends HTMLElement {
     }
 
     static isDesktopViewport() {
-        const isTouch = "ontouchstart" in window || navigator.msMaxTouchPoints > 0;
-        return document.documentElement.clientWidth > 1000 && !isTouch;
+        return document.documentElement.clientWidth > 1000;
     }
 
     static getMhSlotElementId() {
