@@ -541,8 +541,6 @@ class AmeMh extends HTMLElement {
         setTimeout(() => {
             log("Defix", performance.now());
             mh.classList.remove("mhForeground");
-            // Forza sotto la page (z-index:1): su mobile togliere solo la classe a volte non basta.
-            mh.style.zIndex = "0";
             // AME_MH_CUSTOM_EVENTS_START
             AmeMh.dispatchMhEvent(ameMhElement, "ame-mh:state-defixed", {
                 mhContainerId: "mh2021",
