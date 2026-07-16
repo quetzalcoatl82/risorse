@@ -48,6 +48,21 @@ class AmeMh extends HTMLElement {
         if (mobileSlot) mobileSlot.style.display = showDesktop ? "none" : "flex";
     }
 
+    static updateMhHeightFromSlot(root) {
+        const slotEl = AmeMh.getMhSlotEl(root);
+        if (!slotEl) return;
+
+        const applyHeight = () => {
+            const slotHeight = slotEl.offsetHeight;
+            if (!slotHeight || slotHeight <= 0) return;
+            document.documentElement.style.setProperty("--altezzaMh2021", slotHeight + "px");
+        };
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(applyHeight);
+        });
+    }
+
     static startStripAnimationOnce(reason) {
         if (window.__ameMhDorvanStripAnimationStarted) return;
         window.__ameMhDorvanStripAnimationStarted = true;
@@ -299,7 +314,11 @@ class AmeMh extends HTMLElement {
                     const slotElementId = slot.getSlotElementId();
                     if (slotElementId !== mhSlotElementId) return;
 
-                    dispatchFromSlot(slot, slotElementId, computeIsEmpty(event, slot));
+                    const isEmpty = computeIsEmpty(event, slot);
+                    if (!isEmpty) {
+                        AmeMh.updateMhHeightFromSlot(self);
+                    }
+                    dispatchFromSlot(slot, slotElementId, isEmpty);
                 };
 
                 pubads.addEventListener("slotOnload", listenerOnload);
