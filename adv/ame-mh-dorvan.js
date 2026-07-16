@@ -153,6 +153,7 @@ class AmeMh extends HTMLElement {
                 top: 0;
                 left: 0;
                 overflow: hidden;
+                z-index: 0;
             }
             #mh2021.mhForeground {
                 z-index: 9999;
@@ -160,19 +161,21 @@ class AmeMh extends HTMLElement {
             }
             #mh2021Fake {
                 height: var(--altezzaMh2021);
+                min-height: 50px;
                 width: 90vw;
                 position: absolute;
                 top: 0;
                 left: 5vw;
                 overflow: hidden;
                 z-index: -100;
+                pointer-events: none;
             }
             .mh2021Page {
                 margin-top: 0;
                 transition: margin 300ms ease-in-out;
                 position: relative;
                 z-index: 1;
-                ${ (window.getComputedStyle(document.querySelector(this.selectorWrapper)).backgroundColor == "rgba(0, 0, 0, 0)") ? 'background:var(--bgMh2021Page);' : ''}
+                background: ${(this.bgMh) ? this.bgMh : 'var(--bgMh2021Page)'};
             }
             .mh2021Strip {
                 width: 100vw;
@@ -361,9 +364,8 @@ class AmeMh extends HTMLElement {
             page = document.querySelector('.mh2021Page'),
             strip = AmeMh.getMhSlotEl(mh),
             paddingStrip = document.querySelector("#padding-strip"),
-            flyFirstMobile = document.getElementById('flyfirst-mobile-placement'),
             
-            mhIntersection,
+            mhIntersection = false,
             pageSpacedInTop = 0,
             stripH = strip ? strip.offsetHeight || 0 : 0;
 
@@ -373,6 +375,11 @@ class AmeMh extends HTMLElement {
             if (localStorage.getItem("mh2021Debug"))
             console.log("[mh2021] - " + msg, val);
         };
+
+        if (stripH == 0) {
+            // Su mobile Dorvan skin può lasciare lo strip a 0 ma il container #mh2021 ha altezza CSS.
+            stripH = mh ? mh.offsetHeight || 0 : 0;
+        }
 
         if (stripH == 0) {
             log("Strip ad altezza 0 -> return false");
@@ -401,15 +408,49 @@ class AmeMh extends HTMLElement {
             } else {}
         }
 
+        // Preferisci l'altezza del container MH: su mobile lo strip Dorvan può risultare 0
+        // (creative absolute) mentre #mh2021 ha già --altezzaMh2021.
+        let getMhMarginHeight = () => {
+            const stripHeight = strip ? strip.offsetHeight || 0 : 0;
+            const containerHeight = mh ? mh.offsetHeight || 0 : 0;
+            let mhH = Math.max(stripHeight, containerHeight);
+
+            if (!mhH) {
+                const raw = getComputedStyle(document.documentElement).getPropertyValue("--altezzaMh2021").trim();
+                if (raw.endsWith("px")) mhH = parseFloat(raw) || 0;
+                else if (raw.endsWith("vw")) mhH = (parseFloat(raw) / 100) * window.innerWidth || 0;
+            }
+
+            // Solo se davvero microscopico (es. 1x1) azzera; 33vw mobile è tipicamente > 50.
+            if (mhH > 0 && mhH <= 20) mhH = 0;
+            return mhH;
+        };
+
         let mh2021PageInTopView = (motivo) => {
-            log("mh2021PageInTopView", motivo); //log del motivo per cui do margine superiore alla pagina
-            observer.disconnect();
-            let mhH = strip ? strip.offsetHeight : 0;
-            if(mhH <= 50) mhH = 0; //fix per webview fb. Per qualche motivo gira la strip_animation sulla 3x1. Impediamo di mettere margine alla pagina se non c'è uno slot consistente e 50px dovrebbero essere safe.
-            let padding = 0
-            // se c'è il blocco di padding aggiungo anche quello all'altezza
-            if (paddingStrip) padding = paddingStrip.offsetHeight;
-            page.style.marginTop = mhH + padding + "px";
+            log("mh2021PageInTopView", motivo);
+            try { observer.disconnect(); } catch (e) {}
+
+            let mhH = getMhMarginHeight();
+            let padding = paddingStrip ? paddingStrip.offsetHeight : 0;
+            const marginTop = mhH + padding;
+
+            log("top view margin", {
+                motivo,
+                stripH: strip ? strip.offsetHeight : 0,
+                containerH: mh ? mh.offsetHeight : 0,
+                mhH,
+                padding,
+                marginTop,
+            });
+
+            if (page) {
+                // Sfondo opaco: altrimenti su mobile dopo defix si vede ancora lo slot sotto la page.
+                const bg = getComputedStyle(page).backgroundColor;
+                if (!bg || bg === "rgba(0, 0, 0, 0)" || bg === "transparent") {
+                    page.style.backgroundColor = ameMhElement.getAttribute("bg-mh") || "#fff";
+                }
+                page.style.marginTop = marginTop + "px";
+            }
             pageSpacedInTop = 1;
 
             if (getEnableEvents == "true") {
@@ -425,9 +466,6 @@ class AmeMh extends HTMLElement {
                     });
                 } else {}
             }
-            
-            /*document.body.removeEventListener('click',mh2021PageInTopView); //DA RIABILITARE IN CUI SI RIATTIVI L'INTERAZIONE UTENTE
-            document.body.removeEventListener('keypress',mh2021PageInTopView);*/
         };
 
         //check iniziale
@@ -442,6 +480,7 @@ class AmeMh extends HTMLElement {
         setTimeout(() => {
             console.log('top view');
             log("Fix inizio", performance.now());
+            mh.style.zIndex = "";
             mh.classList.add("mhForeground");
             // AME_MH_CUSTOM_EVENTS_START
             AmeMh.dispatchMhEvent(ameMhElement, "ame-mh:state-fixed", {
@@ -450,8 +489,8 @@ class AmeMh extends HTMLElement {
                 reason: "fix_timer",
             });
             // AME_MH_CUSTOM_EVENTS_END
-            if (paddingStrip && strip) {
-                paddingStrip.style.setProperty('--margin-top-adv', strip.offsetHeight + 'px');
+            if (paddingStrip) {
+                paddingStrip.style.setProperty('--margin-top-adv', getMhMarginHeight() + 'px');
             }
 
         }, firstDelay + 400);
@@ -460,6 +499,8 @@ class AmeMh extends HTMLElement {
         setTimeout(() => {
             log("Defix", performance.now());
             mh.classList.remove("mhForeground");
+            // Forza sotto la page (z-index:1): su mobile togliere solo la classe a volte non basta.
+            mh.style.zIndex = "0";
             // AME_MH_CUSTOM_EVENTS_START
             AmeMh.dispatchMhEvent(ameMhElement, "ame-mh:state-defixed", {
                 mhContainerId: "mh2021",
@@ -469,11 +510,11 @@ class AmeMh extends HTMLElement {
             // AME_MH_CUSTOM_EVENTS_END
         }, firstDelay + viewTimeLimit + 400);
 
-        //callback observer
-        let cbMh = (entries, observer) => {
+        //callback observer — threshold 0 per mobile (threshold 1 fallisce spesso)
+        let cbMh = (entries) => {
             entries.forEach((entry) => {
             if (entry.isIntersecting) {
-                if (pageSpacedInTop == 0 && mhIntersection == false) {
+                if (pageSpacedInTop == 0 && mhIntersection === false) {
                     mh2021PageInTopView("Ritorno in top view");
                 }
                 mhIntersection = true;
@@ -483,18 +524,16 @@ class AmeMh extends HTMLElement {
             });
         };
 
-        //opzioni observer
         let optObs = {
+            root: null,
             rootMargin: "0px",
-            threshold: 1,
+            threshold: 0,
         };
 
-        //dichiarazione observer
         let observer = new IntersectionObserver(cbMh, optObs);
 
-        //start observer
-        log("Start observer", "");
-        observer.observe(mhFake);
+        log("Start observer", { stripH, mhH: mh ? mh.offsetHeight : 0 });
+        if (mhFake) observer.observe(mhFake);
 
     }
 }
