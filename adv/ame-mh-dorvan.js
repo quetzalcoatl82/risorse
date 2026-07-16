@@ -48,35 +48,84 @@ class AmeMh extends HTMLElement {
         if (mobileSlot) mobileSlot.style.display = showDesktop ? "none" : "flex";
     }
 
+    static getSlotRenderedHeight(slotEl) {
+        if (!slotEl) return 0;
+
+        let mediaHeight = 0;
+        try {
+            const media = slotEl.querySelectorAll("iframe, img, video, object, embed");
+            media.forEach((el) => {
+                const h = el.offsetHeight || el.clientHeight || 0;
+                if (h > mediaHeight) mediaHeight = h;
+            });
+        } catch (e) {
+            // noop
+        }
+
+        return Math.max(slotEl.offsetHeight || 0, slotEl.scrollHeight || 0, mediaHeight || 0);
+    }
+
     static updateMhHeightFromSlot(root) {
         const slotEl = AmeMh.getMhSlotEl(root);
-        if (!slotEl) return;
+        if (!slotEl) return 0;
 
         const applyHeight = () => {
-            const slotHeight = slotEl.offsetHeight;
-            if (!slotHeight || slotHeight <= 0) return;
+            const slotHeight = AmeMh.getSlotRenderedHeight(slotEl);
+            if (!slotHeight || slotHeight <= 0) return 0;
             document.documentElement.style.setProperty("--altezzaMh2021", slotHeight + "px");
+            return slotHeight;
         };
 
-        requestAnimationFrame(() => {
-            requestAnimationFrame(applyHeight);
-        });
+        return applyHeight();
     }
 
     static startStripAnimationOnce(reason) {
-        if (window.__ameMhDorvanStripAnimationStarted) return;
+        if (window.__ameMhDorvanStripAnimationStarted || window.stripanimationrun) return;
         window.__ameMhDorvanStripAnimationStarted = true;
 
-        setTimeout(() => {
-            try {
-                if (localStorage.getItem("mh2021Debug")) {
-                    console.log("[mh2021] [FLOW] start strip_animation", reason);
+        const tryStart = (attempt) => {
+            const ameMh = document.querySelector("ame-mh");
+            AmeMh.updateMhHeightFromSlot(ameMh);
+
+            const strip = AmeMh.getMhSlotEl(ameMh);
+            const stripH = AmeMh.getSlotRenderedHeight(strip);
+
+            if (stripH > 0) {
+                try {
+                    if (localStorage.getItem("mh2021Debug")) {
+                        console.log("[mh2021] [FLOW] start strip_animation", {
+                            reason,
+                            attempt,
+                            stripH,
+                            slotElementId: AmeMh.getMhSlotElementId(),
+                        });
+                    }
+                } catch (e) {
+                    // localStorage non disponibile
                 }
-            } catch (e) {
-                // localStorage non disponibile
+                const started = AmeMh.strip_animation();
+                if (started !== false) return;
             }
-            AmeMh.strip_animation();
-        }, 50);
+
+            if (attempt >= 40) {
+                window.__ameMhDorvanStripAnimationStarted = false;
+                try {
+                    if (localStorage.getItem("mh2021Debug")) {
+                        console.warn("[mh2021] [GUARD] strip_animation aborted: strip height still 0", {
+                            reason,
+                            slotElementId: AmeMh.getMhSlotElementId(),
+                        });
+                    }
+                } catch (e) {
+                    // noop
+                }
+                return;
+            }
+
+            setTimeout(() => tryStart(attempt + 1), 100);
+        };
+
+        setTimeout(() => tryStart(0), 50);
     }
     // AME_MH_CUSTOM_EVENTS_END
 
@@ -252,7 +301,7 @@ class AmeMh extends HTMLElement {
                 let listenerOnload = null;
                 let listenerRenderEnded = null;
 
-                const dispatchFromSlot = (slot, slotElementId, isEmpty) => {
+                const dispatchFromSlot = (slot, slotElementId, isEmpty, source) => {
                     if (didDispatchSlotOnload) return;
                     didDispatchSlotOnload = true;
 
@@ -263,6 +312,7 @@ class AmeMh extends HTMLElement {
                         slotElementId,
                         isEmpty,
                         sizes,
+                        source,
                     });
 
                     if (isEmpty) {
@@ -270,14 +320,17 @@ class AmeMh extends HTMLElement {
                             mhContainerId: "mh2021",
                             slotElementId,
                             sizes,
+                            source,
                         });
                     } else {
+                        AmeMh.updateMhHeightFromSlot(self);
                         self.dispatchMhEvent("ame-mh:slot-filled", {
                             mhContainerId: "mh2021",
                             slotElementId,
                             sizes,
+                            source,
                         });
-                        AmeMh.startStripAnimationOnce("slot-filled");
+                        AmeMh.startStripAnimationOnce(source || "slot-filled");
                     }
 
                     try {
@@ -299,13 +352,19 @@ class AmeMh extends HTMLElement {
                     return AmeMh.isSlotEmptyFallback(AmeMh.getMhSlotEl(self));
                 };
 
+                // Preferiamo slotRenderEnded: su desk l'altezza è più affidabile dopo il render.
+                // slotOnload resta come fallback se renderEnded non arriva.
                 listenerOnload = (event) => {
                     const slot = event && event.slot;
                     if (!slot || typeof slot.getSlotElementId !== "function") return;
                     const slotElementId = slot.getSlotElementId();
                     if (slotElementId !== mhSlotElementId) return;
 
-                    dispatchFromSlot(slot, slotElementId, computeIsEmpty(event, slot));
+                    // Se renderEnded non è ancora arrivato, aspettiamo un po' prima di usare onload.
+                    setTimeout(() => {
+                        if (didDispatchSlotOnload) return;
+                        dispatchFromSlot(slot, slotElementId, computeIsEmpty(event, slot), "slotOnload");
+                    }, 300);
                 };
 
                 listenerRenderEnded = (event) => {
@@ -318,7 +377,7 @@ class AmeMh extends HTMLElement {
                     if (!isEmpty) {
                         AmeMh.updateMhHeightFromSlot(self);
                     }
-                    dispatchFromSlot(slot, slotElementId, isEmpty);
+                    dispatchFromSlot(slot, slotElementId, isEmpty, "slotRenderEnded");
                 };
 
                 pubads.addEventListener("slotOnload", listenerOnload);
@@ -338,7 +397,10 @@ class AmeMh extends HTMLElement {
                         // noop
                     }
 
-                    dispatchFromSlot(slotObj, mhSlotElementId, isEmpty);
+                    if (!isEmpty) {
+                        AmeMh.updateMhHeightFromSlot(self);
+                    }
+                    dispatchFromSlot(slotObj, mhSlotElementId, isEmpty, "fallback-timer");
                 }, 4000);
             });
         }
@@ -398,7 +460,7 @@ class AmeMh extends HTMLElement {
             
             mhIntersection,
             pageSpacedInTop = 0,
-            stripH = strip ? strip.offsetHeight || 0 : 0;
+            stripH = AmeMh.getSlotRenderedHeight(strip);
 
         if (debug == 1) localStorage.setItem("mh2021Debug", 1);
 
@@ -409,8 +471,12 @@ class AmeMh extends HTMLElement {
 
         if (stripH == 0) {
             log("Strip ad altezza 0 -> return false");
+            window.__ameMhDorvanStripAnimationStarted = false;
             return false;
         }
+
+        // Allinea il container MH all'altezza reale dello slot desk/mobile.
+        document.documentElement.style.setProperty("--altezzaMh2021", stripH + "px");
 
         if (typeof window.stripanimationrun !== "undefined") {
             console.warn(
@@ -437,7 +503,7 @@ class AmeMh extends HTMLElement {
         let mh2021PageInTopView = (motivo) => {
             log("mh2021PageInTopView", motivo); //log del motivo per cui do margine superiore alla pagina
             observer.disconnect();
-            let mhH = strip ? strip.offsetHeight : 0;
+            let mhH = AmeMh.getSlotRenderedHeight(strip);
             if(mhH <= 50) mhH = 0; //fix per webview fb. Per qualche motivo gira la strip_animation sulla 3x1. Impediamo di mettere margine alla pagina se non c'è uno slot consistente e 50px dovrebbero essere safe.
             let padding = 0
             // se c'è il blocco di padding aggiungo anche quello all'altezza
@@ -484,7 +550,7 @@ class AmeMh extends HTMLElement {
             });
             // AME_MH_CUSTOM_EVENTS_END
             if (paddingStrip && strip) {
-                paddingStrip.style.setProperty('--margin-top-adv', strip.offsetHeight + 'px');
+                paddingStrip.style.setProperty('--margin-top-adv', AmeMh.getSlotRenderedHeight(strip) + 'px');
             }
 
         }, firstDelay + 400);
