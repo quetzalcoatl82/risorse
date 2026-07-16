@@ -41,18 +41,26 @@ class AmeMh extends HTMLElement {
 
     static updateMhHeightFromSlot(root, eventSize) {
         const slotEl = AmeMh.getMhSlotEl(root);
-        const isDesktop = AmeMh.isDesktopViewport();
         let height = 0;
+        let source = null;
 
-        // Su mobile non usare event.size GPT: la size map include spesso 970x250
-        // e forzerebbe --altezzaMh2021 a 250px al posto di 33vw.
         if (slotEl) {
             height = slotEl.offsetHeight || 0;
+            if (height) source = "dom";
         }
-        if (!height && isDesktop && Array.isArray(eventSize) && eventSize.length >= 2) {
+        if (!height && Array.isArray(eventSize) && eventSize.length >= 2) {
             height = Number(eventSize[1]) || 0;
+            if (height) source = "gpt-event.size";
         }
         if (!height || height <= 0) return 0;
+
+        console.log("[mh2021] [FLOW] update --altezzaMh2021", {
+            height,
+            source,
+            slotElementId: AmeMh.getMhSlotElementId(),
+            eventSize,
+            isDesktop: AmeMh.isDesktopViewport(),
+        });
 
         document.documentElement.style.setProperty("--altezzaMh2021", height + "px");
         return height;
