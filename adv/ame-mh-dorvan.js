@@ -39,14 +39,43 @@ class AmeMh extends HTMLElement {
         return scope.querySelector("#" + AmeMh.getMhSlotElementId());
     }
 
+    static getCreativeHeight(slotEl) {
+        if (!slotEl) return 0;
+
+        let mediaH = 0;
+        try {
+            slotEl.querySelectorAll("iframe, img, video, object, embed").forEach((el) => {
+                const h = Math.max(
+                    el.offsetHeight || 0,
+                    el.clientHeight || 0,
+                    Number(el.getAttribute("height")) || 0
+                );
+                if (h > mediaH) mediaH = h;
+            });
+        } catch (e) {
+            // noop
+        }
+        if (mediaH > 0) return mediaH;
+
+        // Evita slot.offsetHeight: su mobile lo strip è stretchato all'altezza di #mh2021
+        // (CSS var / 33vw), non all'altezza reale della creative.
+        const child = slotEl.firstElementChild;
+        if (child) {
+            const childH = child.offsetHeight || child.scrollHeight || 0;
+            if (childH > 0) return childH;
+        }
+
+        return slotEl.scrollHeight || 0;
+    }
+
     static updateMhHeightFromSlot(root, eventSize) {
         const slotEl = AmeMh.getMhSlotEl(root);
         let height = 0;
         let source = null;
 
         if (slotEl) {
-            height = slotEl.offsetHeight || 0;
-            if (height) source = "dom";
+            height = AmeMh.getCreativeHeight(slotEl);
+            if (height) source = "creative-dom";
         }
         if (!height && Array.isArray(eventSize) && eventSize.length >= 2) {
             height = Number(eventSize[1]) || 0;
@@ -57,6 +86,7 @@ class AmeMh extends HTMLElement {
         console.log("[mh2021] [FLOW] update --altezzaMh2021", {
             height,
             source,
+            slotOffsetHeight: slotEl ? slotEl.offsetHeight : 0,
             slotElementId: AmeMh.getMhSlotElementId(),
             eventSize,
             isDesktop: AmeMh.isDesktopViewport(),
@@ -154,6 +184,9 @@ class AmeMh extends HTMLElement {
                 left: 0;
                 overflow: hidden;
                 z-index: 0;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
             }
             #mh2021.mhForeground {
                 z-index: 9999;
@@ -180,12 +213,14 @@ class AmeMh extends HTMLElement {
             .mh2021Strip {
                 width: 100vw;
                 max-height: var(--altezzaMh2021);
+                height: auto;
                 overflow: hidden;
                 background: ${(this.bgMh) ? this.bgMh : 'var(--bgMh2021)'};
                 display: flex;
                 justify-content: center;
                 align-items: flex-start;
                 pointer-events: all;
+                align-self: flex-start;
             }
             .mh2021Strip-desktop {
                 display: none;
@@ -367,7 +402,8 @@ class AmeMh extends HTMLElement {
             
             mhIntersection = false,
             pageSpacedInTop = 0,
-            stripH = strip ? strip.offsetHeight || 0 : 0;
+            // Altezza creative (non lo strip stretchato al container)
+            stripH = AmeMh.getCreativeHeight(strip) || (strip ? strip.offsetHeight || 0 : 0);
 
         if (debug == 1) localStorage.setItem("mh2021Debug", 1);
 
@@ -377,7 +413,6 @@ class AmeMh extends HTMLElement {
         };
 
         if (stripH == 0) {
-            // Su mobile Dorvan skin può lasciare lo strip a 0 ma il container #mh2021 ha altezza CSS.
             stripH = mh ? mh.offsetHeight || 0 : 0;
         }
 
@@ -385,6 +420,15 @@ class AmeMh extends HTMLElement {
             log("Strip ad altezza 0 -> return false");
             return false;
         }
+
+        // Riallinea CSS var all'altezza creative reale (evita 124 da 33vw vs 97 creative)
+        document.documentElement.style.setProperty("--altezzaMh2021", stripH + "px");
+        log("Sync --altezzaMh2021 before observer", {
+            stripH,
+            creativeH: AmeMh.getCreativeHeight(strip),
+            stripOffsetH: strip ? strip.offsetHeight : 0,
+            mhH: mh ? mh.offsetHeight : 0,
+        });
 
         if (typeof window.stripanimationrun !== "undefined") {
             console.warn(
@@ -411,9 +455,8 @@ class AmeMh extends HTMLElement {
         // Preferisci l'altezza del container MH: su mobile lo strip Dorvan può risultare 0
         // (creative absolute) mentre #mh2021 ha già --altezzaMh2021.
         let getMhMarginHeight = () => {
-            const stripHeight = strip ? strip.offsetHeight || 0 : 0;
-            const containerHeight = mh ? mh.offsetHeight || 0 : 0;
-            let mhH = Math.max(stripHeight, containerHeight);
+            // Stessa metrica usata per --altezzaMh2021 (creative, non box stretchato)
+            let mhH = AmeMh.getCreativeHeight(strip) || stripH || (mh ? mh.offsetHeight || 0 : 0);
 
             if (!mhH) {
                 const raw = getComputedStyle(document.documentElement).getPropertyValue("--altezzaMh2021").trim();
@@ -421,7 +464,6 @@ class AmeMh extends HTMLElement {
                 else if (raw.endsWith("vw")) mhH = (parseFloat(raw) / 100) * window.innerWidth || 0;
             }
 
-            // Solo se davvero microscopico (es. 1x1) azzera; 33vw mobile è tipicamente > 50.
             if (mhH > 0 && mhH <= 20) mhH = 0;
             return mhH;
         };
