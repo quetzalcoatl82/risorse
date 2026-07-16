@@ -26,7 +26,8 @@ class AmeMh extends HTMLElement {
     }
 
     static isDesktopViewport() {
-        return document.documentElement.clientWidth > 1000;
+        // Stesso discrimine del CSS: min-width 1000px => flx-mh, sotto => flx-skin-mob
+        return document.documentElement.clientWidth >= 1000;
     }
 
     static getMhSlotElementId() {
@@ -40,13 +41,16 @@ class AmeMh extends HTMLElement {
 
     static updateMhHeightFromSlot(root, eventSize) {
         const slotEl = AmeMh.getMhSlotEl(root);
+        const isDesktop = AmeMh.isDesktopViewport();
         let height = 0;
 
-        if (Array.isArray(eventSize) && eventSize.length >= 2) {
-            height = Number(eventSize[1]) || 0;
-        }
-        if (!height && slotEl) {
+        // Su mobile non usare event.size GPT: la size map include spesso 970x250
+        // e forzerebbe --altezzaMh2021 a 250px al posto di 33vw.
+        if (slotEl) {
             height = slotEl.offsetHeight || 0;
+        }
+        if (!height && isDesktop && Array.isArray(eventSize) && eventSize.length >= 2) {
+            height = Number(eventSize[1]) || 0;
         }
         if (!height || height <= 0) return 0;
 
@@ -101,6 +105,12 @@ class AmeMh extends HTMLElement {
         
         //appendo il markup
         this.insertAdjacentHTML('beforeend', this.template())
+
+        // Altezza iniziale: 250px desk / 33vw mobile (senza media query, così non resta sticky da GPT)
+        document.documentElement.style.setProperty(
+            "--altezzaMh2021",
+            AmeMh.isDesktopViewport() ? "250px" : "33vw"
+        );
 
         // CLS Fix scroll
         this.fixCLSScroll();
@@ -173,9 +183,6 @@ class AmeMh extends HTMLElement {
                 display: flex;
             }
             @media all and (min-width: 1000px) {
-                :root {
-                    --altezzaMh2021 : 250px;
-                }
                 .mh2021Strip-desktop {
                     display: flex;
                 }
