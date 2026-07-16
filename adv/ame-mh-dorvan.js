@@ -38,6 +38,32 @@ class AmeMh extends HTMLElement {
         const scope = root || document;
         return scope.querySelector("#" + AmeMh.getMhSlotElementId());
     }
+
+    static syncMhSlotVisibility(root) {
+        const scope = root || document;
+        const desktopSlot = scope.querySelector("#flx-mh");
+        const mobileSlot = scope.querySelector("#flx-skin-mob");
+        const showDesktop = AmeMh.isDesktopViewport();
+
+        if (desktopSlot) desktopSlot.style.display = showDesktop ? "flex" : "none";
+        if (mobileSlot) mobileSlot.style.display = showDesktop ? "none" : "flex";
+    }
+
+    static startStripAnimationOnce(reason) {
+        if (window.__ameMhDorvanStripAnimationStarted) return;
+        window.__ameMhDorvanStripAnimationStarted = true;
+
+        setTimeout(() => {
+            try {
+                if (localStorage.getItem("mh2021Debug")) {
+                    console.log("[mh2021] [FLOW] start strip_animation", reason);
+                }
+            } catch (e) {
+                // localStorage non disponibile
+            }
+            AmeMh.strip_animation();
+        }, 50);
+    }
     // AME_MH_CUSTOM_EVENTS_END
 
     connectedCallback() {
@@ -61,9 +87,17 @@ class AmeMh extends HTMLElement {
         // AME_MH_CUSTOM_EVENTS_END
 
         this.config();
+        this._onViewportChange = () => AmeMh.syncMhSlotVisibility(this);
+        window.addEventListener("resize", this._onViewportChange);
 
         //added class on selector-wrapper
         document.querySelector(this.selectorWrapper).classList.add('mh2021Page');
+    }
+
+    disconnectedCallback() {
+        if (this._onViewportChange) {
+            window.removeEventListener("resize", this._onViewportChange);
+        }
     }
 
     config() {
@@ -74,6 +108,7 @@ class AmeMh extends HTMLElement {
         
         //appendo il markup
         this.insertAdjacentHTML('beforeend', this.template())
+        AmeMh.syncMhSlotVisibility(this);
 
         // CLS Fix scroll
         this.fixCLSScroll();
@@ -144,14 +179,6 @@ class AmeMh extends HTMLElement {
             }
             .mh2021Strip-mobile {
                 display: flex;
-            }
-            @media all and (min-width: 1000px) {
-                .mh2021Strip-desktop {
-                    display: flex;
-                }
-                .mh2021Strip-mobile {
-                    display: none;
-                }
             }
             #bottomStrip2021 {
                 width: 100vw;
@@ -236,6 +263,7 @@ class AmeMh extends HTMLElement {
                             slotElementId,
                             sizes,
                         });
+                        AmeMh.startStripAnimationOnce("slot-filled");
                     }
 
                     try {
