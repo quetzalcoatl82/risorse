@@ -38,164 +38,32 @@ class AmeMh extends HTMLElement {
         return scope.querySelector("#" + AmeMh.getMhSlotElementId());
     }
 
-    static syncMhSlotVisibility(root) {
-        const scope = root || document;
-        const desktopSlot = scope.querySelector("#flx-mh");
-        const mobileSlot = scope.querySelector("#flx-skin-mob");
-        const showDesktop = AmeMh.isDesktopViewport();
-
-        if (desktopSlot) desktopSlot.style.display = showDesktop ? "flex" : "none";
-        if (mobileSlot) mobileSlot.style.display = showDesktop ? "none" : "flex";
-    }
-
-    static getHeightFromGptSizes(sizes, eventSize) {
-        // Preferisci sempre la size effettivamente renderizzata.
-        if (Array.isArray(eventSize) && eventSize.length >= 2) {
-            const h = Number(eventSize[1]);
-            if (h > 0) return h;
-        }
-        if (eventSize && typeof eventSize.getHeight === "function") {
-            const h = Number(eventSize.getHeight()) || 0;
-            if (h > 0) return h;
-        }
-
-        if (!sizes) return 0;
-
-        const list = Array.isArray(sizes) ? sizes : [sizes];
-        // Evita di prendere il max di tutte le size configurate: usiamo solo se ne esiste una sola.
-        if (list.length !== 1) return 0;
-
-        const size = list[0];
-        if (Array.isArray(size) && size.length >= 2) return Number(size[1]) || 0;
-        if (size && typeof size.getHeight === "function") return Number(size.getHeight()) || 0;
-        if (size && typeof size.height === "number") return size.height;
-        return 0;
-    }
-
-    static getFallbackMhHeight() {
-        const gptH = Number(window.__ameMhDorvanGptHeight) || 0;
-        if (gptH > 0) return gptH;
-        return AmeMh.isDesktopViewport() ? 250 : Math.round(window.innerWidth * 0.33) || 120;
-    }
-
-    static rememberGptSlotHeight(height, source) {
-        const h = Number(height) || 0;
-        if (h <= 0) return 0;
-        window.__ameMhDorvanGptHeight = h;
-        document.documentElement.style.setProperty("--altezzaMh2021", h + "px");
-        try {
-            if (localStorage.getItem("mh2021Debug")) {
-                console.log("[mh2021] [FLOW] set --altezzaMh2021 from GPT", { height: h, source });
-            }
-        } catch (e) {
-            // noop
-        }
-        return h;
-    }
-
-    static getSlotRenderedHeight(slotEl) {
-        if (!slotEl) return Number(window.__ameMhDorvanGptHeight) || 0;
-
-        let mediaHeight = 0;
-        try {
-            const media = slotEl.querySelectorAll("iframe, img, video, object, embed, div, ins");
-            media.forEach((el) => {
-                const rectH = el.getBoundingClientRect ? el.getBoundingClientRect().height : 0;
-                const attrH = Number(el.getAttribute("height")) || 0;
-                const h = Math.max(el.offsetHeight || 0, el.clientHeight || 0, rectH || 0, attrH || 0);
-                if (h > mediaHeight) mediaHeight = h;
-            });
-        } catch (e) {
-            // noop
-        }
-
-        const slotRectH = slotEl.getBoundingClientRect ? slotEl.getBoundingClientRect().height : 0;
-        const mh = document.getElementById("mh2021");
-        const containerH = mh ? Math.max(mh.offsetHeight || 0, mh.getBoundingClientRect().height || 0) : 0;
-        const gptH = Number(window.__ameMhDorvanGptHeight) || 0;
-
-        return Math.max(
-            slotEl.offsetHeight || 0,
-            slotEl.scrollHeight || 0,
-            slotRectH || 0,
-            mediaHeight || 0,
-            containerH || 0,
-            gptH || 0
-        );
-    }
-
-    static updateMhHeightFromSlot(root, gptHeight) {
-        if (gptHeight && gptHeight > 0) {
-            return AmeMh.rememberGptSlotHeight(gptHeight, "updateMhHeightFromSlot");
-        }
-
+    static updateMhHeightFromSlot(root, eventSize) {
         const slotEl = AmeMh.getMhSlotEl(root);
-        if (!slotEl) return Number(window.__ameMhDorvanGptHeight) || 0;
+        let height = 0;
 
-        const slotHeight = AmeMh.getSlotRenderedHeight(slotEl);
-        if (!slotHeight || slotHeight <= 0) return 0;
-        document.documentElement.style.setProperty("--altezzaMh2021", slotHeight + "px");
-        return slotHeight;
+        if (Array.isArray(eventSize) && eventSize.length >= 2) {
+            height = Number(eventSize[1]) || 0;
+        }
+        if (!height && slotEl) {
+            height = slotEl.offsetHeight || 0;
+        }
+        if (!height || height <= 0) return 0;
+
+        document.documentElement.style.setProperty("--altezzaMh2021", height + "px");
+        return height;
     }
 
-    static startStripAnimationOnce(reason) {
+    static startStripAnimationOnce() {
         if (window.__ameMhDorvanStripAnimationStarted || window.stripanimationrun) return;
         window.__ameMhDorvanStripAnimationStarted = true;
 
-        const tryStart = (attempt) => {
-            const ameMh = document.querySelector("ame-mh");
-            AmeMh.updateMhHeightFromSlot(ameMh);
-
-            const strip = AmeMh.getMhSlotEl(ameMh);
-            const stripH = AmeMh.getSlotRenderedHeight(strip);
-
-            if (stripH > 0) {
-                try {
-                    if (localStorage.getItem("mh2021Debug")) {
-                        console.log("[mh2021] [FLOW] start strip_animation", {
-                            reason,
-                            attempt,
-                            stripH,
-                            gptHeight: window.__ameMhDorvanGptHeight || 0,
-                            slotElementId: AmeMh.getMhSlotElementId(),
-                        });
-                    }
-                } catch (e) {
-                    // localStorage non disponibile
-                }
-                const started = AmeMh.strip_animation();
-                if (started !== false) return;
-            }
-
-            // Su desk il DOM Dorvan può restare a height 0 anche con creative filled:
-            // dopo pochi tentativi forziamo un'altezza GPT/default e avviamo comunque il fix.
-            if (attempt >= 5) {
-                const forcedH = AmeMh.getFallbackMhHeight();
-                AmeMh.rememberGptSlotHeight(forcedH, "forced-fallback");
-                const started = AmeMh.strip_animation();
-                if (started !== false) return;
-            }
-
-            if (attempt >= 40) {
+        setTimeout(() => {
+            const started = AmeMh.strip_animation();
+            if (started === false) {
                 window.__ameMhDorvanStripAnimationStarted = false;
-                try {
-                    if (localStorage.getItem("mh2021Debug")) {
-                        console.warn("[mh2021] [GUARD] strip_animation aborted: strip height still 0", {
-                            reason,
-                            slotElementId: AmeMh.getMhSlotElementId(),
-                            gptHeight: Number(window.__ameMhDorvanGptHeight) || 0,
-                        });
-                    }
-                } catch (e) {
-                    // noop
-                }
-                return;
             }
-
-            setTimeout(() => tryStart(attempt + 1), 100);
-        };
-
-        setTimeout(() => tryStart(0), 50);
+        }, 100);
     }
     // AME_MH_CUSTOM_EVENTS_END
 
@@ -220,17 +88,9 @@ class AmeMh extends HTMLElement {
         // AME_MH_CUSTOM_EVENTS_END
 
         this.config();
-        this._onViewportChange = () => AmeMh.syncMhSlotVisibility(this);
-        window.addEventListener("resize", this._onViewportChange);
 
         //added class on selector-wrapper
         document.querySelector(this.selectorWrapper).classList.add('mh2021Page');
-    }
-
-    disconnectedCallback() {
-        if (this._onViewportChange) {
-            window.removeEventListener("resize", this._onViewportChange);
-        }
     }
 
     config() {
@@ -241,7 +101,6 @@ class AmeMh extends HTMLElement {
         
         //appendo il markup
         this.insertAdjacentHTML('beforeend', this.template())
-        AmeMh.syncMhSlotVisibility(this);
 
         // CLS Fix scroll
         this.fixCLSScroll();
@@ -299,9 +158,7 @@ class AmeMh extends HTMLElement {
             }
             .mh2021Strip {
                 width: 100vw;
-                min-height: 100%;
-                height: 100%;
-                max-height: none;
+                max-height: var(--altezzaMh2021);
                 overflow: hidden;
                 background: ${(this.bgMh) ? this.bgMh : 'var(--bgMh2021)'};
                 display: flex;
@@ -314,6 +171,17 @@ class AmeMh extends HTMLElement {
             }
             .mh2021Strip-mobile {
                 display: flex;
+            }
+            @media all and (min-width: 1000px) {
+                :root {
+                    --altezzaMh2021 : 250px;
+                }
+                .mh2021Strip-desktop {
+                    display: flex;
+                }
+                .mh2021Strip-mobile {
+                    display: none;
+                }
             }
             #bottomStrip2021 {
                 width: 100vw;
@@ -333,11 +201,6 @@ class AmeMh extends HTMLElement {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-            }
-            @media all and (min-width: 1000px) {
-                :root {
-                    --altezzaMh2021 : 250px;
-                }
             }
         `;
 
@@ -373,15 +236,14 @@ class AmeMh extends HTMLElement {
                 let listenerOnload = null;
                 let listenerRenderEnded = null;
 
-                const dispatchFromSlot = (slot, slotElementId, isEmpty, source, eventSize) => {
+                const dispatchFromSlot = (slot, slotElementId, isEmpty, eventSize) => {
                     if (didDispatchSlotOnload) return;
                     didDispatchSlotOnload = true;
 
                     const sizes = slot && typeof slot.getSizes === "function" ? slot.getSizes() : undefined;
-                    const gptHeight = AmeMh.getHeightFromGptSizes(sizes, eventSize);
 
-                    if (!isEmpty && gptHeight > 0) {
-                        AmeMh.rememberGptSlotHeight(gptHeight, source);
+                    if (!isEmpty) {
+                        AmeMh.updateMhHeightFromSlot(self, eventSize);
                     }
 
                     self.dispatchMhEvent("ame-mh:slot-onload", {
@@ -389,8 +251,6 @@ class AmeMh extends HTMLElement {
                         slotElementId,
                         isEmpty,
                         sizes,
-                        source,
-                        gptHeight,
                     });
 
                     if (isEmpty) {
@@ -398,18 +258,14 @@ class AmeMh extends HTMLElement {
                             mhContainerId: "mh2021",
                             slotElementId,
                             sizes,
-                            source,
                         });
                     } else {
-                        AmeMh.updateMhHeightFromSlot(self, gptHeight);
                         self.dispatchMhEvent("ame-mh:slot-filled", {
                             mhContainerId: "mh2021",
                             slotElementId,
                             sizes,
-                            source,
-                            gptHeight,
                         });
-                        AmeMh.startStripAnimationOnce(source || "slot-filled");
+                        AmeMh.startStripAnimationOnce();
                     }
 
                     try {
@@ -431,24 +287,12 @@ class AmeMh extends HTMLElement {
                     return AmeMh.isSlotEmptyFallback(AmeMh.getMhSlotEl(self));
                 };
 
-                // Preferiamo slotRenderEnded: su desk l'altezza è più affidabile dopo il render.
-                // slotOnload resta come fallback se renderEnded non arriva.
                 listenerOnload = (event) => {
                     const slot = event && event.slot;
                     if (!slot || typeof slot.getSlotElementId !== "function") return;
                     const slotElementId = slot.getSlotElementId();
                     if (slotElementId !== mhSlotElementId) return;
-
-                    setTimeout(() => {
-                        if (didDispatchSlotOnload) return;
-                        dispatchFromSlot(
-                            slot,
-                            slotElementId,
-                            computeIsEmpty(event, slot),
-                            "slotOnload",
-                            event && event.size
-                        );
-                    }, 300);
+                    dispatchFromSlot(slot, slotElementId, computeIsEmpty(event, slot), event && event.size);
                 };
 
                 listenerRenderEnded = (event) => {
@@ -456,18 +300,7 @@ class AmeMh extends HTMLElement {
                     if (!slot || typeof slot.getSlotElementId !== "function") return;
                     const slotElementId = slot.getSlotElementId();
                     if (slotElementId !== mhSlotElementId) return;
-
-                    const isEmpty = computeIsEmpty(event, slot);
-                    const gptHeight = AmeMh.getHeightFromGptSizes(
-                        slot && typeof slot.getSizes === "function" ? slot.getSizes() : undefined,
-                        event && event.size
-                    );
-                    if (!isEmpty && gptHeight > 0) {
-                        AmeMh.rememberGptSlotHeight(gptHeight, "slotRenderEnded");
-                    } else if (!isEmpty) {
-                        AmeMh.updateMhHeightFromSlot(self);
-                    }
-                    dispatchFromSlot(slot, slotElementId, isEmpty, "slotRenderEnded", event && event.size);
+                    dispatchFromSlot(slot, slotElementId, computeIsEmpty(event, slot), event && event.size);
                 };
 
                 pubads.addEventListener("slotOnload", listenerOnload);
@@ -476,44 +309,11 @@ class AmeMh extends HTMLElement {
                 setTimeout(() => {
                     if (didDispatchSlotOnload) return;
                     const isEmpty = AmeMh.isSlotEmptyFallback(AmeMh.getMhSlotEl(self));
-
-                    let slotObj = null;
-                    try {
-                        const slots = typeof pubads.getSlots === "function" ? pubads.getSlots() : [];
-                        slotObj = Array.isArray(slots)
-                            ? slots.find(s => s && typeof s.getSlotElementId === "function" && s.getSlotElementId() === mhSlotElementId)
-                            : null;
-                    } catch (e) {
-                        // noop
-                    }
-
-                    if (!isEmpty) {
-                        AmeMh.updateMhHeightFromSlot(self);
-                    }
-                    dispatchFromSlot(slotObj, mhSlotElementId, isEmpty, "fallback-timer");
+                    dispatchFromSlot(null, mhSlotElementId, isEmpty);
                 }, 4000);
             });
         }
         // AME_MH_CUSTOM_EVENTS_END
-
-        // if (this.disableStrip != "true" && !document.querySelector('.no-strip-mobile')) {
-        //     let fallback = () => {
-        //         setTimeout(() => {  
-        //             //fallback solo se non c'è una flyingpush che sta girando
-        //             if (document.getElementById('flyfirst-mobile-placement')) {
-        //                 if(document.getElementById('flyfirst-mobile-placement').childNodes.length == 0) {
-        //                     startStripMobile("fallback timer");
-        //                 } else {
-        //                     console.log('[strip mobile 2021] fallback fallita per presenza flyfirst')
-        //                 }
-        //             } else {
-        //                 startStripMobile("fallback timer");
-        //             }
-        //         }, 20000);
-        //     };
-
-        //     postTcfReady(fallback);
-        // }
     }
 
     get selectorWrapper() {
@@ -550,7 +350,7 @@ class AmeMh extends HTMLElement {
             
             mhIntersection,
             pageSpacedInTop = 0,
-            stripH = AmeMh.getSlotRenderedHeight(strip);
+            stripH = strip ? strip.offsetHeight || 0 : 0;
 
         if (debug == 1) localStorage.setItem("mh2021Debug", 1);
 
@@ -561,12 +361,8 @@ class AmeMh extends HTMLElement {
 
         if (stripH == 0) {
             log("Strip ad altezza 0 -> return false");
-            window.__ameMhDorvanStripAnimationStarted = false;
             return false;
         }
-
-        // Allinea il container MH all'altezza reale dello slot desk/mobile.
-        document.documentElement.style.setProperty("--altezzaMh2021", stripH + "px");
 
         if (typeof window.stripanimationrun !== "undefined") {
             console.warn(
@@ -593,7 +389,7 @@ class AmeMh extends HTMLElement {
         let mh2021PageInTopView = (motivo) => {
             log("mh2021PageInTopView", motivo); //log del motivo per cui do margine superiore alla pagina
             observer.disconnect();
-            let mhH = AmeMh.getSlotRenderedHeight(strip);
+            let mhH = strip ? strip.offsetHeight : 0;
             if(mhH <= 50) mhH = 0; //fix per webview fb. Per qualche motivo gira la strip_animation sulla 3x1. Impediamo di mettere margine alla pagina se non c'è uno slot consistente e 50px dovrebbero essere safe.
             let padding = 0
             // se c'è il blocco di padding aggiungo anche quello all'altezza
@@ -640,7 +436,7 @@ class AmeMh extends HTMLElement {
             });
             // AME_MH_CUSTOM_EVENTS_END
             if (paddingStrip && strip) {
-                paddingStrip.style.setProperty('--margin-top-adv', AmeMh.getSlotRenderedHeight(strip) + 'px');
+                paddingStrip.style.setProperty('--margin-top-adv', strip.offsetHeight + 'px');
             }
 
         }, firstDelay + 400);
@@ -656,16 +452,6 @@ class AmeMh extends HTMLElement {
                 reason: "defix_timer",
             });
             // AME_MH_CUSTOM_EVENTS_END
-
-            // if (getDisableStrip != "true" && !document.querySelector('.no-strip-mobile')) {
-            //     if (flyFirstMobile) {
-            //         if(flyFirstMobile.childNodes.length == 0) {
-            //             setTimeout(() => {
-            //                 startStripMobile("mh fixed");
-            //             }, 1000);
-            //         }
-            //     }
-            // }
         }, firstDelay + viewTimeLimit + 400);
 
         //callback observer
