@@ -137,7 +137,7 @@ class AmeMh extends HTMLElement {
                 --bgMh2021Page: #fff;
             }
             #mh2021 {
-                height: var(--altezzaMh2021);
+                max-height: var(--altezzaMh2021);
                 width: 100vw;
                 position: fixed;
                 top: 0;
