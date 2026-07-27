@@ -83,13 +83,20 @@ class AmeMh extends HTMLElement {
         }
         if (!height || height <= 0) return 0;
 
+        // Mobile: cap a 100px per creative più alte (il provider scala la resa)
+        const isDesktop = AmeMh.isDesktopViewport();
+        if (!isDesktop && height > 100) {
+            height = 100;
+            source += "+mobile-cap";
+        }
+
         console.log("[mh2021] [FLOW] update --altezzaMh2021", {
             height,
             source,
             slotOffsetHeight: slotEl ? slotEl.offsetHeight : 0,
             slotElementId: AmeMh.getMhSlotElementId(),
             eventSize,
-            isDesktop: AmeMh.isDesktopViewport(),
+            isDesktop,
         });
 
         document.documentElement.style.setProperty("--altezzaMh2021", height + "px");
