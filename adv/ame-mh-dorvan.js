@@ -42,23 +42,33 @@ class AmeMh extends HTMLElement {
     static getCreativeHeight(slotEl) {
         if (!slotEl) return 0;
 
+        // Preferisci l'altezza renderizzata dello slot (ciò che si vede).
+        // Gli attributi height dell'iframe (es. 250) spesso non matchano la resa (es. 97).
+        const slotH = slotEl.offsetHeight || 0;
+        if (slotH > 20) return slotH;
+
         let mediaH = 0;
         try {
             slotEl.querySelectorAll("iframe, img, video, object, embed").forEach((el) => {
-                const h = Math.max(
-                    el.offsetHeight || 0,
-                    el.clientHeight || 0,
-                    Number(el.getAttribute("height")) || 0
-                );
-                if (h > mediaH) mediaH = h;
+                const rendered = Math.max(el.offsetHeight || 0, el.clientHeight || 0);
+                if (rendered > mediaH) mediaH = rendered;
             });
         } catch (e) {
             // noop
         }
         if (mediaH > 0) return mediaH;
 
-        // Evita slot.offsetHeight: su mobile lo strip è stretchato all'altezza di #mh2021
-        // (CSS var / 33vw), non all'altezza reale della creative.
+        // Attributi solo se ancora non c'è nulla di renderizzato
+        try {
+            slotEl.querySelectorAll("iframe, img, video, object, embed").forEach((el) => {
+                const attr = Number(el.getAttribute("height")) || 0;
+                if (attr > mediaH) mediaH = attr;
+            });
+        } catch (e) {
+            // noop
+        }
+        if (mediaH > 0) return mediaH;
+
         const child = slotEl.firstElementChild;
         if (child) {
             const childH = child.offsetHeight || child.scrollHeight || 0;
@@ -66,6 +76,14 @@ class AmeMh extends HTMLElement {
         }
 
         return slotEl.scrollHeight || 0;
+    }
+
+    // Mobile cap a 100px: disabilitato finché usiamo l'altezza renderizzata dello strip.
+    // Riattivare se il provider torna a dichiarare altezze diverse dalla resa.
+    static capMobileHeight(height) {
+        if (!height || height <= 0) return 0;
+        // if (!AmeMh.isDesktopViewport() && height > 100) return 100;
+        return height;
     }
 
     static updateMhHeightFromSlot(root, eventSize) {
@@ -83,12 +101,12 @@ class AmeMh extends HTMLElement {
         }
         if (!height || height <= 0) return 0;
 
-        // Mobile: cap a 100px per creative più alte (il provider scala la resa)
         const isDesktop = AmeMh.isDesktopViewport();
-        if (!isDesktop && height > 100) {
-            height = 100;
-            source += "+mobile-cap";
-        }
+        // Cap mobile (opzionale): vedi capMobileHeight
+        // const capped = AmeMh.capMobileHeight(height);
+        // if (capped !== height) source += "+mobile-cap";
+        // height = capped;
+        height = AmeMh.capMobileHeight(height);
 
         console.log("[mh2021] [FLOW] update --altezzaMh2021", {
             height,
@@ -409,8 +427,11 @@ class AmeMh extends HTMLElement {
             
             mhIntersection = false,
             pageSpacedInTop = 0,
-            // Altezza creative (non lo strip stretchato al container)
-            stripH = AmeMh.getCreativeHeight(strip) || (strip ? strip.offsetHeight || 0 : 0);
+            // Preferisci strip.offsetHeight (resa visuale), poi fallback creative
+            // (cap mobile disabilitato in capMobileHeight)
+            stripH = AmeMh.capMobileHeight(
+                (strip ? strip.offsetHeight || 0 : 0) || AmeMh.getCreativeHeight(strip)
+            );
 
         if (debug == 1) localStorage.setItem("mh2021Debug", 1);
 
@@ -420,7 +441,7 @@ class AmeMh extends HTMLElement {
         };
 
         if (stripH == 0) {
-            stripH = mh ? mh.offsetHeight || 0 : 0;
+            stripH = AmeMh.capMobileHeight(mh ? mh.offsetHeight || 0 : 0);
         }
 
         if (stripH == 0) {
@@ -428,7 +449,7 @@ class AmeMh extends HTMLElement {
             return false;
         }
 
-        // Riallinea CSS var all'altezza creative reale (evita 124 da 33vw vs 97 creative)
+        // Riallinea CSS var all'altezza usata (resa visuale dello strip)
         document.documentElement.style.setProperty("--altezzaMh2021", stripH + "px");
         log("Sync --altezzaMh2021 before observer", {
             stripH,
@@ -459,7 +480,7 @@ class AmeMh extends HTMLElement {
             } else {}
         }
 
-        // Usa sempre --altezzaMh2021 (già capped a 100px in mobile se serve).
+        // Usa sempre --altezzaMh2021 (allineata alla resa visuale dello strip).
         let getMhMarginHeight = () => {
             let mhH = 0;
             const raw = getComputedStyle(document.documentElement).getPropertyValue("--altezzaMh2021").trim();
@@ -467,7 +488,9 @@ class AmeMh extends HTMLElement {
             else if (raw.endsWith("vw")) mhH = (parseFloat(raw) / 100) * window.innerWidth || 0;
 
             if (!mhH) {
-                mhH = AmeMh.getCreativeHeight(strip) || stripH || (mh ? mh.offsetHeight || 0 : 0);
+                mhH = AmeMh.capMobileHeight(
+                    AmeMh.getCreativeHeight(strip) || stripH || (mh ? mh.offsetHeight || 0 : 0)
+                );
             }
 
             if (mhH > 0 && mhH <= 20) mhH = 0;
