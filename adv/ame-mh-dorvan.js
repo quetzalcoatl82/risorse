@@ -459,16 +459,15 @@ class AmeMh extends HTMLElement {
             } else {}
         }
 
-        // Preferisci l'altezza del container MH: su mobile lo strip Dorvan può risultare 0
-        // (creative absolute) mentre #mh2021 ha già --altezzaMh2021.
+        // Usa sempre --altezzaMh2021 (già capped a 100px in mobile se serve).
         let getMhMarginHeight = () => {
-            // Stessa metrica usata per --altezzaMh2021 (creative, non box stretchato)
-            let mhH = AmeMh.getCreativeHeight(strip) || stripH || (mh ? mh.offsetHeight || 0 : 0);
+            let mhH = 0;
+            const raw = getComputedStyle(document.documentElement).getPropertyValue("--altezzaMh2021").trim();
+            if (raw.endsWith("px")) mhH = parseFloat(raw) || 0;
+            else if (raw.endsWith("vw")) mhH = (parseFloat(raw) / 100) * window.innerWidth || 0;
 
             if (!mhH) {
-                const raw = getComputedStyle(document.documentElement).getPropertyValue("--altezzaMh2021").trim();
-                if (raw.endsWith("px")) mhH = parseFloat(raw) || 0;
-                else if (raw.endsWith("vw")) mhH = (parseFloat(raw) / 100) * window.innerWidth || 0;
+                mhH = AmeMh.getCreativeHeight(strip) || stripH || (mh ? mh.offsetHeight || 0 : 0);
             }
 
             if (mhH > 0 && mhH <= 20) mhH = 0;
