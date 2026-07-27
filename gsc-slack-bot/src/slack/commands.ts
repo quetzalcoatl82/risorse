@@ -1,3 +1,4 @@
+import { buildWeeklyDigest } from "../jobs/weekly-digest";
 import {
   comparePageWeeks,
   getPageStats,
@@ -89,6 +90,9 @@ export async function handleCommand(env: Env, text: string): Promise<SlackMessag
         if (!comparison) return errorMessage(`Nessun dato per \`${url}\`.`, false);
         return compareMessage(comparison);
       }
+
+      case "digest":
+        return buildWeeklyDigest(env);
 
       default:
         return errorMessage(

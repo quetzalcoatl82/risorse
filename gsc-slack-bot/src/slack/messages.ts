@@ -72,6 +72,7 @@ export function helpMessage(): SlackMessage {
             "`/gsc trend [su|giù]` — query in crescita o calo vs settimana precedente",
             "`/gsc discover` — top 10 articoli su Discover",
             "`/gsc confronto <url>` — confronto settimanale di un articolo",
+            "`/gsc digest` — riepilogo settimanale (stesso del digest automatico)",
           ].join("\n"),
         },
       },
@@ -394,6 +395,8 @@ export async function postToSlack(
       channel,
       text: message.text,
       blocks: message.blocks,
+      unfurl_links: false,
+      unfurl_media: false,
     }),
   });
 
@@ -407,7 +410,11 @@ export async function postDelayedResponse(responseUrl: string, message: SlackMes
   const response = await fetch(responseUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(message),
+    body: JSON.stringify({
+      ...message,
+      unfurl_links: false,
+      unfurl_media: false,
+    }),
   });
   if (!response.ok) {
     const body = await response.text();

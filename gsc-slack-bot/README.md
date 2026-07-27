@@ -16,6 +16,7 @@ Worker Cloudflare che espone slash command Slack e un digest settimanale automat
 | `/gsc trend [su\|giù]` | Query in crescita o calo |
 | `/gsc discover` | Top 10 articoli Discover |
 | `/gsc confronto <url>` | Confronto settimanale articolo |
+| `/gsc digest` | Riepilogo settimanale (stesso del digest automatico) |
 
 ### Digest settimanale
 
