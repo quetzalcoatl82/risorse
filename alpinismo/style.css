@@ -445,6 +445,57 @@ a.card:hover { border-color: var(--forest); }
   color: var(--ink-soft);
 }
 
+.diary-day { margin: 0 0 1.75rem; }
+
+.diary-day h2 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 650;
+  margin: 0 0 0.6rem;
+}
+
+.diary-entry {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.4rem 1rem;
+  align-items: start;
+  padding: 0.85rem 1rem;
+  margin: 0 0 0.5rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.diary-entry .row-title {
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 0.4rem;
+}
+
+.diary-peaks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.diary-count {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 650;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+}
+
+.diary-mark {
+  font-family: "Source Sans 3", system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-left: 0.15rem;
+}
+
+.diary-mark-up { color: var(--ok); }
+.diary-mark-eq { color: var(--ink-soft); }
+
 @media (max-width: 800px) {
   .compare-cols { grid-template-columns: 1fr; }
   .legend { margin-left: 0; }

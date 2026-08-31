@@ -5,71 +5,87 @@ const CONFIG = {
 
 const MOCK = {
   cime: [
-    { id: "monte-bianco", nome: "Monte Bianco", altezza_m: 4808, dislivello_m: 1700, durata_h: 12, lat: 45.8326, lon: 6.8652 },
-    { id: "punta-dufour", nome: "Punta Dufour", altezza_m: 4634, dislivello_m: 1800, durata_h: 14, lat: 45.9369, lon: 7.8668 },
-    { id: "cervino", nome: "Cervino", altezza_m: 4478, dislivello_m: 1220, durata_h: 10, lat: 45.9766, lon: 7.6584 },
-    { id: "grand-combin", nome: "Grand Combin", altezza_m: 4314, dislivello_m: 1550, durata_h: 11, lat: 45.9375, lon: 7.2992 },
-    { id: "aiguille-verte", nome: "Aiguille Verte", altezza_m: 4122, dislivello_m: 1600, durata_h: 12, lat: 45.9349, lon: 6.97 },
-    { id: "barre-ecrins", nome: "Barre des Écrins", altezza_m: 4102, dislivello_m: 1450, durata_h: 10.5, lat: 44.9222, lon: 6.36 },
-    { id: "gran-paradiso", nome: "Gran Paradiso", altezza_m: 4061, dislivello_m: 1300, durata_h: 8.5, lat: 45.5183, lon: 7.2667 },
-    { id: "piz-bernina", nome: "Piz Bernina", altezza_m: 4049, dislivello_m: 1400, durata_h: 11, lat: 46.3824, lon: 9.9081 },
-    { id: "dent-geant", nome: "Dent du Géant", altezza_m: 4013, dislivello_m: 700, durata_h: 7, lat: 45.8628, lon: 6.9517 },
-    { id: "grivola", nome: "Grivola", altezza_m: 3969, dislivello_m: 1650, durata_h: 11, lat: 45.592, lon: 7.268 },
-    { id: "ortles", nome: "Ortles", altezza_m: 3905, dislivello_m: 1450, durata_h: 9, lat: 46.509, lon: 10.545 },
-    { id: "monviso", nome: "Monviso", altezza_m: 3841, dislivello_m: 1600, durata_h: 10, lat: 44.6672, lon: 7.0903 },
-    { id: "disgrazia", nome: "Monte Disgrazia", altezza_m: 3678, dislivello_m: 1500, durata_h: 9.5, lat: 46.2689, lon: 9.7311 },
-    { id: "presanella", nome: "Presanella", altezza_m: 3558, dislivello_m: 1200, durata_h: 8, lat: 46.22, lon: 10.664 },
-    { id: "adamello", nome: "Adamello", altezza_m: 3539, dislivello_m: 1100, durata_h: 8, lat: 46.155, lon: 10.496 },
-    { id: "marmolada", nome: "Marmolada", altezza_m: 3343, dislivello_m: 900, durata_h: 6.5, lat: 46.4344, lon: 11.8611 },
-    { id: "pizzo-badile", nome: "Pizzo Badile", altezza_m: 3308, dislivello_m: 1100, durata_h: 9, lat: 46.295, lon: 9.586 },
-    { id: "antelao", nome: "Antelao", altezza_m: 3264, dislivello_m: 1600, durata_h: 8, lat: 46.437, lon: 12.261 },
+    { id: "1", nome: "Monte Corno Grande, vetta occidentale", gruppo: "Gran Sasso", altezza_m: 2912, lat: 42.46961, lon: 13.56539 },
+    { id: "2", nome: "Monte Corno Grande, vetta orientale", gruppo: "Gran Sasso", altezza_m: 2903, lat: 42.47217, lon: 13.57084 },
+    { id: "3", nome: "Monte Corno Grande, vetta centrale", gruppo: "Gran Sasso", altezza_m: 2893, lat: 42.47108, lon: 13.5697 },
+    { id: "4", nome: "Torrione Cambi", gruppo: "Gran Sasso", altezza_m: 2875, lat: 42.47056, lon: 13.56892 },
+    { id: "5", nome: "Monte Corno Piccolo", gruppo: "Gran Sasso", altezza_m: 2655, lat: 42.47934, lon: 13.55999 },
+    { id: "6", nome: "Pizzo d'Intermesoli", gruppo: "Gran Sasso", altezza_m: 2635, lat: 42.47279, lon: 13.52704 },
+    { id: "7", nome: "Monte Corvo", gruppo: "Gran Sasso", altezza_m: 2623, lat: 42.47932, lon: 13.49331 },
+    { id: "8", nome: "Punta dei Due", gruppo: "Gran Sasso", altezza_m: 2608, lat: 42.47555, lon: 13.56002 },
+    { id: "9", nome: "Monte Camicia", gruppo: "Gran Sasso", altezza_m: 2564, lat: 42.43926, lon: 13.71835 },
+    { id: "10", nome: "Monte Prena", gruppo: "Gran Sasso", altezza_m: 2561, lat: 42.44238, lon: 13.68321 },
+    { id: "11", nome: "Monte Corvo, vetta occidentale", gruppo: "Gran Sasso", altezza_m: 2533, lat: 42.4508, lon: 13.52472 },
+    { id: "12", nome: "Pizzo Cefalone", gruppo: "Gran Sasso", altezza_m: 2533, lat: 42.48275, lon: 13.48222 },
+    { id: "13", nome: "Monte Aquila", gruppo: "Gran Sasso", altezza_m: 2494, lat: 42.45732, lon: 13.56743 },
+    { id: "14", nome: "Pizzo d'Intermesoli, vetta settentrionale", gruppo: "Gran Sasso", altezza_m: 2483, lat: 42.48211, lon: 13.52323 },
+    { id: "15", nome: "Monte Infornace", gruppo: "Gran Sasso", altezza_m: 2469, lat: 42.4386, lon: 13.67691 },
+    { id: "16", nome: "Cima delle Malecoste", gruppo: "Gran Sasso", altezza_m: 2444, lat: 42.45756, lon: 13.49986 },
+    { id: "17", nome: "Cima Giovanni Paolo II", gruppo: "Gran Sasso", altezza_m: 2425, lat: 42.45324, lon: 13.5146 },
+    { id: "18", nome: "Monte Portella, anticima nord-est", gruppo: "Gran Sasso", altezza_m: 2422, lat: 42.45026, lon: 13.55441 },
+    { id: "19", nome: "Monte Brancastello", gruppo: "Gran Sasso", altezza_m: 2385, lat: 42.44753, lon: 13.63982 },
+    { id: "20", nome: "Monte Portella", gruppo: "Gran Sasso", altezza_m: 2385, lat: 42.44756, lon: 13.54595 },
   ],
   ascese: [
-    { cima_id: "gran-paradiso", alpinista: "Marco", data: "2019-07-14" },
-    { cima_id: "gran-paradiso", alpinista: "Luca", data: "2019-07-14" },
-    { cima_id: "gran-paradiso", alpinista: "Sara", data: "2021-08-02" },
-    { cima_id: "gran-paradiso", alpinista: "Elena", data: "2021-08-02" },
-    { cima_id: "gran-paradiso", alpinista: "Paolo", data: "2023-07-22" },
-    { cima_id: "gran-paradiso", alpinista: "Anna", data: "2024-08-11" },
-    { cima_id: "monviso", alpinista: "Marco", data: "2018-08-19" },
-    { cima_id: "monviso", alpinista: "Luca", data: "2020-07-26" },
-    { cima_id: "monviso", alpinista: "Paolo", data: "2020-07-26" },
-    { cima_id: "marmolada", alpinista: "Sara", data: "2017-09-03" },
-    { cima_id: "marmolada", alpinista: "Elena", data: "2017-09-03" },
-    { cima_id: "marmolada", alpinista: "Anna", data: "2022-08-15" },
-    { cima_id: "marmolada", alpinista: "Marco", data: "2022-08-15" },
-    { cima_id: "cervino", alpinista: "Luca", data: "2021-07-18" },
-    { cima_id: "cervino", alpinista: "Marco", data: "2023-07-09" },
-    { cima_id: "monte-bianco", alpinista: "Marco", data: "2022-08-28" },
-    { cima_id: "monte-bianco", alpinista: "Luca", data: "2022-08-28" },
-    { cima_id: "monte-bianco", alpinista: "Paolo", data: "2024-07-07" },
-    { cima_id: "punta-dufour", alpinista: "Luca", data: "2024-07-20" },
-    { cima_id: "ortles", alpinista: "Elena", data: "2019-06-30" },
-    { cima_id: "ortles", alpinista: "Sara", data: "2019-06-30" },
-    { cima_id: "ortles", alpinista: "Anna", data: "2023-07-16" },
-    { cima_id: "presanella", alpinista: "Anna", data: "2018-08-04" },
-    { cima_id: "presanella", alpinista: "Elena", data: "2020-08-09" },
-    { cima_id: "presanella", alpinista: "Paolo", data: "2020-08-09" },
-    { cima_id: "presanella", alpinista: "Sara", data: "2024-07-28" },
-    { cima_id: "adamello", alpinista: "Paolo", data: "2018-07-12" },
-    { cima_id: "adamello", alpinista: "Marco", data: "2021-07-03" },
-    { cima_id: "adamello", alpinista: "Anna", data: "2021-07-03" },
-    { cima_id: "grivola", alpinista: "Marco", data: "2024-08-03" },
-    { cima_id: "grivola", alpinista: "Luca", data: "2024-08-03" },
-    { cima_id: "piz-bernina", alpinista: "Luca", data: "2023-08-12" },
-    { cima_id: "piz-bernina", alpinista: "Sara", data: "2025-07-19" },
-    { cima_id: "barre-ecrins", alpinista: "Paolo", data: "2022-07-24" },
-    { cima_id: "barre-ecrins", alpinista: "Elena", data: "2022-07-24" },
-    { cima_id: "aiguille-verte", alpinista: "Luca", data: "2025-08-02" },
-    { cima_id: "dent-geant", alpinista: "Marco", data: "2020-08-16" },
-    { cima_id: "dent-geant", alpinista: "Sara", data: "2023-08-20" },
-    { cima_id: "disgrazia", alpinista: "Elena", data: "2021-09-05" },
-    { cima_id: "disgrazia", alpinista: "Anna", data: "2021-09-05" },
-    { cima_id: "disgrazia", alpinista: "Paolo", data: "2024-09-01" },
-    { cima_id: "pizzo-badile", alpinista: "Marco", data: "2025-07-06" },
-    { cima_id: "antelao", alpinista: "Sara", data: "2016-08-21" },
-    { cima_id: "antelao", alpinista: "Elena", data: "2018-08-12" },
-    { cima_id: "grand-combin", alpinista: "Luca", data: "2022-07-10" },
+    { cima_id: "1", alpinista: "Marco", data: "2018-08-12" },
+    { cima_id: "1", alpinista: "Luca", data: "2018-08-12" },
+    { cima_id: "1", alpinista: "Sara", data: "2020-07-19" },
+    { cima_id: "1", alpinista: "Elena", data: "2020-07-19" },
+    { cima_id: "1", alpinista: "Paolo", data: "2022-08-06" },
+    { cima_id: "1", alpinista: "Anna", data: "2024-07-21" },
+    { cima_id: "2", alpinista: "Marco", data: "2019-08-03" },
+    { cima_id: "2", alpinista: "Luca", data: "2019-08-03" },
+    { cima_id: "3", alpinista: "Marco", data: "2021-07-25" },
+    { cima_id: "3", alpinista: "Luca", data: "2021-07-25" },
+    { cima_id: "3", alpinista: "Sara", data: "2023-08-13" },
+    { cima_id: "4", alpinista: "Luca", data: "2023-08-13" },
+    { cima_id: "5", alpinista: "Marco", data: "2017-09-10" },
+    { cima_id: "5", alpinista: "Sara", data: "2019-06-30" },
+    { cima_id: "5", alpinista: "Elena", data: "2019-06-30" },
+    { cima_id: "6", alpinista: "Luca", data: "2020-08-16" },
+    { cima_id: "6", alpinista: "Paolo", data: "2022-07-17" },
+    { cima_id: "7", alpinista: "Elena", data: "2021-09-05" },
+    { cima_id: "7", alpinista: "Anna", data: "2021-09-05" },
+    { cima_id: "8", alpinista: "Paolo", data: "2024-08-18" },
+    { cima_id: "9", alpinista: "Marco", data: "2022-08-28" },
+    { cima_id: "9", alpinista: "Luca", data: "2022-08-28" },
+    { cima_id: "9", alpinista: "Paolo", data: "2024-07-07" },
+    { cima_id: "9", alpinista: "Sara", data: "2025-07-12" },
+    { cima_id: "10", alpinista: "Sara", data: "2021-08-22" },
+    { cima_id: "10", alpinista: "Anna", data: "2023-07-16" },
+    { cima_id: "11", alpinista: "Sara", data: "2024-09-01" },
+    { cima_id: "12", alpinista: "Elena", data: "2022-07-24" },
+    { cima_id: "13", alpinista: "Marco", data: "2016-08-21" },
+    { cima_id: "13", alpinista: "Luca", data: "2018-07-14" },
+    { cima_id: "13", alpinista: "Sara", data: "2018-07-14" },
+    { cima_id: "13", alpinista: "Elena", data: "2020-08-09" },
+    { cima_id: "13", alpinista: "Paolo", data: "2020-08-09" },
+    { cima_id: "14", alpinista: "Elena", data: "2025-08-02" },
+    { cima_id: "15", alpinista: "Sara", data: "2023-08-20" },
+    { cima_id: "16", alpinista: "Elena", data: "2024-07-28" },
+    { cima_id: "16", alpinista: "Anna", data: "2024-07-28" },
+    { cima_id: "17", alpinista: "Marco", data: "2025-07-06" },
+    { cima_id: "18", alpinista: "Luca", data: "2024-07-20" },
+    { cima_id: "19", alpinista: "Paolo", data: "2021-07-03" },
+    { cima_id: "19", alpinista: "Anna", data: "2021-07-03" },
+    { cima_id: "20", alpinista: "Marco", data: "2023-07-09" },
+    { cima_id: "20", alpinista: "Luca", data: "2023-07-09" },
+    { cima_id: "1", alpinista: "Marco", data: "2025-08-16" },
+    { cima_id: "2", alpinista: "Marco", data: "2025-08-16" },
+    { cima_id: "1", alpinista: "Luca", data: "2025-08-16" },
+    { cima_id: "2", alpinista: "Luca", data: "2025-08-16" },
+    { cima_id: "1", alpinista: "Paolo", data: "2025-08-16" },
+    { cima_id: "2", alpinista: "Paolo", data: "2025-08-16" },
+    { cima_id: "9", alpinista: "Elena", data: "2024-06-15" },
+    { cima_id: "10", alpinista: "Elena", data: "2024-06-15" },
+    { cima_id: "9", alpinista: "Anna", data: "2024-06-15" },
+    { cima_id: "10", alpinista: "Anna", data: "2024-06-15" },
+    { cima_id: "9", alpinista: "Sara", data: "2024-06-15" },
+    { cima_id: "10", alpinista: "Sara", data: "2024-06-15" },
+    { cima_id: "18", alpinista: "Marco", data: "2023-09-02" },
+    { cima_id: "20", alpinista: "Marco", data: "2023-09-02" },
+    { cima_id: "18", alpinista: "Luca", data: "2023-09-02" },
+    { cima_id: "20", alpinista: "Luca", data: "2023-09-02" },
   ],
 };
 
@@ -79,6 +95,7 @@ const state = {
   mapFilter: "",
   personSort: "data",
   maps: { main: null, mini: null },
+  mapTimers: [],
 };
 
 const appEl = document.getElementById("app");
@@ -147,9 +164,8 @@ function normalizeCima(raw) {
   return {
     id: String(raw.id || "").trim(),
     nome: String(raw.nome || "").trim(),
+    gruppo: String(raw.gruppo || "").trim(),
     altezza_m: num(raw.altezza_m),
-    dislivello_m: num(raw.dislivello_m),
-    durata_h: num(raw.durata_h),
     lat: num(raw.lat),
     lon: num(raw.lon),
     ascese: [],
@@ -186,10 +202,10 @@ function joinData(cimeRaw, asceseRaw) {
 function personStats(persona) {
   const peaks = persona.ascese.map((a) => a.cima).filter(Boolean);
   const dates = persona.ascese.map((a) => a.data).filter(Boolean).sort();
+  const gruppi = new Set(peaks.map((c) => c.gruppo).filter(Boolean));
   return {
     n: persona.ascese.length,
-    dislivello: peaks.reduce((s, c) => s + c.dislivello_m, 0),
-    ore: peaks.reduce((s, c) => s + c.durata_h, 0),
+    nGruppi: gruppi.size,
     quotaMax: peaks.reduce((m, c) => Math.max(m, c.altezza_m), 0),
     prima: dates[0] || "",
     ultima: dates[dates.length - 1] || "",
@@ -205,13 +221,6 @@ function fmtDate(iso) {
     month: "short",
     year: "numeric",
   });
-}
-
-function fmtHours(h) {
-  const hours = Math.floor(h);
-  const mins = Math.round((h - hours) * 60);
-  if (!mins) return `${hours} h`;
-  return `${hours} h ${mins} min`;
 }
 
 function fmtNum(n) {
@@ -262,6 +271,8 @@ function circleIcon(color) {
 }
 
 function destroyMaps() {
+  state.mapTimers.forEach(clearTimeout);
+  state.mapTimers = [];
   if (state.maps.main) {
     state.maps.main.remove();
     state.maps.main = null;
@@ -279,11 +290,14 @@ function hasLeaflet() {
 function refreshMap(map) {
   if (!map) return;
   const bump = function () {
-    map.invalidateSize();
+    if (!map || !map._loaded) return;
+    try {
+      map.invalidateSize();
+    } catch (err) {}
   };
   requestAnimationFrame(bump);
-  setTimeout(bump, 150);
-  setTimeout(bump, 500);
+  state.mapTimers.push(setTimeout(bump, 150));
+  state.mapTimers.push(setTimeout(bump, 500));
 }
 
 function addTopoLayer(map) {
@@ -313,7 +327,7 @@ function peakPopup(cima) {
     ? `Salita da ${n} ${n === 1 ? "alpinista" : "alpinisti"}`
     : "Non ancora salita dal gruppo";
   return `<p class="popup-title">${escapeHtml(cima.nome)}</p>
-    <p class="popup-meta">${fmtNum(cima.altezza_m)} m · ${who}</p>
+    <p class="popup-meta">${fmtNum(cima.altezza_m)} m${cima.gruppo ? " · " + escapeHtml(cima.gruppo) : ""} · ${who}</p>
     <a href="#/cima/${encodeURIComponent(cima.id)}">Scheda cima</a>`;
 }
 
@@ -364,6 +378,7 @@ function setNav(view) {
     mappa: "mappa",
     cime: "cime",
     cima: "cime",
+    diario: "diario",
     alpinisti: "alpinisti",
     alpinista: "alpinisti",
     confronta: "confronta",
@@ -447,7 +462,7 @@ function viewCime() {
       return `<a class="row" href="#/cima/${encodeURIComponent(c.id)}">
         <div>
           <div class="row-title">${escapeHtml(c.nome)}</div>
-          <div class="muted">${fmtNum(c.altezza_m)} m · dislivello ${fmtNum(c.dislivello_m)} m · ${fmtHours(c.durata_h)}</div>
+          <div class="muted">${fmtNum(c.altezza_m)} m${c.gruppo ? " · " + escapeHtml(c.gruppo) : ""}</div>
         </div>
         <div class="muted">${n} ${n === 1 ? "ascesa" : "ascese"}</div>
       </a>`;
@@ -459,6 +474,93 @@ function viewCime() {
       <h1 class="page-title">Cime</h1>
       <p class="lede">${state.cime.length} cime nel diario di gruppo.</p>
       <div class="list">${rows || `<p class="empty">Nessuna cima nel foglio.</p>`}</div>
+    </section>`;
+}
+
+function peakIdNum(id) {
+  const n = Number(id);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function buildDiario() {
+  const all = [];
+  for (const persona of state.persone) {
+    const byDate = new Map();
+    for (const a of persona.ascese) {
+      if (!a.cima || !a.data) continue;
+      if (!byDate.has(a.data)) byDate.set(a.data, []);
+      const list = byDate.get(a.data);
+      if (!list.some((c) => c.id === a.cima.id)) list.push(a.cima);
+    }
+    const dates = [...byDate.keys()].sort();
+    const seen = new Set();
+    let prevCount = 0;
+    for (let i = 0; i < dates.length; i++) {
+      const data = dates[i];
+      const peaks = byDate.get(data).slice().sort((a, b) => {
+        const na = peakIdNum(a.id);
+        const nb = peakIdNum(b.id);
+        if (na && nb && na !== nb) return na - nb;
+        return a.nome.localeCompare(b.nome, "it");
+      });
+      for (const c of peaks) seen.add(c.id);
+      const count = seen.size;
+      all.push({
+        persona: persona.nome,
+        data: data,
+        peaks: peaks,
+        count: count,
+        changed: count > prevCount,
+      });
+      prevCount = count;
+    }
+  }
+  all.sort((a, b) => b.data.localeCompare(a.data) || a.persona.localeCompare(b.persona, "it"));
+  const days = [];
+  for (const entry of all) {
+    const last = days[days.length - 1];
+    if (!last || last.data !== entry.data) days.push({ data: entry.data, entries: [entry] });
+    else last.entries.push(entry);
+  }
+  return days;
+}
+
+function viewDiario() {
+  const days = buildDiario();
+  const body = days
+    .map((day) => {
+      const cards = day.entries
+        .map((e) => {
+          const peaks = e.peaks
+            .map(
+              (c) =>
+                `<a class="chip" href="#/cima/${encodeURIComponent(c.id)}">${escapeHtml(c.nome)}</a>`
+            )
+            .join("");
+          const mark = e.changed
+            ? `<span class="diary-mark diary-mark-up" title="Il totale è aumentato">↑</span>`
+            : `<span class="diary-mark diary-mark-eq" title="Stesso totale della data precedente">=</span>`;
+          return `<article class="diary-entry">
+            <div>
+              <a class="row-title" href="#/alpinista/${encodeName(e.persona)}">${escapeHtml(e.persona)}</a>
+              <div class="diary-peaks">${peaks}</div>
+            </div>
+            <div class="diary-count">${e.count} ${mark}</div>
+          </article>`;
+        })
+        .join("");
+      return `<div class="diary-day">
+        <h2>${fmtDate(day.data)}</h2>
+        ${cards}
+      </div>`;
+    })
+    .join("");
+  appEl.innerHTML = `
+    <section class="page">
+      <p class="kicker">Cronaca</p>
+      <h1 class="page-title">Diario</h1>
+      <p class="lede">Dalla più recente. Più vette nello stesso giorno sono una sola uscita; il numero è il totale di cime distinte di quella persona.</p>
+      ${body || `<p class="empty">Nessuna ascesa con data.</p>`}
     </section>`;
 }
 
@@ -478,12 +580,12 @@ function viewCima(id) {
     .join("");
   appEl.innerHTML = `
     <section class="page">
-      <p class="kicker">Cima</p>
+      <p class="kicker">${cima.gruppo ? escapeHtml(cima.gruppo) : "Cima"}</p>
       <h1 class="page-title">${escapeHtml(cima.nome)}</h1>
       <p class="lede">${fmtNum(cima.altezza_m)} m</p>
       <div class="stats-row">
-        <div class="stat"><span>Dislivello</span><b>${fmtNum(cima.dislivello_m)} m</b></div>
-        <div class="stat"><span>Durata</span><b>${fmtHours(cima.durata_h)}</b></div>
+        <div class="stat"><span>Quota</span><b>${fmtNum(cima.altezza_m)} m</b></div>
+        <div class="stat"><span>Gruppo</span><b>${cima.gruppo ? escapeHtml(cima.gruppo) : "—"}</b></div>
         <div class="stat"><span>Ascese</span><b>${cima.ascese.length}</b></div>
       </div>
       <div id="map-peak" class="map-mini"></div>
@@ -499,7 +601,7 @@ function viewAlpinisti() {
       const s = personStats(p);
       return `<a class="card" href="#/alpinista/${encodeName(p.nome)}">
         <h2>${escapeHtml(p.nome)}</h2>
-        <p class="muted">${s.n} cime · ${fmtNum(s.dislivello)} m D+ · max ${fmtNum(s.quotaMax)} m</p>
+        <p class="muted">${s.n} cime · max ${fmtNum(s.quotaMax)} m</p>
       </a>`;
     })
     .join("");
@@ -524,14 +626,14 @@ function viewAlpinista(nome) {
     .filter((a) => a.cima)
     .sort((a, b) => {
       if (sort === "quota") return b.cima.altezza_m - a.cima.altezza_m;
-      if (sort === "dislivello") return b.cima.dislivello_m - a.cima.dislivello_m;
+      if (sort === "gruppo") return (a.cima.gruppo || "").localeCompare(b.cima.gruppo || "", "it") || b.cima.altezza_m - a.cima.altezza_m;
       return (b.data || "").localeCompare(a.data || "");
     })
     .map(
       (a) => `<a class="row" href="#/cima/${encodeURIComponent(a.cima.id)}">
         <div>
           <div class="row-title">${escapeHtml(a.cima.nome)}</div>
-          <div class="muted">${fmtNum(a.cima.altezza_m)} m · D+ ${fmtNum(a.cima.dislivello_m)} m</div>
+          <div class="muted">${fmtNum(a.cima.altezza_m)} m${a.cima.gruppo ? " · " + escapeHtml(a.cima.gruppo) : ""}</div>
         </div>
         <div class="muted">${fmtDate(a.data)}</div>
       </a>`
@@ -547,8 +649,7 @@ function viewAlpinista(nome) {
       <h1 class="page-title">${escapeHtml(persona.nome)}</h1>
       <div class="stats-row">
         <div class="stat"><span>Cime</span><b>${s.n}</b></div>
-        <div class="stat"><span>Dislivello</span><b>${fmtNum(s.dislivello)} m</b></div>
-        <div class="stat"><span>Ore</span><b>${fmtHours(s.ore)}</b></div>
+        <div class="stat"><span>Gruppi</span><b>${s.nGruppi}</b></div>
         <div class="stat"><span>Quota max</span><b>${fmtNum(s.quotaMax)} m</b></div>
         <div class="stat"><span>Prima ascesa</span><b>${fmtDate(s.prima)}</b></div>
         <div class="stat"><span>Ultima ascesa</span><b>${fmtDate(s.ultima)}</b></div>
@@ -556,7 +657,7 @@ function viewAlpinista(nome) {
       <div class="toolbar">
         <button class="sort-btn${sort === "data" ? " is-active" : ""}" data-sort="data">Data</button>
         <button class="sort-btn${sort === "quota" ? " is-active" : ""}" data-sort="quota">Quota</button>
-        <button class="sort-btn${sort === "dislivello" ? " is-active" : ""}" data-sort="dislivello">Dislivello</button>
+        <button class="sort-btn${sort === "gruppo" ? " is-active" : ""}" data-sort="gruppo">Gruppo</button>
       </div>
       <div class="list">${rows}</div>
       <p class="lede" style="margin-top:1.5rem">Confronta con</p>
@@ -611,7 +712,6 @@ function viewConfronta(nameA, nameB) {
       </div>
       <div class="stats-row">
         <div class="stat"><span>Cime</span><b>${sa.n} / ${sb.n}</b></div>
-        <div class="stat"><span>Dislivello</span><b>${fmtNum(sa.dislivello)} / ${fmtNum(sb.dislivello)} m</b></div>
         <div class="stat"><span>Quota max</span><b>${fmtNum(sa.quotaMax)} / ${fmtNum(sb.quotaMax)} m</b></div>
       </div>`;
   } else {
@@ -680,6 +780,14 @@ function viewStats() {
       return `<div class="year-block"><h3>${y} <span class="muted">(${byYear.get(y).length})</span></h3><div class="chips">${items}</div></div>`;
     })
     .join("");
+  const byGruppo = new Map();
+  for (const c of state.cime) {
+    const g = c.gruppo || "—";
+    byGruppo.set(g, (byGruppo.get(g) || 0) + 1);
+  }
+  const gruppiBars = [...byGruppo.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "it"))
+    .map((entry) => ({ label: entry[0], value: entry[1], display: String(entry[1]) }));
   appEl.innerHTML = `
     <section class="page">
       <p class="kicker">Diario</p>
@@ -689,13 +797,7 @@ function viewStats() {
         "Cime per persona",
         ranked.map((r) => ({ label: r.p.nome, value: r.s.n, display: String(r.s.n) }))
       )}
-      ${barChart(
-        "Dislivello cumulato",
-        [...ranked]
-          .sort((a, b) => b.s.dislivello - a.s.dislivello)
-          .map((r) => ({ label: r.p.nome, value: r.s.dislivello, display: `${fmtNum(r.s.dislivello)} m` })),
-        "alt"
-      )}
+      ${barChart("Cime per gruppo", gruppiBars, "alt")}
       ${barChart(
         "Quota massima",
         [...ranked]
@@ -716,6 +818,7 @@ function route() {
     setNav(view);
     if (view === "mappa") viewMappa();
     else if (view === "cime") viewCime();
+    else if (view === "diario") viewDiario();
     else if (view === "cima") viewCima(decodeURIComponent(parts[1] || ""));
     else if (view === "alpinisti") viewAlpinisti();
     else if (view === "alpinista") viewAlpinista(decodeURIComponent(parts[1] || ""));
