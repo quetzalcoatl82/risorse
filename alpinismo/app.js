@@ -372,6 +372,10 @@ function setNav(view) {
   document.querySelectorAll("#nav a").forEach((a) => {
     a.classList.toggle("is-active", a.dataset.nav === key);
   });
+  const active = document.querySelector("#nav a.is-active");
+  if (active && active.scrollIntoView) {
+    active.scrollIntoView({ inline: "nearest", block: "nearest" });
+  }
 }
 
 function findCima(id) {
