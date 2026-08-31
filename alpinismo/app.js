@@ -116,15 +116,16 @@ function parseGviz(text) {
   if (start < 0 || end < 0) throw new Error("Risposta foglio non valida");
   const json = JSON.parse(text.slice(start, end + 1));
   if (json.status === "error") {
-    throw new Error(json.errors?.[0]?.detailed_message || "Errore foglio");
+    const err0 = json.errors && json.errors[0];
+    throw new Error((err0 && err0.detailed_message) || "Errore foglio");
   }
   const cols = json.table.cols.map((c) => (c.label || c.id || "").trim());
   return json.table.rows.map((row) => {
     const obj = {};
     cols.forEach((col, i) => {
-      const cell = row.c?.[i];
-      obj[col] = cell ? cell.v ?? "" : "";
-      if (col === "data") obj[col] = parseGvizDate(cell?.v, cell?.f);
+      const cell = row.c && row.c[i];
+      obj[col] = cell && cell.v != null ? cell.v : "";
+      if (col === "data") obj[col] = parseGvizDate(cell && cell.v, cell && cell.f);
     });
     return obj;
   });
@@ -271,11 +272,39 @@ function destroyMaps() {
   }
 }
 
+function hasLeaflet() {
+  return typeof L !== "undefined";
+}
+
+function refreshMap(map) {
+  if (!map) return;
+  const bump = function () {
+    map.invalidateSize();
+  };
+  requestAnimationFrame(bump);
+  setTimeout(bump, 150);
+  setTimeout(bump, 500);
+}
+
 function addTopoLayer(map) {
-  L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+  const topo = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
     maxZoom: 17,
     attribution: '&copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
-  }).addTo(map);
+  });
+  const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap",
+  });
+  let failed = 0;
+  let switched = false;
+  topo.on("tileerror", function () {
+    failed += 1;
+    if (switched || failed < 4) return;
+    switched = true;
+    map.removeLayer(topo);
+    osm.addTo(map);
+  });
+  topo.addTo(map);
 }
 
 function peakPopup(cima) {
@@ -289,6 +318,7 @@ function peakPopup(cima) {
 }
 
 function renderMainMap(cime) {
+  if (!hasLeaflet() || !document.getElementById("map-main")) return;
   const map = L.map("map-main", { scrollWheelZoom: true });
   addTopoLayer(map);
   const maxN = Math.max(1, ...state.cime.map(climberCount));
@@ -306,10 +336,11 @@ function renderMainMap(cime) {
   if (bounds.length) map.fitBounds(bounds, { padding: [28, 28], maxZoom: 10 });
   else map.setView([45.9, 7.5], 7);
   state.maps.main = map;
-  requestAnimationFrame(() => map.invalidateSize());
+  refreshMap(map);
 }
 
 function renderMiniMap(cima) {
+  if (!hasLeaflet() || !document.getElementById("map-peak")) return;
   const map = L.map("map-peak", { scrollWheelZoom: false, attributionControl: false });
   addTopoLayer(map);
   map.setView([cima.lat, cima.lon], 11);
@@ -318,7 +349,7 @@ function renderMiniMap(cima) {
     icon: circleIcon(markerColor(climberCount(cima), maxN)),
   }).addTo(map);
   state.maps.mini = map;
-  requestAnimationFrame(() => map.invalidateSize());
+  refreshMap(map);
 }
 
 function parseHash() {
@@ -395,6 +426,13 @@ function viewMappa() {
     route();
   });
   renderMainMap(cime);
+  if (!hasLeaflet()) {
+    const mapEl = document.getElementById("map-main");
+    if (mapEl) {
+      mapEl.innerHTML = '<p class="empty">Mappa non disponibile: apri la lista Cime.</p>';
+    }
+    showStatus("Leaflet non e' stato caricato.", true);
+  }
 }
 
 function viewCime() {
@@ -580,8 +618,8 @@ function viewConfronta(nameA, nameB) {
       <p class="kicker">Side by side</p>
       <h1 class="page-title">Confronta</h1>
       <div class="compare-picks">
-        <label>A ${personSelect("cmp-a", a?.nome || "")}</label>
-        <label>B ${personSelect("cmp-b", b?.nome || "")}</label>
+        <label>A ${personSelect("cmp-a", (a && a.nome) || "")}</label>
+        <label>B ${personSelect("cmp-b", (b && b.nome) || "")}</label>
       </div>
       ${body}
     </section>`;
@@ -632,7 +670,7 @@ function viewStats() {
         .sort((a, b) => (a.data || "").localeCompare(b.data || ""))
         .map(
           (a) =>
-            `<a class="chip" href="#/cima/${encodeURIComponent(a.cima_id)}">${escapeHtml(a.alpinista)} · ${escapeHtml(a.cima?.nome || a.cima_id)}</a>`
+            `<a class="chip" href="#/cima/${encodeURIComponent(a.cima_id)}">${escapeHtml(a.alpinista)} · ${escapeHtml((a.cima && a.cima.nome) || a.cima_id)}</a>`
         )
         .join("");
       return `<div class="year-block"><h3>${y} <span class="muted">(${byYear.get(y).length})</span></h3><div class="chips">${items}</div></div>`;
@@ -666,21 +704,27 @@ function viewStats() {
 }
 
 function route() {
-  destroyMaps();
-  const { view, parts } = parseHash();
-  setNav(view);
-  if (view === "mappa") viewMappa();
-  else if (view === "cime") viewCime();
-  else if (view === "cima") viewCima(decodeURIComponent(parts[1] || ""));
-  else if (view === "alpinisti") viewAlpinisti();
-  else if (view === "alpinista") viewAlpinista(decodeURIComponent(parts[1] || ""));
-  else if (view === "confronta") {
-    viewConfronta(
-      parts[1] ? decodeURIComponent(parts[1]) : "",
-      parts[2] ? decodeURIComponent(parts[2]) : ""
-    );
-  } else if (view === "stats") viewStats();
-  else viewMappa();
+  try {
+    destroyMaps();
+    const parsed = parseHash();
+    const view = parsed.view;
+    const parts = parsed.parts;
+    setNav(view);
+    if (view === "mappa") viewMappa();
+    else if (view === "cime") viewCime();
+    else if (view === "cima") viewCima(decodeURIComponent(parts[1] || ""));
+    else if (view === "alpinisti") viewAlpinisti();
+    else if (view === "alpinista") viewAlpinista(decodeURIComponent(parts[1] || ""));
+    else if (view === "confronta") {
+      viewConfronta(
+        parts[1] ? decodeURIComponent(parts[1]) : "",
+        parts[2] ? decodeURIComponent(parts[2]) : ""
+      );
+    } else if (view === "stats") viewStats();
+    else viewMappa();
+  } catch (err) {
+    showStatus("Errore in pagina: " + (err && err.message ? err.message : err), true);
+  }
 }
 
 async function loadData() {
@@ -700,7 +744,7 @@ async function init() {
     state.cime = data.cime;
     state.persone = data.persone;
     if (!CONFIG.spreadsheetId) {
-      showStatus("Dati di esempio: incolla l’ID del foglio Drive in CONFIG.spreadsheetId dentro app.js.");
+      showStatus("Dati di esempio: incolla l'ID del foglio Drive in CONFIG.spreadsheetId dentro app.js.");
     } else {
       showStatus("");
     }
