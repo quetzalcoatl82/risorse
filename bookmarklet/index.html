@@ -25,6 +25,8 @@
 <body>
     <h1>Bookmarklet</h1>
     <h2>Trascina il bookmarklet nella tua barra dei preferiti e schiaccialo in pagina per eseguire il codice</h2>
+    <p>Modifica post WordPress</p>
+    <a href="javascript:(function(){function wp_edit_url( class_name ) {var classMatches = [ /page\-id\-([0-9]+)/, /postid\-([0-9]+)/ ];for ( var i = 0; i < classMatches.length; i++ ) {var match = classMatches[ i ].exec( class_name );if ( null != match && match.length > 1 ) {return '/wp-admin/post.php?action=edit&post=%27 + match[1];}}return %27/wp-admin/%27;}window.location = wp_edit_url( document.getElementsByTagName(%27body%27)[0].className )})()" class="button"></a>
     <p>Per eliminare tutte le chiavi adk_ da localstorage</p>
     <a class="button" href="javascript:(function()%7Bconst%20local_items%20%3D%20%7B%20...localStorage%20%7D%0A%0AObject.keys(local_items).forEach(function%20(key)%20%7B%0A%20%20%20%20if%20(key.startsWith('adk_'))%20%7B%0A%20%20%20%20%20%20%20%20console.log('Rimuovo%20la%20chiave'%2C%20key)%3B%0A%20%20%20%20%20%20%20%20localStorage.removeItem(key)%3B%0A%20%20%20%20%7D%0A%7D)%7D)()%3B">Cancella tutte le chiavi adk_ da localstorage</a>
     <p>Corsi di aggiornamento</p>

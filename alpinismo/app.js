@@ -1,70 +1,72 @@
 const CONFIG = {
   spreadsheetId: "", // ID del foglio tra /d/ e /edit. Vuoto = ascese di esempio.
-  sheets: { ascese: "Ascese" },
+  sheets: { ascese: "Ascese", alpinisti: "Alpinisti" },
   // sessionStorage non ha scadenza nativa: la simuliamo con savedAt + questo TTL.
   cacheTtlMs: 60 * 60 * 1000,
 };
 
 const MOCK_ASCESE = [
-    { cima_id: "1", alpinista: "Marco", data: "2018-08-12" },
-    { cima_id: "1", alpinista: "Luca", data: "2018-08-12" },
-    { cima_id: "1", alpinista: "Sara", data: "2020-07-19" },
-    { cima_id: "1", alpinista: "Elena", data: "2020-07-19" },
-    { cima_id: "1", alpinista: "Paolo", data: "2022-08-06" },
-    { cima_id: "1", alpinista: "Anna", data: "2024-07-21" },
-    { cima_id: "2", alpinista: "Marco", data: "2019-08-03" },
-    { cima_id: "2", alpinista: "Luca", data: "2019-08-03" },
-    { cima_id: "3", alpinista: "Marco", data: "2021-07-25" },
-    { cima_id: "3", alpinista: "Luca", data: "2021-07-25" },
-    { cima_id: "3", alpinista: "Sara", data: "2023-08-13" },
-    { cima_id: "4", alpinista: "Luca", data: "2023-08-13" },
-    { cima_id: "5", alpinista: "Marco", data: "2017-09-10" },
-    { cima_id: "5", alpinista: "Sara", data: "2019-06-30" },
-    { cima_id: "5", alpinista: "Elena", data: "2019-06-30" },
-    { cima_id: "6", alpinista: "Luca", data: "2020-08-16" },
-    { cima_id: "6", alpinista: "Paolo", data: "2022-07-17" },
-    { cima_id: "7", alpinista: "Elena", data: "2021-09-05" },
-    { cima_id: "7", alpinista: "Anna", data: "2021-09-05" },
-    { cima_id: "8", alpinista: "Paolo", data: "2024-08-18" },
-    { cima_id: "9", alpinista: "Marco", data: "2022-08-28" },
-    { cima_id: "9", alpinista: "Luca", data: "2022-08-28" },
-    { cima_id: "9", alpinista: "Paolo", data: "2024-07-07" },
-    { cima_id: "9", alpinista: "Sara", data: "2025-07-12" },
-    { cima_id: "10", alpinista: "Sara", data: "2021-08-22" },
-    { cima_id: "10", alpinista: "Anna", data: "2023-07-16" },
-    { cima_id: "11", alpinista: "Sara", data: "2024-09-01" },
-    { cima_id: "12", alpinista: "Elena", data: "2022-07-24" },
-    { cima_id: "13", alpinista: "Marco", data: "2016-08-21" },
-    { cima_id: "13", alpinista: "Luca", data: "2018-07-14" },
-    { cima_id: "13", alpinista: "Sara", data: "2018-07-14" },
-    { cima_id: "13", alpinista: "Elena", data: "2020-08-09" },
-    { cima_id: "13", alpinista: "Paolo", data: "2020-08-09" },
-    { cima_id: "14", alpinista: "Elena", data: "2025-08-02" },
-    { cima_id: "15", alpinista: "Sara", data: "2023-08-20" },
-    { cima_id: "16", alpinista: "Elena", data: "2024-07-28" },
-    { cima_id: "16", alpinista: "Anna", data: "2024-07-28" },
-    { cima_id: "17", alpinista: "Marco", data: "2025-07-06" },
-    { cima_id: "18", alpinista: "Luca", data: "2024-07-20" },
-    { cima_id: "19", alpinista: "Paolo", data: "2021-07-03" },
-    { cima_id: "19", alpinista: "Anna", data: "2021-07-03" },
-    { cima_id: "20", alpinista: "Marco", data: "2023-07-09" },
-    { cima_id: "20", alpinista: "Luca", data: "2023-07-09" },
-    { cima_id: "1", alpinista: "Marco", data: "2025-08-16" },
-    { cima_id: "2", alpinista: "Marco", data: "2025-08-16" },
-    { cima_id: "1", alpinista: "Luca", data: "2025-08-16" },
-    { cima_id: "2", alpinista: "Luca", data: "2025-08-16" },
-    { cima_id: "1", alpinista: "Paolo", data: "2025-08-16" },
-    { cima_id: "2", alpinista: "Paolo", data: "2025-08-16" },
-    { cima_id: "9", alpinista: "Elena", data: "2024-06-15" },
-    { cima_id: "10", alpinista: "Elena", data: "2024-06-15" },
-    { cima_id: "9", alpinista: "Anna", data: "2024-06-15" },
-    { cima_id: "10", alpinista: "Anna", data: "2024-06-15" },
-    { cima_id: "9", alpinista: "Sara", data: "2024-06-15" },
-    { cima_id: "10", alpinista: "Sara", data: "2024-06-15" },
-    { cima_id: "18", alpinista: "Marco", data: "2023-09-02" },
-    { cima_id: "20", alpinista: "Marco", data: "2023-09-02" },
-    { cima_id: "18", alpinista: "Luca", data: "2023-09-02" },
-    { cima_id: "20", alpinista: "Luca", data: "2023-09-02" },
+    { cima_id: "1", alpinista: "1", data: "2018-08-12" },
+    { cima_id: "1", alpinista: "2", data: "2018-08-12" },
+    { cima_id: "1", alpinista: "4", data: "2020-07-19" },
+    { cima_id: "1", alpinista: "3", data: "2022-08-06" },
+    { cima_id: "1", alpinista: "5", data: "2024-07-21" },
+    { cima_id: "2", alpinista: "1", data: "2019-08-03" },
+    { cima_id: "2", alpinista: "2", data: "2019-08-03" },
+    { cima_id: "3", alpinista: "1", data: "2021-07-25" },
+    { cima_id: "3", alpinista: "2", data: "2021-07-25" },
+    { cima_id: "4", alpinista: "2", data: "2023-08-13" },
+    { cima_id: "5", alpinista: "1", data: "2017-09-10" },
+    { cima_id: "5", alpinista: "4", data: "2019-06-30" },
+    { cima_id: "6", alpinista: "2", data: "2020-08-16" },
+    { cima_id: "6", alpinista: "3", data: "2022-07-17" },
+    { cima_id: "7", alpinista: "4", data: "2021-09-05" },
+    { cima_id: "7", alpinista: "5", data: "2021-09-05" },
+    { cima_id: "8", alpinista: "3", data: "2024-08-18" },
+    { cima_id: "9", alpinista: "1", data: "2022-08-28" },
+    { cima_id: "9", alpinista: "2", data: "2022-08-28" },
+    { cima_id: "9", alpinista: "3", data: "2024-07-07" },
+    { cima_id: "10", alpinista: "5", data: "2023-07-16" },
+    { cima_id: "11", alpinista: "5", data: "2024-09-01" },
+    { cima_id: "12", alpinista: "4", data: "2022-07-24" },
+    { cima_id: "13", alpinista: "1", data: "2016-08-21" },
+    { cima_id: "13", alpinista: "2", data: "2018-07-14" },
+    { cima_id: "13", alpinista: "4", data: "2020-08-09" },
+    { cima_id: "13", alpinista: "3", data: "2020-08-09" },
+    { cima_id: "14", alpinista: "4", data: "2025-08-02" },
+    { cima_id: "15", alpinista: "2", data: "2023-08-20" },
+    { cima_id: "16", alpinista: "4", data: "2024-07-28" },
+    { cima_id: "16", alpinista: "5", data: "2024-07-28" },
+    { cima_id: "17", alpinista: "1", data: "2025-07-06" },
+    { cima_id: "18", alpinista: "2", data: "2024-07-20" },
+    { cima_id: "19", alpinista: "3", data: "2021-07-03" },
+    { cima_id: "19", alpinista: "5", data: "2021-07-03" },
+    { cima_id: "20", alpinista: "1", data: "2023-07-09" },
+    { cima_id: "20", alpinista: "2", data: "2023-07-09" },
+    { cima_id: "1", alpinista: "1", data: "2025-08-16" },
+    { cima_id: "2", alpinista: "1", data: "2025-08-16" },
+    { cima_id: "1", alpinista: "2", data: "2025-08-16" },
+    { cima_id: "2", alpinista: "2", data: "2025-08-16" },
+    { cima_id: "1", alpinista: "3", data: "2025-08-16" },
+    { cima_id: "2", alpinista: "3", data: "2025-08-16" },
+    { cima_id: "9", alpinista: "3", data: "2024-06-15" },
+    { cima_id: "10", alpinista: "3", data: "2024-06-15" },
+    { cima_id: "9", alpinista: "4", data: "2024-06-15" },
+    { cima_id: "10", alpinista: "4", data: "2024-06-15" },
+    { cima_id: "9", alpinista: "5", data: "2024-06-15" },
+    { cima_id: "10", alpinista: "5", data: "2024-06-15" },
+    { cima_id: "18", alpinista: "1", data: "2023-09-02" },
+    { cima_id: "20", alpinista: "1", data: "2023-09-02" },
+    { cima_id: "18", alpinista: "2", data: "2023-09-02" },
+    { cima_id: "20", alpinista: "2", data: "2023-09-02" },
+];
+
+const MOCK_ALPINISTI = [
+  { id: "1", nome: "Marco" },
+  { id: "2", nome: "Luca" },
+  { id: "3", nome: "Paolo" },
+  { id: "4", nome: "Elena" },
+  { id: "5", nome: "Anna" },
 ];
 
 const state = {
@@ -151,27 +153,51 @@ function normalizeCima(raw) {
   };
 }
 
-function joinData(cimeRaw, asceseRaw) {
+function climberKey(row) {
+  const id = row.alpinista_id != null && String(row.alpinista_id).trim();
+  if (id) return id;
+  return String(row.alpinista != null ? row.alpinista : "").trim();
+}
+
+function alpinistiIndex(rows) {
+  const map = new Map();
+  for (const row of rows || []) {
+    const id = String(row.id != null ? row.id : "").trim();
+    if (!id) continue;
+    const nome = String(row.nome || "").trim();
+    map.set(id, nome || id);
+  }
+  return map;
+}
+
+function joinData(cimeRaw, asceseRaw, alpinistiRaw) {
   const cime = cimeRaw.map(normalizeCima).filter((c) => c.id);
   const byId = new Map(cime.map((c) => [c.id, c]));
+  const names = alpinistiIndex(alpinistiRaw);
   const personeMap = new Map();
 
   for (const row of asceseRaw) {
     const cimaId = String(row.cima_id || "").trim();
-    const nome = String(row.alpinista || "").trim();
+    const pid = climberKey(row);
     const data = parseGvizDate(row.data, row.data);
-    if (!cimaId || !nome) continue;
+    if (!cimaId || !pid) continue;
+    const nome = names.get(pid) || pid;
     const cima = byId.get(cimaId);
-    const ascesa = { cima_id: cimaId, alpinista: nome, data, cima };
+    const ascesa = { cima_id: cimaId, alpinista: nome, alpinista_id: pid, data, cima };
     if (cima) cima.ascese.push(ascesa);
-    if (!personeMap.has(nome)) personeMap.set(nome, { nome, ascese: [] });
-    personeMap.get(nome).ascese.push(ascesa);
+    if (!personeMap.has(pid)) personeMap.set(pid, { id: pid, nome, ascese: [] });
+    personeMap.get(pid).ascese.push(ascesa);
   }
 
   for (const cima of cime) {
     cima.ascese.sort((a, b) => (a.data || "").localeCompare(b.data || ""));
   }
-  const persone = [...personeMap.values()].sort((a, b) => a.nome.localeCompare(b.nome, "it"));
+  const persone = [...personeMap.values()].sort((a, b) => {
+    const na = Number(a.id);
+    const nb = Number(b.id);
+    if (Number.isFinite(na) && Number.isFinite(nb) && na !== nb) return na - nb;
+    return a.nome.localeCompare(b.nome, "it");
+  });
   for (const p of persone) {
     p.ascese.sort((a, b) => (a.data || "").localeCompare(b.data || ""));
   }
@@ -376,8 +402,8 @@ function findCima(id) {
   return state.cime.find((c) => c.id === id);
 }
 
-function findPersona(nome) {
-  return state.persone.find((p) => p.nome === nome);
+function findPersona(key) {
+  return state.persone.find((p) => p.nome === key || p.id === key);
 }
 
 function gruppiList() {
@@ -855,18 +881,20 @@ function readAsceseCache() {
     const raw = sessionStorage.getItem(asceseCacheKey());
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (!parsed || !Array.isArray(parsed.ascese) || !parsed.savedAt) return null;
+    if (!parsed || !Array.isArray(parsed.ascese) || !Array.isArray(parsed.alpinisti) || !parsed.savedAt) {
+      return null;
+    }
     return parsed;
   } catch (err) {
     return null;
   }
 }
 
-function writeAsceseCache(ascese) {
+function writeAsceseCache(ascese, alpinisti) {
   try {
     sessionStorage.setItem(
       asceseCacheKey(),
-      JSON.stringify({ savedAt: Date.now(), ascese: ascese })
+      JSON.stringify({ savedAt: Date.now(), ascese: ascese, alpinisti: alpinisti })
     );
   } catch (err) {}
 }
@@ -891,18 +919,28 @@ function scheduleCacheRefresh(savedAt) {
   }, wait);
 }
 
+async function fetchDriveTables() {
+  const asceseP = fetchSheet(CONFIG.sheets.ascese);
+  const alpinistiP = fetchSheet(CONFIG.sheets.alpinisti).catch(function () {
+    return [];
+  });
+  const ascese = await asceseP;
+  const alpinisti = await alpinistiP;
+  return { ascese, alpinisti };
+}
+
 async function loadData() {
   const cime = catalogCime();
   if (!CONFIG.spreadsheetId) {
-    return joinData(cime, MOCK_ASCESE);
+    return joinData(cime, MOCK_ASCESE, MOCK_ALPINISTI);
   }
   const cached = readAsceseCache();
   if (cached && cacheIsFresh(cached)) {
-    return joinData(cime, cached.ascese);
+    return joinData(cime, cached.ascese, cached.alpinisti);
   }
-  const ascese = await fetchSheet(CONFIG.sheets.ascese);
-  writeAsceseCache(ascese);
-  return joinData(cime, ascese);
+  const tables = await fetchDriveTables();
+  writeAsceseCache(tables.ascese, tables.alpinisti);
+  return joinData(cime, tables.ascese, tables.alpinisti);
 }
 
 async function refreshAsceseIfStale() {
@@ -913,9 +951,9 @@ async function refreshAsceseIfStale() {
     return;
   }
   try {
-    const ascese = await fetchSheet(CONFIG.sheets.ascese);
-    writeAsceseCache(ascese);
-    applyJoined(joinData(catalogCime(), ascese));
+    const tables = await fetchDriveTables();
+    writeAsceseCache(tables.ascese, tables.alpinisti);
+    applyJoined(joinData(catalogCime(), tables.ascese, tables.alpinisti));
     route();
   } catch (err) {
     if (cached) return;
@@ -928,14 +966,14 @@ async function init() {
     const data = await loadData();
     applyJoined(data);
     if (!CONFIG.spreadsheetId) {
-      showStatus("Ascese di esempio: il catalogo è l'elenco Club 2000m. Per i dati veri incolla l'ID del foglio (solo scheda Ascese) in CONFIG.spreadsheetId.");
+      showStatus("Ascese di esempio: il catalogo è l'elenco Club 2000m. Per i dati veri incolla l'ID del foglio (schede Ascese e Alpinisti) in CONFIG.spreadsheetId.");
     } else {
       showStatus("");
       const cached = readAsceseCache();
       if (cached) scheduleCacheRefresh(cached.savedAt);
     }
   } catch (err) {
-    applyJoined(joinData(catalogCime(), MOCK_ASCESE));
+    applyJoined(joinData(catalogCime(), MOCK_ASCESE, MOCK_ALPINISTI));
     showStatus("Foglio non leggibile (" + err.message + "). Mostro le ascese di esempio.", true);
   }
   window.addEventListener("hashchange", route);
