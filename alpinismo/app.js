@@ -1,32 +1,11 @@
 const CONFIG = {
-  spreadsheetId: "", // ID del foglio tra /d/ e /edit. Vuoto = dati di esempio.
-  sheets: { cime: "Cime", ascese: "Ascese" },
+  spreadsheetId: "", // ID del foglio tra /d/ e /edit. Vuoto = ascese di esempio.
+  sheets: { ascese: "Ascese" },
+  // sessionStorage non ha scadenza nativa: la simuliamo con savedAt + questo TTL.
+  cacheTtlMs: 60 * 60 * 1000,
 };
 
-const MOCK = {
-  cime: [
-    { id: "1", nome: "Monte Corno Grande, vetta occidentale", gruppo: "Gran Sasso", altezza_m: 2912, lat: 42.46961, lon: 13.56539 },
-    { id: "2", nome: "Monte Corno Grande, vetta orientale", gruppo: "Gran Sasso", altezza_m: 2903, lat: 42.47217, lon: 13.57084 },
-    { id: "3", nome: "Monte Corno Grande, vetta centrale", gruppo: "Gran Sasso", altezza_m: 2893, lat: 42.47108, lon: 13.5697 },
-    { id: "4", nome: "Torrione Cambi", gruppo: "Gran Sasso", altezza_m: 2875, lat: 42.47056, lon: 13.56892 },
-    { id: "5", nome: "Monte Corno Piccolo", gruppo: "Gran Sasso", altezza_m: 2655, lat: 42.47934, lon: 13.55999 },
-    { id: "6", nome: "Pizzo d'Intermesoli", gruppo: "Gran Sasso", altezza_m: 2635, lat: 42.47279, lon: 13.52704 },
-    { id: "7", nome: "Monte Corvo", gruppo: "Gran Sasso", altezza_m: 2623, lat: 42.47932, lon: 13.49331 },
-    { id: "8", nome: "Punta dei Due", gruppo: "Gran Sasso", altezza_m: 2608, lat: 42.47555, lon: 13.56002 },
-    { id: "9", nome: "Monte Camicia", gruppo: "Gran Sasso", altezza_m: 2564, lat: 42.43926, lon: 13.71835 },
-    { id: "10", nome: "Monte Prena", gruppo: "Gran Sasso", altezza_m: 2561, lat: 42.44238, lon: 13.68321 },
-    { id: "11", nome: "Monte Corvo, vetta occidentale", gruppo: "Gran Sasso", altezza_m: 2533, lat: 42.4508, lon: 13.52472 },
-    { id: "12", nome: "Pizzo Cefalone", gruppo: "Gran Sasso", altezza_m: 2533, lat: 42.48275, lon: 13.48222 },
-    { id: "13", nome: "Monte Aquila", gruppo: "Gran Sasso", altezza_m: 2494, lat: 42.45732, lon: 13.56743 },
-    { id: "14", nome: "Pizzo d'Intermesoli, vetta settentrionale", gruppo: "Gran Sasso", altezza_m: 2483, lat: 42.48211, lon: 13.52323 },
-    { id: "15", nome: "Monte Infornace", gruppo: "Gran Sasso", altezza_m: 2469, lat: 42.4386, lon: 13.67691 },
-    { id: "16", nome: "Cima delle Malecoste", gruppo: "Gran Sasso", altezza_m: 2444, lat: 42.45756, lon: 13.49986 },
-    { id: "17", nome: "Cima Giovanni Paolo II", gruppo: "Gran Sasso", altezza_m: 2425, lat: 42.45324, lon: 13.5146 },
-    { id: "18", nome: "Monte Portella, anticima nord-est", gruppo: "Gran Sasso", altezza_m: 2422, lat: 42.45026, lon: 13.55441 },
-    { id: "19", nome: "Monte Brancastello", gruppo: "Gran Sasso", altezza_m: 2385, lat: 42.44753, lon: 13.63982 },
-    { id: "20", nome: "Monte Portella", gruppo: "Gran Sasso", altezza_m: 2385, lat: 42.44756, lon: 13.54595 },
-  ],
-  ascese: [
+const MOCK_ASCESE = [
     { cima_id: "1", alpinista: "Marco", data: "2018-08-12" },
     { cima_id: "1", alpinista: "Luca", data: "2018-08-12" },
     { cima_id: "1", alpinista: "Sara", data: "2020-07-19" },
@@ -86,13 +65,13 @@ const MOCK = {
     { cima_id: "20", alpinista: "Marco", data: "2023-09-02" },
     { cima_id: "18", alpinista: "Luca", data: "2023-09-02" },
     { cima_id: "20", alpinista: "Luca", data: "2023-09-02" },
-  ],
-};
+];
 
 const state = {
   cime: [],
   persone: [],
   mapFilter: "",
+  gruppoFilter: "",
   personSort: "data",
   maps: { main: null, mini: null },
   mapTimers: [],
@@ -401,6 +380,31 @@ function findPersona(nome) {
   return state.persone.find((p) => p.nome === nome);
 }
 
+function gruppiList() {
+  return [...new Set(state.cime.map((c) => c.gruppo).filter(Boolean))].sort((a, b) =>
+    a.localeCompare(b, "it")
+  );
+}
+
+function gruppoSelect(id, selected) {
+  const opts = [`<option value="">Tutti i gruppi</option>`]
+    .concat(
+      gruppiList().map(
+        (g) =>
+          `<option value="${escapeHtml(g)}"${g === selected ? " selected" : ""}>${escapeHtml(g)}</option>`
+      )
+    )
+    .join("");
+  return `<select id="${id}">${opts}</select>`;
+}
+
+function filterCime() {
+  let cime = state.cime;
+  if (state.gruppoFilter) cime = cime.filter((c) => c.gruppo === state.gruppoFilter);
+  if (state.mapFilter) cime = cime.filter((c) => c.ascese.some((a) => a.alpinista === state.mapFilter));
+  return cime;
+}
+
 function personSelect(id, selected) {
   const opts = [`<option value="">Scegli</option>`]
     .concat(
@@ -416,9 +420,7 @@ function personSelect(id, selected) {
 function viewMappa() {
   const maxN = Math.max(1, ...state.cime.map(climberCount));
   const filter = state.mapFilter;
-  const cime = filter
-    ? state.cime.filter((c) => c.ascese.some((a) => a.alpinista === filter))
-    : state.cime;
+  const cime = filterCime();
   const opts = [`<option value="">Tutti</option>`]
     .concat(
       state.persone.map(
@@ -431,6 +433,7 @@ function viewMappa() {
     <section class="view-map">
       <div class="map-toolbar">
         <label>Alpinista ${`<select id="map-filter">${opts}</select>`}</label>
+        <label>Gruppo ${gruppoSelect("map-gruppo", state.gruppoFilter)}</label>
         <div class="legend">
           <span><i class="swatch" style="background:#8a8478"></i> Nessuno</span>
           <span><i class="swatch" style="background:${markerColor(1, maxN)}"></i> Pochi</span>
@@ -444,6 +447,10 @@ function viewMappa() {
     state.mapFilter = e.target.value;
     route();
   });
+  document.getElementById("map-gruppo").addEventListener("change", (e) => {
+    state.gruppoFilter = e.target.value;
+    route();
+  });
   renderMainMap(cime);
   if (!hasLeaflet()) {
     const mapEl = document.getElementById("map-main");
@@ -455,13 +462,16 @@ function viewMappa() {
 }
 
 function viewCime() {
-  const rows = [...state.cime]
-    .sort((a, b) => b.altezza_m - a.altezza_m)
+  const lista = state.gruppoFilter
+    ? state.cime.filter((c) => c.gruppo === state.gruppoFilter)
+    : state.cime;
+  const rows = [...lista]
+    .sort((a, b) => peakIdNum(a.id) - peakIdNum(b.id) || b.altezza_m - a.altezza_m)
     .map((c) => {
       const n = climberCount(c);
       return `<a class="row" href="#/cima/${encodeURIComponent(c.id)}">
         <div>
-          <div class="row-title">${escapeHtml(c.nome)}</div>
+          <div class="row-title">${escapeHtml(c.id)}. ${escapeHtml(c.nome)}</div>
           <div class="muted">${fmtNum(c.altezza_m)} m${c.gruppo ? " · " + escapeHtml(c.gruppo) : ""}</div>
         </div>
         <div class="muted">${n} ${n === 1 ? "ascesa" : "ascese"}</div>
@@ -470,11 +480,16 @@ function viewCime() {
     .join("");
   appEl.innerHTML = `
     <section class="page">
-      <p class="kicker">Registro</p>
+      <p class="kicker">Club 2000m · rev. 2026</p>
       <h1 class="page-title">Cime</h1>
-      <p class="lede">${state.cime.length} cime nel diario di gruppo.</p>
-      <div class="list">${rows || `<p class="empty">Nessuna cima nel foglio.</p>`}</div>
+      <p class="lede">${lista.length} cime${state.gruppoFilter ? " in " + escapeHtml(state.gruppoFilter) : " nell'elenco ufficiale"}.</p>
+      <div class="toolbar"><label>Gruppo ${gruppoSelect("cime-gruppo", state.gruppoFilter)}</label></div>
+      <div class="list">${rows || `<p class="empty">Nessuna cima.</p>`}</div>
     </section>`;
+  document.getElementById("cime-gruppo").addEventListener("change", (e) => {
+    state.gruppoFilter = e.target.value;
+    viewCime();
+  });
 }
 
 function peakIdNum(id) {
@@ -601,7 +616,7 @@ function viewAlpinisti() {
       const s = personStats(p);
       return `<a class="card" href="#/alpinista/${encodeName(p.nome)}">
         <h2>${escapeHtml(p.nome)}</h2>
-        <p class="muted">${s.n} cime · max ${fmtNum(s.quotaMax)} m</p>
+        <p class="muted">${s.n} / ${state.cime.length} cime · max ${fmtNum(s.quotaMax)} m</p>
       </a>`;
     })
     .join("");
@@ -834,34 +849,106 @@ function route() {
   }
 }
 
-async function loadData() {
-  if (!CONFIG.spreadsheetId) {
-    return joinData(MOCK.cime, MOCK.ascese);
+function catalogCime() {
+  return typeof CIME !== "undefined" ? CIME : [];
+}
+
+function asceseCacheKey() {
+  return "cime-ascese:" + CONFIG.spreadsheetId;
+}
+
+function readAsceseCache() {
+  try {
+    const raw = sessionStorage.getItem(asceseCacheKey());
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.ascese) || !parsed.savedAt) return null;
+    return parsed;
+  } catch (err) {
+    return null;
   }
-  const [cime, ascese] = await Promise.all([
-    fetchSheet(CONFIG.sheets.cime),
-    fetchSheet(CONFIG.sheets.ascese),
-  ]);
+}
+
+function writeAsceseCache(ascese) {
+  try {
+    sessionStorage.setItem(
+      asceseCacheKey(),
+      JSON.stringify({ savedAt: Date.now(), ascese: ascese })
+    );
+  } catch (err) {}
+}
+
+function cacheIsFresh(entry) {
+  return entry && Date.now() - entry.savedAt < CONFIG.cacheTtlMs;
+}
+
+function applyJoined(data) {
+  state.cime = data.cime;
+  state.persone = data.persone;
+}
+
+let cacheRefreshTimer = null;
+
+function scheduleCacheRefresh(savedAt) {
+  if (cacheRefreshTimer) clearTimeout(cacheRefreshTimer);
+  if (!CONFIG.spreadsheetId) return;
+  const wait = Math.max(0, CONFIG.cacheTtlMs - (Date.now() - savedAt)) + 250;
+  cacheRefreshTimer = setTimeout(function () {
+    refreshAsceseIfStale();
+  }, wait);
+}
+
+async function loadData() {
+  const cime = catalogCime();
+  if (!CONFIG.spreadsheetId) {
+    return joinData(cime, MOCK_ASCESE);
+  }
+  const cached = readAsceseCache();
+  if (cached && cacheIsFresh(cached)) {
+    return joinData(cime, cached.ascese);
+  }
+  const ascese = await fetchSheet(CONFIG.sheets.ascese);
+  writeAsceseCache(ascese);
   return joinData(cime, ascese);
+}
+
+async function refreshAsceseIfStale() {
+  if (!CONFIG.spreadsheetId || document.hidden) return;
+  const cached = readAsceseCache();
+  if (cached && cacheIsFresh(cached)) {
+    scheduleCacheRefresh(cached.savedAt);
+    return;
+  }
+  try {
+    const ascese = await fetchSheet(CONFIG.sheets.ascese);
+    writeAsceseCache(ascese);
+    applyJoined(joinData(catalogCime(), ascese));
+    route();
+  } catch (err) {
+    if (cached) return;
+    showStatus("Foglio non leggibile (" + err.message + ").", true);
+  }
 }
 
 async function init() {
   try {
     const data = await loadData();
-    state.cime = data.cime;
-    state.persone = data.persone;
+    applyJoined(data);
     if (!CONFIG.spreadsheetId) {
-      showStatus("Dati di esempio: incolla l'ID del foglio Drive in CONFIG.spreadsheetId dentro app.js.");
+      showStatus("Ascese di esempio: il catalogo è l'elenco Club 2000m. Per i dati veri incolla l'ID del foglio (solo scheda Ascese) in CONFIG.spreadsheetId.");
     } else {
       showStatus("");
+      const cached = readAsceseCache();
+      if (cached) scheduleCacheRefresh(cached.savedAt);
     }
   } catch (err) {
-    const data = joinData(MOCK.cime, MOCK.ascese);
-    state.cime = data.cime;
-    state.persone = data.persone;
-    showStatus(`Foglio non leggibile (${err.message}). Mostro i dati di esempio.`, true);
+    applyJoined(joinData(catalogCime(), MOCK_ASCESE));
+    showStatus("Foglio non leggibile (" + err.message + "). Mostro le ascese di esempio.", true);
   }
   window.addEventListener("hashchange", route);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") refreshAsceseIfStale();
+  });
   if (!location.hash) location.hash = "#/mappa";
   else route();
 }
