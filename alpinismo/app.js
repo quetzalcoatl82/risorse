@@ -108,17 +108,14 @@ function parseGvizDate(value, formatted) {
   return String(value);
 }
 
-function parseGviz(text) {
-  const start = text.indexOf("{");
-  const end = text.lastIndexOf("}");
-  if (start < 0 || end < 0) throw new Error("Risposta foglio non valida");
-  const json = JSON.parse(text.slice(start, end + 1));
-  if (json.status === "error") {
-    const err0 = json.errors && json.errors[0];
-    throw new Error((err0 && err0.detailed_message) || "Errore foglio");
+function rowsFromGviz(json) {
+  if (!json || json.status === "error") {
+    const err0 = json && json.errors && json.errors[0];
+    throw new Error((err0 && (err0.detailed_message || err0.message)) || "Errore foglio");
   }
-  const cols = json.table.cols.map((c) => (c.label || c.id || "").trim());
-  return json.table.rows.map((row) => {
+  const table = json.table || {};
+  const cols = (table.cols || []).map((c) => (c.label || c.id || "").trim());
+  return (table.rows || []).map((row) => {
     const obj = {};
     cols.forEach((col, i) => {
       const cell = row.c && row.c[i];
@@ -129,16 +126,68 @@ function parseGviz(text) {
   });
 }
 
-function gvizUrl(sheet) {
+function parseGviz(text) {
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  if (start < 0 || end < 0) throw new Error("Risposta foglio non valida");
+  return rowsFromGviz(JSON.parse(text.slice(start, end + 1)));
+}
+
+function gvizUrl(sheet, handler) {
   const id = CONFIG.spreadsheetId;
   const name = encodeURIComponent(sheet);
-  return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&sheet=${name}`;
+  const tqx = handler ? "out:json;responseHandler:" + handler : "out:json";
+  return `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=${encodeURIComponent(tqx)}&sheet=${name}`;
+}
+
+let gvizSeq = 0;
+
+function fetchSheetJsonp(sheet) {
+  return new Promise(function (resolve, reject) {
+    const cb = "gvizCb" + ++gvizSeq;
+    const script = document.createElement("script");
+    let done = false;
+    const timer = setTimeout(function () {
+      finish(new Error("Timeout su " + sheet));
+    }, 15000);
+    function finish(err, data) {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      try {
+        delete window[cb];
+      } catch (e) {
+        window[cb] = undefined;
+      }
+      if (script.parentNode) script.parentNode.removeChild(script);
+      if (err) reject(err);
+      else resolve(data);
+    }
+    window[cb] = function (json) {
+      try {
+        finish(null, rowsFromGviz(json));
+      } catch (err) {
+        finish(err);
+      }
+    };
+    script.onerror = function () {
+      finish(new Error("Impossibile caricare " + sheet));
+    };
+    script.src = gvizUrl(sheet, cb);
+    document.head.appendChild(script);
+  });
 }
 
 async function fetchSheet(sheet) {
-  const res = await fetch(gvizUrl(sheet));
-  if (!res.ok) throw new Error(`HTTP ${res.status} su ${sheet}`);
-  return parseGviz(await res.text());
+  try {
+    const res = await fetch(gvizUrl(sheet), { credentials: "omit", mode: "cors" });
+    if (!res.ok) throw new Error("HTTP " + res.status + " su " + sheet);
+    const text = await res.text();
+    if (!text) throw new Error("Risposta vuota su " + sheet);
+    return parseGviz(text);
+  } catch (err) {
+    return fetchSheetJsonp(sheet);
+  }
 }
 
 function normalizeCima(raw) {
