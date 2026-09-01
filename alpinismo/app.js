@@ -254,15 +254,40 @@ function joinData(cimeRaw, asceseRaw, alpinistiRaw) {
 }
 
 function personStats(persona) {
-  const peaks = persona.ascese.map((a) => a.cima).filter(Boolean);
+  const peaks = [];
+  const seen = new Set();
+  for (const a of persona.ascese) {
+    if (!a.cima || seen.has(a.cima.id)) continue;
+    seen.add(a.cima.id);
+    peaks.push(a.cima);
+  }
   const dates = persona.ascese.map((a) => a.data).filter(Boolean).sort();
   const gruppi = new Set(peaks.map((c) => c.gruppo).filter(Boolean));
   return {
-    n: persona.ascese.length,
+    n: peaks.length,
     nGruppi: gruppi.size,
     prima: dates[0] || "",
     ultima: dates[dates.length - 1] || "",
   };
+}
+
+function uniquePeaksOf(persona) {
+  const byId = new Map();
+  for (const a of persona.ascese) {
+    if (!a.cima) continue;
+    let item = byId.get(a.cima.id);
+    if (!item) {
+      item = { cima: a.cima, dates: [] };
+      byId.set(a.cima.id, item);
+    }
+    if (a.data) item.dates.push(a.data);
+  }
+  const list = [...byId.values()];
+  for (const item of list) {
+    item.dates.sort();
+    item.data = item.dates[item.dates.length - 1] || "";
+  }
+  return list;
 }
 
 function fmtDate(iso) {
@@ -713,22 +738,26 @@ function viewAlpinista(nome) {
   }
   const s = personStats(persona);
   const sort = state.personSort;
-  const rows = [...persona.ascese]
-    .filter((a) => a.cima)
+  const rows = uniquePeaksOf(persona)
     .sort((a, b) => {
       if (sort === "quota") return b.cima.altezza_m - a.cima.altezza_m;
       if (sort === "gruppo") return (a.cima.gruppo || "").localeCompare(b.cima.gruppo || "", "it") || b.cima.altezza_m - a.cima.altezza_m;
       return (b.data || "").localeCompare(a.data || "");
     })
-    .map(
-      (a) => `<a class="row" href="#/cima/${encodeURIComponent(a.cima.id)}">
+    .map((a) => {
+      const dates = a.dates
+        .slice()
+        .reverse()
+        .map(fmtDate)
+        .join(" · ");
+      return `<a class="row" href="#/cima/${encodeURIComponent(a.cima.id)}">
         <div>
           <div class="row-title">${escapeHtml(a.cima.nome)}</div>
           <div class="muted">${fmtNum(a.cima.altezza_m)} m${a.cima.gruppo ? " · " + escapeHtml(a.cima.gruppo) : ""}</div>
         </div>
-        <div class="muted">${fmtDate(a.data)}</div>
-      </a>`
-    )
+        <div class="muted">${dates || "—"}</div>
+      </a>`;
+    })
     .join("");
   const others = state.persone.filter((p) => p.nome !== persona.nome);
   const compareLinks = others
