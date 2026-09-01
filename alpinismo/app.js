@@ -1,5 +1,5 @@
 const CONFIG = {
-  spreadsheetId: "", // ID del foglio tra /d/ e /edit. Vuoto = ascese di esempio.
+  spreadsheetId: "1F8AqL6WXXq5BAnmbuYnGAa2q34AvhyM9_AIcLGF_iuo", // ID del foglio tra /d/ e /edit. Vuoto = ascese di esempio.
   sheets: { ascese: "Ascese", alpinisti: "Alpinisti" },
   // sessionStorage non ha scadenza nativa: la simuliamo con savedAt + questo TTL.
   cacheTtlMs: 60 * 60 * 1000,
@@ -62,11 +62,11 @@ const MOCK_ASCESE = [
 ];
 
 const MOCK_ALPINISTI = [
-  { id: "1", nome: "Marco" },
-  { id: "2", nome: "Luca" },
-  { id: "3", nome: "Paolo" },
-  { id: "4", nome: "Elena" },
-  { id: "5", nome: "Anna" },
+  { id: "1", nome: "Teo Marchetti" },
+  { id: "2", nome: "Nina Valeri" },
+  { id: "3", nome: "Dario Spina" },
+  { id: "4", nome: "Giulia Neri" },
+  { id: "5", nome: "Irene Costa" },
 ];
 
 const state = {
