@@ -171,13 +171,25 @@ button:hover, .sort-btn:hover { border-color: var(--ink-soft); }
 .legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem 1rem;
+  align-items: center;
+  gap: 0.45rem 0.75rem;
   margin-left: auto;
   font-size: 0.8rem;
   color: var(--ink-soft);
 }
 
-.legend span {
+.legend-caption {
+  font-weight: 600;
+}
+
+.legend-scale {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.85rem;
+}
+
+.legend-scale span {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -229,6 +241,7 @@ button:hover, .sort-btn:hover { border-color: var(--ink-soft); }
 }
 
 .page {
+  width: 100%;
   max-width: 1080px;
   margin: 0 auto;
   padding: 1.5rem 1.25rem 3rem;

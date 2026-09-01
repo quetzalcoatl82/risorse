@@ -185,7 +185,6 @@ function personStats(persona) {
   return {
     n: persona.ascese.length,
     nGruppi: gruppi.size,
-    quotaMax: peaks.reduce((m, c) => Math.max(m, c.altezza_m), 0),
     prima: dates[0] || "",
     ultima: dates[dates.length - 1] || "",
   };
@@ -232,12 +231,11 @@ function climberCount(cima) {
   return new Set(cima.ascese.map((a) => a.alpinista)).size;
 }
 
-function markerColor(count, max) {
-  if (count <= 0) return "#8a8478";
-  const t = max <= 1 ? 1 : (count - 1) / Math.max(1, max - 1);
-  if (t < 0.34) return "#4f7a62";
-  if (t < 0.67) return "#c4a35a";
-  return "#b4482a";
+const COUNT_COLORS = ["#8a8478", "#d32f2f", "#ef6c00", "#f4c430", "#43a047", "#29b6f6"];
+
+function markerColor(count) {
+  const n = Math.max(0, Math.min(5, Number(count) || 0));
+  return COUNT_COLORS[n];
 }
 
 function circleIcon(color) {
@@ -280,10 +278,14 @@ function refreshMap(map) {
 }
 
 function addTopoLayer(map) {
-  const topo = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
-    maxZoom: 17,
-    attribution: '&copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
-  });
+  const topo = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+    {
+      maxZoom: 19,
+      attribution:
+        'Tiles &copy; <a href="https://www.esri.com/">Esri</a> — Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community',
+    }
+  );
   const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "&copy; OpenStreetMap",
@@ -314,13 +316,12 @@ function renderMainMap(cime) {
   if (!hasLeaflet() || !document.getElementById("map-main")) return;
   const map = L.map("map-main", { scrollWheelZoom: true });
   addTopoLayer(map);
-  const maxN = Math.max(1, ...state.cime.map(climberCount));
   const bounds = [];
   for (const cima of cime) {
     if (!cima.lat && !cima.lon) continue;
     const n = climberCount(cima);
     const marker = L.marker([cima.lat, cima.lon], {
-      icon: circleIcon(markerColor(n, maxN)),
+      icon: circleIcon(markerColor(n)),
       title: cima.nome,
     }).addTo(map);
     marker.bindPopup(peakPopup(cima));
@@ -337,9 +338,8 @@ function renderMiniMap(cima) {
   const map = L.map("map-peak", { scrollWheelZoom: false, attributionControl: false });
   addTopoLayer(map);
   map.setView([cima.lat, cima.lon], 11);
-  const maxN = Math.max(1, ...state.cime.map(climberCount));
   L.marker([cima.lat, cima.lon], {
-    icon: circleIcon(markerColor(climberCount(cima), maxN)),
+    icon: circleIcon(markerColor(climberCount(cima))),
   }).addTo(map);
   state.maps.mini = map;
   refreshMap(map);
@@ -418,7 +418,6 @@ function personSelect(id, selected) {
 }
 
 function viewMappa() {
-  const maxN = Math.max(1, ...state.cime.map(climberCount));
   const filter = state.mapFilter;
   const cime = filterCime();
   const opts = [`<option value="">Tutti</option>`]
@@ -429,16 +428,18 @@ function viewMappa() {
       )
     )
     .join("");
+  const legend = COUNT_COLORS.map((c, i) => {
+    const label = String(i);
+    return `<span><i class="swatch" style="background:${c}"></i> ${label}</span>`;
+  }).join("");
   appEl.innerHTML = `
     <section class="view-map">
       <div class="map-toolbar">
         <label>Alpinista ${`<select id="map-filter">${opts}</select>`}</label>
         <label>Gruppo ${gruppoSelect("map-gruppo", state.gruppoFilter)}</label>
         <div class="legend">
-          <span><i class="swatch" style="background:#8a8478"></i> Nessuno</span>
-          <span><i class="swatch" style="background:${markerColor(1, maxN)}"></i> Pochi</span>
-          <span><i class="swatch" style="background:${markerColor(Math.ceil(maxN / 2), maxN)}"></i> Alcuni</span>
-          <span><i class="swatch" style="background:${markerColor(maxN, maxN)}"></i> Quasi tutti</span>
+          <span class="legend-caption">Alpinisti che hanno completato la salita:</span>
+          <span class="legend-scale">${legend}</span>
         </div>
       </div>
       <div id="map-main"></div>
@@ -616,7 +617,7 @@ function viewAlpinisti() {
       const s = personStats(p);
       return `<a class="card" href="#/alpinista/${encodeName(p.nome)}">
         <h2>${escapeHtml(p.nome)}</h2>
-        <p class="muted">${s.n} / ${state.cime.length} cime · max ${fmtNum(s.quotaMax)} m</p>
+        <p class="muted">${s.n} / ${state.cime.length} cime</p>
       </a>`;
     })
     .join("");
@@ -665,7 +666,6 @@ function viewAlpinista(nome) {
       <div class="stats-row">
         <div class="stat"><span>Cime</span><b>${s.n}</b></div>
         <div class="stat"><span>Gruppi</span><b>${s.nGruppi}</b></div>
-        <div class="stat"><span>Quota max</span><b>${fmtNum(s.quotaMax)} m</b></div>
         <div class="stat"><span>Prima ascesa</span><b>${fmtDate(s.prima)}</b></div>
         <div class="stat"><span>Ultima ascesa</span><b>${fmtDate(s.ultima)}</b></div>
       </div>
@@ -727,7 +727,7 @@ function viewConfronta(nameA, nameB) {
       </div>
       <div class="stats-row">
         <div class="stat"><span>Cime</span><b>${sa.n} / ${sb.n}</b></div>
-        <div class="stat"><span>Quota max</span><b>${fmtNum(sa.quotaMax)} / ${fmtNum(sb.quotaMax)} m</b></div>
+        <div class="stat"><span>Gruppi</span><b>${sa.nGruppi} / ${sb.nGruppi}</b></div>
       </div>`;
   } else {
     body = `<p class="empty">Scegli due alpinisti per vedere cime in comune e differenze.</p>`;
@@ -813,13 +813,6 @@ function viewStats() {
         ranked.map((r) => ({ label: r.p.nome, value: r.s.n, display: String(r.s.n) }))
       )}
       ${barChart("Cime per gruppo", gruppiBars, "alt")}
-      ${barChart(
-        "Quota massima",
-        [...ranked]
-          .sort((a, b) => b.s.quotaMax - a.s.quotaMax)
-          .map((r) => ({ label: r.p.nome, value: r.s.quotaMax, display: `${fmtNum(r.s.quotaMax)} m` })),
-        "gold"
-      )}
       <div class="bar-block"><h2>Ascese per anno</h2>${timeline || `<p class="empty">Nessuna data.</p>`}</div>
     </section>`;
 }
