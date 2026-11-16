@@ -26,6 +26,7 @@ function onOpen() {
     .addItem('Completa i libri mancanti', 'completaMancanti')
     .addItem('Rileggi tutto da capo', 'completaTutto')
     .addItem('Traduci i generi', 'traduciGeneri')
+    .addItem('Aggiorna le copertine', 'aggiornaCopertine')
     .addSeparator()
     .addItem('Prepara le intestazioni', 'preparaIntestazioni')
     .addItem('Crea il Form di inserimento', 'creaForm')
@@ -379,12 +380,25 @@ function daGoogleBooks_(isbn) {
     autore: (info.authors || []).join(', '),
     anno: annoDa_(info.publishedDate),
     pagine: info.pageCount || '',
-    // http -> https, e via lo zoom=1 che restituisce la miniatura piccola
-    copertina: copertina.replace(/^http:/, 'https:').replace(/&edge=curl/, ''),
+    copertina: normalizzaCopertina_(copertina),
     descrizione: ripulisci_(info.description || ''),
     categoria: categorie_(info.categories),
     fonte: 'google'
   };
+}
+
+/**
+ * Normalizza l'URL della copertina: https e via il ricciolo d'angolo.
+ * Lo zoom resta 1 ed e' una scelta obbligata, non una svista: per questi
+ * volumi Google ha solo la miniatura (128px). Con zoom=2, zoom=3, zoom=0 o
+ * w=400 risponde 200 ma serve il segnaposto grigio "image not available",
+ * identico byte per byte fra libri diversi. Verificato guardando le immagini.
+ */
+function normalizzaCopertina_(url) {
+  var pulito = String(url || '').replace(/^http:/, 'https:').replace(/&edge=curl/, '');
+  if (pulito.indexOf('books.google.') < 0) return pulito;
+  if (/[?&]zoom=\d/.test(pulito)) return pulito.replace(/([?&]zoom=)\d/, '$11');
+  return pulito;
 }
 
 /** Riempie i buchi della scheda ridotta con il dettaglio del volume. */
@@ -573,6 +587,29 @@ function traduciCategoria_(testo) {
     i += consumati;
   }
   return fuori.join(', ');
+}
+
+/** Rimette in riga le copertine gia' salvate. Nessuna chiamata API. */
+function aggiornaCopertine() {
+  var sh = foglio_();
+  var col = indiceColonne_(sh);
+  var ultima = sh.getLastRow();
+  if (ultima < 2) return;
+
+  var intervallo = sh.getRange(2, col['copertina'], ultima - 1, 1);
+  var valori = intervallo.getValues();
+  var cambiate = 0;
+  for (var i = 0; i < valori.length; i++) {
+    var prima = String(valori[i][0] || '');
+    if (!prima) continue;
+    var dopo = normalizzaCopertina_(prima);
+    if (dopo !== prima) {
+      valori[i][0] = dopo;
+      cambiate++;
+    }
+  }
+  intervallo.setValues(valori);
+  SpreadsheetApp.getUi().alert(cambiate ? 'Copertine aggiornate: ' + cambiate : 'Erano gia\' a posto.');
 }
 
 /** Riscrive la colonna categoria con la mappa, senza chiamare le API. */

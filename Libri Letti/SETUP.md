@@ -133,6 +133,25 @@ Le risposte restano comunque registrate nel Form. Menu *Libri letti -> Recupera
 risposte non entrate*: rilegge tutte le risposte e inserisce quelle il cui ISBN
 non e' gia' nel foglio.
 
+## Le copertine
+
+Si usano i link che l'API restituisce (`books.google.com/books/content?...&
+source=gbs_api`), senza scaricare le immagini: non consumano la quota del
+progetto, che vive su `googleapis.com`, e rispondono con
+`cache-control: private, max-age=86400`.
+
+**Lo `zoom=1` non e' una svista.** Per questi volumi Google ha solo la
+miniatura da 128px: con `zoom=0`, `zoom=2`, `zoom=3` o `w=400` risponde 200 ma
+serve il segnaposto grigio "image not available", identico byte per byte fra
+libri diversi (9103 byte). Chi volesse "alzare la risoluzione" otterrebbe solo
+di cancellare tutte le copertine: verificato sul campo, aprendo le immagini.
+Menu *Aggiorna le copertine* rimette in riga gli URL gia' salvati, senza
+chiamare le API.
+
+Nella pagina le `<img>` hanno `referrerpolicy="no-referrer"`, cosi' Google non
+riceve anche l'indirizzo della pagina di chi guarda, e un gestore di `error`
+che al posto di un'immagine morta rimette il riquadro con il titolo.
+
 ## Lo script dal repo, con clasp
 
 `apps-script/Codice.js` e' la copia buona: si carica nel foglio con clasp, la CLI

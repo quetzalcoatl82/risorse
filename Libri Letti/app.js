@@ -271,12 +271,33 @@ function anniDisponibili(libri) {
     return [...anni].sort((a, b) => b.localeCompare(a));
 }
 /* -------------------------------------------------------------------- render */
-function renderCopertina(libro, grande) {
+function placeholderCopertina(titolo, grande) {
     const classe = grande ? "cover cover-big" : "cover";
-    if (!libro.copertina) {
-        return `<div class="${classe} cover-empty" aria-hidden="true"><span>${esc(libro.titolo)}</span></div>`;
-    }
-    return `<img class="${classe}" src="${esc(libro.copertina)}" alt="Copertina di ${esc(libro.titolo)}" loading="lazy" decoding="async">`;
+    return `<div class="${classe} cover-empty" aria-hidden="true"><span>${esc(titolo)}</span></div>`;
+}
+function renderCopertina(libro, grande) {
+    if (!libro.copertina)
+        return placeholderCopertina(libro.titolo, grande);
+    const classe = grande ? "cover cover-big" : "cover";
+    // referrerpolicy: la pagina e' pubblica e le immagini stanno su Google, non
+    // gli mandiamo anche l'indirizzo della pagina di chi guarda.
+    return `<img class="${classe}" src="${esc(libro.copertina)}" alt="Copertina di ${esc(libro.titolo)}"
+    data-titolo="${esc(libro.titolo)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">`;
+}
+/** Se un URL muore, al suo posto torna il riquadro con il titolo. */
+function agganciaCopertine(root) {
+    const immagini = root.querySelectorAll("img.cover");
+    immagini.forEach((img) => {
+        img.addEventListener("error", () => {
+            const titolo = img.dataset["titolo"] || "";
+            const grande = img.classList.contains("cover-big");
+            const sostituto = document.createElement("div");
+            sostituto.innerHTML = placeholderCopertina(titolo, grande);
+            const nuovo = sostituto.firstElementChild;
+            if (nuovo && img.parentNode)
+                img.parentNode.replaceChild(nuovo, img);
+        }, { once: true });
+    });
 }
 function renderElenco(libri) {
     if (libri.length === 0) {
@@ -349,6 +370,7 @@ function render() {
         app.innerHTML = libro
             ? renderScheda(libro)
             : `<p class="empty">Libro non trovato. <a href="#/">Torna all'elenco</a></p>`;
+        agganciaCopertine(app);
         document.title = libro ? `${libro.titolo} — Libri letti` : "Libri letti";
         window.scrollTo(0, 0);
         return;
@@ -362,6 +384,7 @@ function render() {
             : `${visibili.length} di ${totale} libri`;
     }
     app.innerHTML = renderElenco(visibili);
+    agganciaCopertine(app);
     document.title = "Libri letti";
 }
 /* ------------------------------------------------------------------ routing */

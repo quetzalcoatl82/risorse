@@ -343,12 +343,33 @@ function anniDisponibili(libri: readonly Libro[]): readonly string[] {
 
 /* -------------------------------------------------------------------- render */
 
-function renderCopertina(libro: Libro, grande: boolean): string {
+function placeholderCopertina(titolo: string, grande: boolean): string {
   const classe = grande ? "cover cover-big" : "cover";
-  if (!libro.copertina) {
-    return `<div class="${classe} cover-empty" aria-hidden="true"><span>${esc(libro.titolo)}</span></div>`;
-  }
-  return `<img class="${classe}" src="${esc(libro.copertina)}" alt="Copertina di ${esc(libro.titolo)}" loading="lazy" decoding="async">`;
+  return `<div class="${classe} cover-empty" aria-hidden="true"><span>${esc(titolo)}</span></div>`;
+}
+
+function renderCopertina(libro: Libro, grande: boolean): string {
+  if (!libro.copertina) return placeholderCopertina(libro.titolo, grande);
+  const classe = grande ? "cover cover-big" : "cover";
+  // referrerpolicy: la pagina e' pubblica e le immagini stanno su Google, non
+  // gli mandiamo anche l'indirizzo della pagina di chi guarda.
+  return `<img class="${classe}" src="${esc(libro.copertina)}" alt="Copertina di ${esc(libro.titolo)}"
+    data-titolo="${esc(libro.titolo)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">`;
+}
+
+/** Se un URL muore, al suo posto torna il riquadro con il titolo. */
+function agganciaCopertine(root: HTMLElement): void {
+  const immagini = root.querySelectorAll<HTMLImageElement>("img.cover");
+  immagini.forEach((img) => {
+    img.addEventListener("error", () => {
+      const titolo = img.dataset["titolo"] || "";
+      const grande = img.classList.contains("cover-big");
+      const sostituto = document.createElement("div");
+      sostituto.innerHTML = placeholderCopertina(titolo, grande);
+      const nuovo = sostituto.firstElementChild;
+      if (nuovo && img.parentNode) img.parentNode.replaceChild(nuovo, img);
+    }, { once: true });
+  });
 }
 
 function renderElenco(libri: readonly Libro[]): string {
@@ -422,6 +443,7 @@ function render(): void {
     app.innerHTML = libro
       ? renderScheda(libro)
       : `<p class="empty">Libro non trovato. <a href="#/">Torna all'elenco</a></p>`;
+    agganciaCopertine(app);
     document.title = libro ? `${libro.titolo} — Libri letti` : "Libri letti";
     window.scrollTo(0, 0);
     return;
@@ -436,6 +458,7 @@ function render(): void {
       : `${visibili.length} di ${totale} libri`;
   }
   app.innerHTML = renderElenco(visibili);
+  agganciaCopertine(app);
   document.title = "Libri letti";
 }
 
