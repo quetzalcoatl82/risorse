@@ -27,7 +27,7 @@ condivisa, scritta dallo script).
 
 ## L'Apps Script
 
-`apps-script/Codice.gs` va incollato in Estensioni -> Apps Script del foglio.
+`apps-script/Codice.js` va incollato in Estensioni -> Apps Script del foglio.
 Poi, dal foglio, menu **Libri letti**:
 
 1. *Prepara le intestazioni* — crea la scheda e la riga 1 se mancano
@@ -132,6 +132,39 @@ del Form e' rimasta fuori dal foglio per questo motivo).
 Le risposte restano comunque registrate nel Form. Menu *Libri letti -> Recupera
 risposte non entrate*: rilegge tutte le risposte e inserisce quelle il cui ISBN
 non e' gia' nel foglio.
+
+## Lo script dal repo, con clasp
+
+`apps-script/Codice.js` e' la copia buona: si carica nel foglio con clasp, la CLI
+ufficiale di Apps Script. `.clasp.json` punta allo scriptId del progetto legato
+al foglio, con `rootDir: apps-script`.
+
+Una volta sola:
+
+1. abilita l'Apps Script API su <https://script.google.com/home/usersettings>
+2. `npm run gas:login` — OAuth nel browser, con l'account del foglio
+
+Poi:
+
+```sh
+npm run gas:pull     # scarica dal foglio: la PRIMA volta serve per appsscript.json
+npm run gas:push     # carica quello che c'e' nel repo
+npm run gas:watch    # carica a ogni salvataggio
+```
+
+**Il primo comando dev'essere `pull`**, non `push`: porta giu' `appsscript.json`,
+il manifest del progetto, che prima esisteva solo lato Google. Dentro ci sono
+fuso orario (`Europe/Rome`), runtime (`V8`) e logging; **non** gli scope OAuth,
+che Apps Script continua a dedurre dal codice a ogni autorizzazione.
+
+Due avvertenze:
+
+- `clasp push` **sovrascrive** il progetto remoto, non fa merge: se modifichi
+  dall'editor web, fai `pull` prima di ripushare o perdi quelle modifiche.
+- clasp 3 **non transpila piu' TypeScript** (lo faceva la 2.x). Lo script resta
+  JavaScript; il TypeScript del sito e' un'altra cosa e non passa da clasp.
+- clasp salva il codice come `Codice.js`, non `.gs`: e' il nome che usa lui e
+  che il repo deve tenere. Nell'editor web lo vedrai sempre come `Codice.gs`.
 
 ## Build
 

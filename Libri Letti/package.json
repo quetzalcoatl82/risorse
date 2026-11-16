@@ -1,0 +1,13 @@
+{
+  "name": "libri-letti",
+  "private": true,
+  "description": "Pagina dei libri letti: TypeScript per il sito, clasp per lo script del foglio.",
+  "scripts": {
+    "build": "npx -y -p typescript@5.9.2 tsc -p .",
+    "watch": "npx -y -p typescript@5.9.2 tsc -p . --watch",
+    "gas:login": "npx -y @google/clasp@3.4.1 login",
+    "gas:pull": "npx -y @google/clasp@3.4.1 pull",
+    "gas:push": "npx -y @google/clasp@3.4.1 push",
+    "gas:watch": "npx -y @google/clasp@3.4.1 push --watch"
+  }
+}
