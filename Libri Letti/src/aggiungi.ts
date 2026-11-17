@@ -234,10 +234,13 @@ function renderAggiungi(): void {
 
   if (!statoAggiungi.autenticato) {
     app.innerHTML = `
-      <article class="scheda">
+      <article class="scheda inserimento">
         <a class="indietro" href="#/">&larr; Tutti i libri</a>
-        <p class="empty">Da qui aggiungo i libri solo io.
-        ${CONFIG.formUrl ? `<br><a href="${esc(CONFIG.formUrl)}" target="_blank" rel="noopener">C'è il modulo, se serve.</a>` : ""}</p>
+        <h2>Aggiungi un libro</h2>
+        <p class="avviso">Da qui i libri li aggiungo solo io. Se sei me, entra:
+        ti arriva un codice via email e la sessione dura un giorno.</p>
+        <p><a class="bottone bottone-primario" href="/api/login">Accedi</a></p>
+        ${CONFIG.formUrl ? `<p class="avviso"><a href="${esc(CONFIG.formUrl)}" target="_blank" rel="noopener">C'è ancora il modulo, se preferisci.</a></p>` : ""}
       </article>`;
     return;
   }

@@ -257,6 +257,7 @@ body {
 .bottone[disabled] { opacity: .5; cursor: default; }
 
 .bottone-primario { background: var(--accento); border-color: var(--accento); color: #fff; }
+a.bottone { display: inline-block; text-decoration: none; }
 .bottone-primario:hover { filter: brightness(1.08); }
 
 .scanner { position: relative; margin-bottom: 16px; }
