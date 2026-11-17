@@ -1,5 +1,0 @@
-node_modules/
-.clasprc.json
-dist/
-.dev.vars
-.wrangler/
