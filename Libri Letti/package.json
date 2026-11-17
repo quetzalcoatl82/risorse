@@ -8,6 +8,9 @@
     "gas:login": "npx -y @google/clasp@3.4.1 login",
     "gas:pull": "npx -y @google/clasp@3.4.1 pull",
     "gas:push": "npx -y @google/clasp@3.4.1 push",
-    "gas:watch": "npx -y @google/clasp@3.4.1 push --watch"
+    "gas:watch": "npx -y @google/clasp@3.4.1 push --watch",
+    "site": "rm -rf dist && mkdir -p dist && cp index.html app.js style.css dist/",
+    "dev": "npm run build && npm run site && npx -y wrangler@4 pages dev dist",
+    "deploy": "npm run build && npm run site && npx -y wrangler@4 pages deploy dist --project-name libri-letti"
   }
 }

@@ -1,4 +1,282 @@
 "use strict";
+// Rotta #/aggiungi: inquadri il codice a barre, controlli l'anteprima, salvi.
+// La scrittura passa da /api/libri, protetta da Cloudflare Access: qui dentro
+// non c'e' nessun segreto, e una pagina senza sessione valida non salva niente.
+const statoAggiungi = {
+    autenticato: null,
+    isbn: "",
+    anteprima: null,
+    messaggio: "",
+    errore: false,
+    inCorso: false,
+    scansione: false,
+    salvato: "",
+};
+let flusso = null;
+let fermaScansione = null;
+function oggi() {
+    const adesso = new Date();
+    const mese = String(adesso.getMonth() + 1).padStart(2, "0");
+    const giorno = String(adesso.getDate()).padStart(2, "0");
+    return `${adesso.getFullYear()}-${mese}-${giorno}`;
+}
+function scannerDisponibile() {
+    return "BarcodeDetector" in window && typeof navigator.mediaDevices?.getUserMedia === "function";
+}
+/* ------------------------------------------------------------------ rete */
+async function chiediAnteprima(isbn) {
+    statoAggiungi.inCorso = true;
+    statoAggiungi.messaggio = "Cerco il libro…";
+    statoAggiungi.errore = false;
+    renderAggiungi();
+    try {
+        const res = await fetch(`/api/libro?isbn=${encodeURIComponent(isbn)}`);
+        if (res.status === 404) {
+            statoAggiungi.anteprima = null;
+            statoAggiungi.messaggio = "Nessun libro con questo ISBN. Puoi salvarlo lo stesso: lo completa la passata notturna.";
+            statoAggiungi.errore = false;
+        }
+        else if (!res.ok) {
+            const dettaglio = (await res.json().catch(() => ({})));
+            throw new Error(dettaglio.errore || `Errore ${res.status}`);
+        }
+        else {
+            statoAggiungi.anteprima = (await res.json());
+            statoAggiungi.messaggio = "";
+        }
+    }
+    catch (err) {
+        statoAggiungi.anteprima = null;
+        statoAggiungi.messaggio = err instanceof Error ? err.message : String(err);
+        statoAggiungi.errore = true;
+    }
+    finally {
+        statoAggiungi.inCorso = false;
+        renderAggiungi();
+    }
+}
+async function salva() {
+    const dataEl = document.getElementById("data-fine");
+    const noteEl = document.getElementById("note");
+    const a = statoAggiungi.anteprima;
+    statoAggiungi.inCorso = true;
+    statoAggiungi.messaggio = "Salvo…";
+    statoAggiungi.errore = false;
+    renderAggiungi();
+    try {
+        const res = await fetch("/api/libri", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+                isbn: statoAggiungi.isbn,
+                data_fine: dataEl?.value || oggi(),
+                note: noteEl?.value || "",
+                titolo: a?.titolo || "",
+                autore: a?.autore || "",
+                anno: a?.anno ?? null,
+                pagine: a?.pagine ?? null,
+                copertina: a?.copertina || "",
+                descrizione: a?.descrizione || "",
+                categoria: (a?.categorie || []).slice(0, 2).join(", "),
+            }),
+        });
+        if (res.status === 401)
+            throw new Error("Sessione scaduta: ricarica la pagina per rientrare.");
+        if (!res.ok) {
+            const dettaglio = (await res.json().catch(() => ({})));
+            throw new Error(dettaglio.errore || `Errore ${res.status}`);
+        }
+        statoAggiungi.salvato = a?.titolo || statoAggiungi.isbn;
+        statoAggiungi.anteprima = null;
+        statoAggiungi.isbn = "";
+        statoAggiungi.messaggio = "";
+        sessionStorage.clear(); // l'elenco deve rileggere il foglio
+    }
+    catch (err) {
+        statoAggiungi.messaggio = err instanceof Error ? err.message : String(err);
+        statoAggiungi.errore = true;
+    }
+    finally {
+        statoAggiungi.inCorso = false;
+        renderAggiungi();
+    }
+}
+async function controllaAccesso() {
+    try {
+        const res = await fetch("/api/me");
+        const dati = (await res.json());
+        statoAggiungi.autenticato = dati.autenticato === true;
+    }
+    catch {
+        statoAggiungi.autenticato = false;
+    }
+    renderAggiungi();
+}
+async function avviaScansione() {
+    const video = document.getElementById("video");
+    if (!video)
+        return;
+    try {
+        flusso = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" },
+            audio: false,
+        });
+    }
+    catch {
+        statoAggiungi.scansione = false;
+        statoAggiungi.messaggio = "Fotocamera non disponibile: scrivi l'ISBN a mano.";
+        statoAggiungi.errore = true;
+        renderAggiungi();
+        return;
+    }
+    video.srcObject = flusso;
+    await video.play().catch(() => undefined);
+    const globali = window;
+    // EAN-13 e' il codice a barre dei libri: l'ISBN-13 e' quel numero.
+    const rilevatore = new globali.BarcodeDetector({ formats: ["ean_13", "ean_8", "isbn"] });
+    let attivo = true;
+    fermaScansione = () => {
+        attivo = false;
+        if (flusso)
+            flusso.getTracks().forEach((t) => t.stop());
+        flusso = null;
+    };
+    const cerca = async () => {
+        if (!attivo)
+            return;
+        try {
+            const codici = await rilevatore.detect(video);
+            const primo = codici[0];
+            if (primo && /^\d{10,13}$/.test(primo.rawValue)) {
+                if (navigator.vibrate)
+                    navigator.vibrate(60);
+                fermaScansione?.();
+                statoAggiungi.scansione = false;
+                statoAggiungi.isbn = primo.rawValue;
+                renderAggiungi();
+                void chiediAnteprima(primo.rawValue);
+                return;
+            }
+        }
+        catch {
+            // un fotogramma illeggibile non e' un errore: si riprova col prossimo
+        }
+        requestAnimationFrame(() => void cerca());
+    };
+    void cerca();
+}
+/* --------------------------------------------------------------- render */
+function renderAnteprima(a) {
+    const meta = [];
+    if (a.anno !== null)
+        meta.push(String(a.anno));
+    if (a.pagine !== null)
+        meta.push(`${a.pagine} pagine`);
+    const copertina = a.copertina
+        ? `<img class="cover" src="${esc(a.copertina)}" alt="" referrerpolicy="no-referrer">`
+        : `<div class="cover cover-empty"><span>${esc(a.titolo)}</span></div>`;
+    return `
+    <div class="anteprima">
+      ${copertina}
+      <div>
+        <h3>${esc(a.titolo)}</h3>
+        ${a.autore ? `<p class="scheda-autore">${esc(a.autore)}</p>` : ""}
+        ${meta.length ? `<p class="scheda-meta">${esc(meta.join(" · "))}</p>` : ""}
+        ${a.categorie.length ? `<p class="scheda-categoria">${esc(a.categorie.slice(0, 2).join(", "))}</p>` : ""}
+      </div>
+    </div>`;
+}
+function renderAggiungi() {
+    const app = document.getElementById("app");
+    if (!app)
+        return;
+    if (statoAggiungi.autenticato === null) {
+        app.innerHTML = `<p class="empty">Controllo l'accesso…</p>`;
+        return;
+    }
+    if (!statoAggiungi.autenticato) {
+        app.innerHTML = `
+      <article class="scheda">
+        <a class="indietro" href="#/">&larr; Tutti i libri</a>
+        <p class="empty">Da qui aggiungo i libri solo io.
+        ${CONFIG.formUrl ? `<br><a href="${esc(CONFIG.formUrl)}" target="_blank" rel="noopener">C'è il modulo, se serve.</a>` : ""}</p>
+      </article>`;
+        return;
+    }
+    const a = statoAggiungi.anteprima;
+    app.innerHTML = `
+    <article class="scheda inserimento">
+      <a class="indietro" href="#/">&larr; Tutti i libri</a>
+      <h2>Aggiungi un libro</h2>
+
+      ${statoAggiungi.salvato
+        ? `<p class="esito">Salvato: ${esc(statoAggiungi.salvato)}.</p>`
+        : ""}
+
+      ${statoAggiungi.scansione
+        ? `<div class="scanner"><video id="video" playsinline muted></video>
+             <button class="bottone" id="stop">Annulla</button></div>`
+        : `<div class="riga-isbn">
+             <input class="ricerca" id="isbn" type="text" inputmode="numeric" placeholder="ISBN"
+               value="${esc(statoAggiungi.isbn)}" autocomplete="off">
+             <button class="bottone" id="cerca">Cerca</button>
+             ${scannerDisponibile() ? `<button class="bottone bottone-primario" id="scansiona">Inquadra</button>` : ""}
+           </div>`}
+
+      ${statoAggiungi.messaggio
+        ? `<p class="${statoAggiungi.errore ? "avviso is-error" : "avviso"}">${esc(statoAggiungi.messaggio)}</p>`
+        : ""}
+
+      ${a ? renderAnteprima(a) : ""}
+
+      ${statoAggiungi.isbn && !statoAggiungi.scansione ? `
+        <div class="campi">
+          <label>Finito il
+            <input class="ricerca" id="data-fine" type="date" value="${oggi()}">
+          </label>
+          <label>Note
+            <textarea class="ricerca" id="note" rows="3" placeholder="Facoltative"></textarea>
+          </label>
+          <button class="bottone bottone-primario" id="salva" ${statoAggiungi.inCorso ? "disabled" : ""}>
+            Salva nel foglio
+          </button>
+        </div>` : ""}
+    </article>`;
+    agganciaAggiungi();
+}
+function agganciaAggiungi() {
+    const isbnEl = document.getElementById("isbn");
+    isbnEl?.addEventListener("input", () => {
+        statoAggiungi.isbn = isbnEl.value.replace(/[^0-9Xx]/g, "").toUpperCase();
+    });
+    document.getElementById("cerca")?.addEventListener("click", () => {
+        if (statoAggiungi.isbn)
+            void chiediAnteprima(statoAggiungi.isbn);
+    });
+    document.getElementById("scansiona")?.addEventListener("click", () => {
+        statoAggiungi.scansione = true;
+        statoAggiungi.messaggio = "";
+        statoAggiungi.salvato = "";
+        renderAggiungi();
+        void avviaScansione();
+    });
+    document.getElementById("stop")?.addEventListener("click", () => {
+        fermaScansione?.();
+        statoAggiungi.scansione = false;
+        renderAggiungi();
+    });
+    document.getElementById("salva")?.addEventListener("click", () => void salva());
+}
+function apriAggiungi() {
+    statoAggiungi.salvato = "";
+    renderAggiungi();
+    if (statoAggiungi.autenticato === null)
+        void controllaAccesso();
+}
+function chiudiAggiungi() {
+    fermaScansione?.();
+    statoAggiungi.scansione = false;
+}
 // Libri letti — legge una scheda di un foglio Google via gviz e la mostra.
 // Il foglio e' riempito dal Form e arricchito dall'Apps Script: qui si legge e basta.
 const CONFIG = {
@@ -69,7 +347,7 @@ const MOCK_LIBRI = [
         dataFine: "2024-04-14",
     },
 ];
-const state = { libri: [], query: "", anno: "", aperto: "" };
+const state = { libri: [], query: "", anno: "", aperto: "", inserimento: false };
 /* ------------------------------------------------------------------ utility */
 function esc(value) {
     return value
@@ -365,6 +643,14 @@ function render() {
     if (!app)
         return;
     renderBarra(state.libri);
+    if (state.inserimento) {
+        const barra = document.getElementById("barra");
+        if (barra)
+            barra.hidden = true;
+        document.title = "Aggiungi un libro — Libri letti";
+        apriAggiungi();
+        return;
+    }
     if (state.aperto) {
         const libro = state.libri.find((l) => l.isbn === state.aperto);
         app.innerHTML = libro
@@ -389,8 +675,10 @@ function render() {
 }
 /* ------------------------------------------------------------------ routing */
 function leggiHash() {
-    const m = /^#\/libro\/(.+)$/.exec(window.location.hash);
+    const hash = window.location.hash;
+    const m = /^#\/libro\/(.+)$/.exec(hash);
     state.aperto = m && m[1] ? decodeURIComponent(m[1]) : "";
+    state.inserimento = hash === "#/aggiungi";
 }
 /* ---------------------------------------------------------------- caricamento */
 async function caricaDalFoglio() {
@@ -459,13 +747,25 @@ function init() {
         });
     }
     if (aggiungi) {
-        if (CONFIG.formUrl)
+        // in locale (file://) non c'e' nessuna API: si ripiega sul modulo
+        const conApi = window.location.protocol.startsWith("http");
+        if (conApi) {
+            aggiungi.href = "#/aggiungi";
+            aggiungi.removeAttribute("target");
+            aggiungi.removeAttribute("rel");
+        }
+        else if (CONFIG.formUrl) {
             aggiungi.href = CONFIG.formUrl;
-        else
+        }
+        else {
             aggiungi.hidden = true;
+        }
     }
     window.addEventListener("hashchange", () => {
+        const eraInserimento = state.inserimento;
         leggiHash();
+        if (eraInserimento && !state.inserimento)
+            chiudiAggiungi();
         render();
     });
     leggiHash();

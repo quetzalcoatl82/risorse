@@ -1,0 +1,7 @@
+# Copia in .dev.vars (ignorato da git) per provare le Functions in locale.
+# In produzione gli stessi nomi vanno messi come secret del progetto Pages.
+GOOGLE_BOOKS_KEY=
+GOOGLE_SA_EMAIL=
+GOOGLE_SA_KEY=
+SPREADSHEET_ID=1y_3XOn0N7LnZ0r1bW-X74S71ngEUSQIH15gVKYkhNq0
+SHEET_NAME=Letture

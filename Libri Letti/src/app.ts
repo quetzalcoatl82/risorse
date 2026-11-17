@@ -102,9 +102,11 @@ interface State {
   anno: string;
   /** ISBN del libro aperto in scheda, vuoto in elenco. */
   aperto: string;
+  /** true sulla rotta #/aggiungi. */
+  inserimento: boolean;
 }
 
-const state: State = { libri: [], query: "", anno: "", aperto: "" };
+const state: State = { libri: [], query: "", anno: "", aperto: "", inserimento: false };
 
 /* ------------------------------------------------------------------ utility */
 
@@ -438,6 +440,14 @@ function render(): void {
 
   renderBarra(state.libri);
 
+  if (state.inserimento) {
+    const barra = document.getElementById("barra");
+    if (barra) barra.hidden = true;
+    document.title = "Aggiungi un libro — Libri letti";
+    apriAggiungi();
+    return;
+  }
+
   if (state.aperto) {
     const libro = state.libri.find((l) => l.isbn === state.aperto);
     app.innerHTML = libro
@@ -465,8 +475,10 @@ function render(): void {
 /* ------------------------------------------------------------------ routing */
 
 function leggiHash(): void {
-  const m = /^#\/libro\/(.+)$/.exec(window.location.hash);
+  const hash = window.location.hash;
+  const m = /^#\/libro\/(.+)$/.exec(hash);
   state.aperto = m && m[1] ? decodeURIComponent(m[1]) : "";
+  state.inserimento = hash === "#/aggiungi";
 }
 
 /* ---------------------------------------------------------------- caricamento */
@@ -536,12 +548,23 @@ function init(): void {
     });
   }
   if (aggiungi) {
-    if (CONFIG.formUrl) aggiungi.href = CONFIG.formUrl;
-    else aggiungi.hidden = true;
+    // in locale (file://) non c'e' nessuna API: si ripiega sul modulo
+    const conApi = window.location.protocol.startsWith("http");
+    if (conApi) {
+      aggiungi.href = "#/aggiungi";
+      aggiungi.removeAttribute("target");
+      aggiungi.removeAttribute("rel");
+    } else if (CONFIG.formUrl) {
+      aggiungi.href = CONFIG.formUrl;
+    } else {
+      aggiungi.hidden = true;
+    }
   }
 
   window.addEventListener("hashchange", () => {
+    const eraInserimento = state.inserimento;
     leggiHash();
+    if (eraInserimento && !state.inserimento) chiudiAggiungi();
     render();
   });
 

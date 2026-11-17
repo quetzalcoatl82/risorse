@@ -233,3 +233,72 @@ body {
   .scheda-corpo { grid-template-columns: 1fr; gap: 20px; }
   .cover-big { max-width: 180px; }
 }
+
+/* inserimento */
+
+.inserimento h2 { margin: 0 0 20px; font-size: 24px; letter-spacing: -.015em; }
+
+.riga-isbn { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.riga-isbn .ricerca { flex: 1; min-width: 160px; }
+
+.bottone {
+  padding: 10px 16px;
+  border: 1px solid var(--bordo);
+  border-radius: 10px;
+  background: var(--carta);
+  color: var(--testo);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bottone:hover { border-color: var(--accento); }
+.bottone[disabled] { opacity: .5; cursor: default; }
+
+.bottone-primario { background: var(--accento); border-color: var(--accento); color: #fff; }
+.bottone-primario:hover { filter: brightness(1.08); }
+
+.scanner { position: relative; margin-bottom: 16px; }
+
+.scanner video {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  background: #000;
+  object-fit: cover;
+}
+
+.scanner .bottone { display: block; margin-top: 10px; }
+
+.anteprima {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 18px;
+  align-items: start;
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid var(--bordo);
+  border-radius: 12px;
+  background: var(--carta);
+}
+
+.anteprima h3 { margin: 0 0 4px; font-size: 19px; line-height: 1.25; }
+.anteprima .cover { margin: 0; }
+
+.campi { display: grid; gap: 14px; max-width: 420px; }
+.campi label { display: grid; gap: 6px; font-size: 14px; color: var(--tenue); }
+.campi textarea { resize: vertical; font-family: inherit; }
+
+.avviso { margin: 12px 0; font-size: 15px; color: var(--tenue); }
+.avviso.is-error { color: var(--errore); }
+
+.esito {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--accento);
+  color: var(--accento);
+  font-size: 15px;
+}

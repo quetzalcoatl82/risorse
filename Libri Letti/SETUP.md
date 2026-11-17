@@ -152,6 +152,54 @@ Nella pagina le `<img>` hanno `referrerpolicy="no-referrer"`, cosi' Google non
 riceve anche l'indirizzo della pagina di chi guarda, e un gestore di `error`
 che al posto di un'immagine morta rimette il riquadro con il titolo.
 
+## La pagina di inserimento (#/aggiungi)
+
+Rotta della stessa pagina: inquadri il codice a barre con `BarcodeDetector`
+(nativa su Chrome Android, assente su Safari iOS e Firefox, richiede HTTPS),
+vedi l'anteprima del libro e salvi. Niente dipendenze.
+
+Il sito sta su **Cloudflare Pages** e le tre API sono Pages Functions nella
+cartella `functions/`:
+
+| endpoint | cosa fa |
+|---|---|
+| `GET /api/me` | dice alla pagina se chi guarda puo' salvare |
+| `GET /api/libro?isbn=` | anteprima da Google Books, con la chiave lato server |
+| `POST /api/libri` | aggiunge la riga al foglio con il service account |
+
+**Access non puo' proteggere `#/aggiungi`**: il frammento dopo `#` non arriva
+mai al server. Si protegge `/api/*`, che e' dove sta il potere: l'interfaccia
+e' visibile a tutti ma inerte, e `POST /api/libri` senza l'header
+`cf-access-authenticated-user-email` risponde 401. Quell'header lo scrive
+Cloudflare, il browser non puo' fabbricarlo.
+
+### Configurazione
+
+Secret del progetto Pages (Settings -> Variables and secrets):
+
+| nome | valore |
+|---|---|
+| `GOOGLE_BOOKS_KEY` | la stessa chiave usata da Apps Script |
+| `GOOGLE_SA_EMAIL` | email del service account |
+| `GOOGLE_SA_KEY` | la sua chiave privata, in PEM |
+| `SPREADSHEET_ID` | id del foglio |
+| `SHEET_NAME` | `Letture` |
+
+Il **service account** si crea nel progetto `libri-letti` della console Cloud, e
+il foglio va condiviso **in scrittura con la sua email**: e' quello che gli da'
+il permesso, senza nessun consenso OAuth da rinnovare.
+
+In locale: `cp .dev.vars.example .dev.vars`, riempi, `npm run dev`. La variabile
+`DEV_UTENTE` finge l'autenticazione **solo su localhost**, cosi' si vede
+l'interfaccia da autenticati senza Access.
+
+### Comandi
+
+```sh
+npm run dev       # build + wrangler pages dev su dist/
+npm run deploy    # build + wrangler pages deploy
+```
+
 ## Lo script dal repo, con clasp
 
 `apps-script/Codice.js` e' la copia buona: si carica nel foglio con clasp, la CLI
